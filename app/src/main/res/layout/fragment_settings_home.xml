@@ -56,10 +56,10 @@
         android:layout_height="1dp"
         android:background="@color/separator_color"/>
     <TextView
-        android:id="@+id/export_CSV_fragment"
+        android:id="@+id/autobackup_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_csv"
+        android:text="@string/auto_backup"
         style="@style/LargeText"/>
     <View
         android:layout_width="match_parent"
