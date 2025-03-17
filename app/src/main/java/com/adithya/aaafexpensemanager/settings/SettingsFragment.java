@@ -21,6 +21,7 @@ public class SettingsFragment extends Fragment {
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
     private TextView futureTransactionsTextView;
+    private TextView importCSVTextView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -42,6 +43,8 @@ public class SettingsFragment extends Fragment {
         });
         futureTransactionsTextView = view.findViewById(R.id.future_transactions_text_view);
         futureTransactionsTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_futureTransactionsFragment));
+        importCSVTextView = view.findViewById(R.id.import_CSV_text_view);
+        importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importCSVFragment));
         return view;
     }
 

@@ -45,4 +45,24 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/separator_color"/>
+    <TextView
+        android:id="@+id/import_CSV_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/import_csv"
+        style="@style/LargeText"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color"/>
+    <TextView
+        android:id="@+id/export_CSV_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_csv"
+        style="@style/LargeText"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color"/>
 </LinearLayout>

@@ -91,4 +91,6 @@
     <string name="clear_filter">Clear Filter</string>
     <string name="select_transaction_names">Select Transaction Names</string>
     <string name="select_items">Select Items</string>
+    <string name="import_csv">Import CSV</string>
+    <string name="export_csv">Export CSV</string>
 </resources>
