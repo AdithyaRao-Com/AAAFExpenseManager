@@ -1,0 +1,39 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_copy_txn"
+        android:icon="@drawable/baseline_content_copy_24"
+        android:title="@string/copy_txn"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/delete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_select_all"
+        android:icon="@drawable/baseline_select_all_24"
+        android:title="@string/select_all"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_deselect_all"
+        android:icon="@drawable/baseline_check_box_outline_blank_24"
+        android:title="@string/deselect_all"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_update_account"
+        android:title="@string/update_selected_account"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_update_to_account"
+        android:title="@string/update_selected_to_account"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_update_category"
+        android:title="@string/update_selected_category"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_update_transaction_name"
+        android:title="@string/update_transaction_name"
+        app:showAsAction="ifRoom" />
+</menu>

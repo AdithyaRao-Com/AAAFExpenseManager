@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_account"
+            android:title="@string/menu_account" />
+        <item
+            android:id="@+id/nav_transaction"
+            android:title="@string/menu_transaction" />
+        <item
+            android:id="@+id/nav_category"
+            android:title="@string/menu_category" />
+        <item
+            android:id="@+id/nav_recurring"
+            android:title="@string/recurring_schedule" />
+        <item
+            android:id="@+id/nav_reports"
+            android:title="@string/reports"/>
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/menu_settings"/>
+    </group>
+</menu>

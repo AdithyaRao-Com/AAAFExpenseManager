@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@id/nav_account">
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.adithya.aaafexpensemanager.account.AccountFragment"
+        android:label="@string/menu_account"
+        tools:layout="@layout/fragment_list_account">
+        <action
+            android:id="@+id/action_accountFragment_to_transactionFragment"
+            app:destination="@id/nav_transaction"
+            app:popUpTo="@id/nav_transaction"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_transaction"
+        android:name="com.adithya.aaafexpensemanager.transaction.TransactionFragment"
+        android:label="@string/menu_transaction"
+        tools:layout="@layout/fragment_list_transaction">
+        <action
+            android:id="@+id/action_transactionFragment_to_createTransactionFragment"
+            app:destination="@id/nav_create_transaction"
+            app:popUpTo="@id/nav_create_transaction"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_category"
+        android:name="com.adithya.aaafexpensemanager.category.CategoryFragment"
+        android:label="@string/menu_category"
+        tools:layout="@layout/fragment_list_category">
+        <action
+            android:id="@+id/action_categoryFragment_to_createCategoryFragment"
+            app:destination="@id/nav_create_category"
+            app:popUpTo="@id/nav_create_category"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_create_account"
+        android:name="com.adithya.aaafexpensemanager.account.CreateAccountFragment"
+        android:label="@string/menu_create_account"
+        tools:layout="@layout/fragment_create_account" />
+    <fragment
+        android:id="@+id/nav_create_transaction"
+        android:name="com.adithya.aaafexpensemanager.transaction.CreateTransactionFragment"
+        android:label="@string/menu_create_transaction"
+        tools:layout="@layout/fragment_create_transaction">
+        <action
+            android:id="@+id/action_createTransactionFragment_to_transactionFragment"
+            app:destination="@id/nav_transaction"
+            app:popUpTo="@id/nav_transaction"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_category"
+        android:name="com.adithya.aaafexpensemanager.category.CreateCategoryFragment"
+        android:label="@string/menu_create_category"
+        tools:layout="@layout/fragment_create_category">
+        <action
+            android:id="@+id/action_createCategoryFragment_to_categoryFragment"
+            app:destination="@id/nav_category"
+            app:popUpTo="@id/nav_category"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.adithya.aaafexpensemanager.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings_home">
+        <action
+            android:id="@+id/action_settingsFragment_to_accountTypeFragment"
+            app:destination="@id/nav_account_type"
+            app:popUpTo="@id/nav_account_type"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_exportDatabaseFragment"
+            app:destination="@id/nav_export_database"
+            app:popUpTo="@id/nav_export_database"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_importDatabaseFragment"
+            app:destination="@id/nav_import_database"
+            app:popUpTo="@id/nav_import_database"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_futureTransactionsFragment"
+            app:destination="@id/nav_future_transactions"
+            app:popUpTo="@id/nav_future_transactions"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_account_type"
+        android:name="com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeFragment"
+        android:label="@string/manage_account_types"
+        tools:layout="@layout/fragment_list_account_type">
+        <action
+            android:id="@+id/action_accountTypeFragment_to_settingsFragment"
+            app:destination="@id/nav_settings"
+            app:popUpTo="@id/nav_settings"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_accountTypeFragment_to_createAccountTypeFragment"
+            app:destination="@id/nav_create_account_type"
+            app:popUpTo="@id/nav_create_account_type"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_account_type"
+        android:name="com.adithya.aaafexpensemanager.settings.accounttype.CreateAccountTypeFragment"
+        android:label="Create/Update Account Type"
+        tools:layout="@layout/fragment_create_account_type">
+        <action
+            android:id="@+id/action_createAccountTypeFragment_to_accountTypeFragment"
+            app:destination="@id/nav_account_type"
+            app:popUpTo="@id/nav_account_type"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recurring"
+        android:name="com.adithya.aaafexpensemanager.recurring.RecurringFragment"
+        android:label="Recurring Schedule"
+        tools:layout="@layout/fragment_list_recurring">
+        <action
+            android:id="@+id/action_recurringFragment_to_createRecurringFragment"
+            app:destination="@id/nav_create_recurring"
+            app:popUpTo="@id/nav_create_recurring"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_recurring"
+        android:name="com.adithya.aaafexpensemanager.recurring.CreateRecurringFragment"
+        android:label="Create Recurring Schedule"
+        tools:layout="@layout/fragment_create_recurring">
+        <action
+            android:id="@+id/action_createRecurringFragment_to_recurringFragment"
+            app:destination="@id/nav_recurring"
+            app:popUpTo="@id/nav_recurring"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_createRecurringFragment_to_recurringTransactionFragment"
+            app:destination="@id/nav_future_transactions"
+            app:popUpTo="@id/nav_future_transactions"
+            app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+        android:id="@+id/nav_future_transactions"
+        android:name="com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionFragment"
+        android:label="Future Transactions"
+        tools:layout="@layout/fragment_list_future_transaction">
+        <action
+            android:id="@+id/action_recurringTransactionFragment_to_createRecurringFragment"
+            app:destination="@id/nav_create_recurring"
+            app:popUpTo="@id/nav_create_recurring"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_export_database"
+        android:name="com.adithya.aaafexpensemanager.settings.exportDatabase.ExportDatabaseFragment"
+        android:label="Export Database"
+        tools:layout="@layout/fragment_setting_export_database"/>
+    <fragment
+        android:id="@+id/nav_import_database"
+        android:name="com.adithya.aaafexpensemanager.settings.importDatabase.ImportDatabaseFragment"
+        android:label="Import Database"
+        tools:layout="@layout/fragment_setting_import_database"/>
+    <fragment
+        android:id="@+id/nav_reports"
+        android:name="com.adithya.aaafexpensemanager.reports.ReportsHomeFragment"
+        android:label="Reports"
+        tools:layout="@layout/fragment_reports_home">
+        <action
+            android:id="@+id/action_reportsHomeFragment_to_categorySummaryFragment"
+            app:destination="@id/nav_category_summary"
+            app:popUpTo="@id/nav_category_summary"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_category_summary"
+        android:name="com.adithya.aaafexpensemanager.reports.categorySummary.CategorySummaryFragment"
+        android:label="Category Summary"
+        tools:layout="@layout/fragment_report_category_summary">
+        <action
+            android:id="@+id/action_categorySummaryFragment_to_categorySummaryChartFragment"
+            app:destination="@id/nav_category_summary_chart"
+            app:popUpTo="@id/nav_category_summary_chart"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_category_summary_chart"
+        android:name="com.adithya.aaafexpensemanager.reports.categorySummary.CategorySummaryChartFragment"
+        android:label="Category Summary Chart"
+        tools:layout="@layout/fragment_report_category_summary">
+        <action
+            android:id="@+id/action_categorySummaryChartFragment_to_categorySummaryFragment"
+            app:destination="@id/nav_category_summary"
+            app:popUpTo="@id/nav_category_summary"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
