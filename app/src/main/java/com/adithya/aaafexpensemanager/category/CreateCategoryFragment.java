@@ -128,12 +128,13 @@ public class CreateCategoryFragment extends Fragment {
                             "Delete Category",
                             "Are you sure you want to delete this category? \n" +
                                     "Impacted Transactions will be marked as uncategorized.",
-                            ()-> viewModel.deleteCategory(originalCategory),
+                            ()-> {
+                                viewModel.deleteCategory(originalCategory);
+                                Navigation.findNavController(getView()).navigate(R.id.nav_category);},
                             ()->{},
                             "Delete",
                             "Cancel"
                     );
-                    Navigation.findNavController(getView()).navigate(R.id.nav_category);
                     return true;
                 }
                 else if(menuItem.getItemId()==R.id.action_show_category_transactions){
