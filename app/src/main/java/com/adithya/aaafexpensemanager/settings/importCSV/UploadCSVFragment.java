@@ -1,9 +1,12 @@
 package com.adithya.aaafexpensemanager.settings.importCSV;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,20 +20,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.adithya.aaafexpensemanager.R;
+import com.adithya.aaafexpensemanager.importdata.ImportCSVParser;
+import com.adithya.aaafexpensemanager.util.CsvFileTypeDetector;
+import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
+import com.google.android.material.snackbar.Snackbar;
 
 public class UploadCSVFragment extends Fragment {
-
     private TextView fileSelectedTextView;
     private Button uploadButton;
     private Uri selectedFileUri;
+    private Context context;
+    private ViewGroup viewGroup;
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> pickFileLauncher = registerForActivityResult(
@@ -55,7 +56,8 @@ public class UploadCSVFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_upload_csv, container, false);
-
+        this.viewGroup = container;
+        this.context = getContext();
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
         uploadButton = view.findViewById(R.id.uploadButton);
         Button selectFileButton = view.findViewById(R.id.selectFileButton);
@@ -64,7 +66,7 @@ public class UploadCSVFragment extends Fragment {
 
         selectFileButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("text/csv"); // Filter for CSV files
+            intent.setType("*/*");
             pickFileLauncher.launch(intent);
         });
 
@@ -78,54 +80,31 @@ public class UploadCSVFragment extends Fragment {
     }
 
     private void processCsvFile(Uri fileUri) {
-        try {
-            InputStream inputStream = requireContext().getContentResolver().openInputStream(fileUri);
-            if (inputStream != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                String line;
-                List<String[]> data = new ArrayList<>(); // Store the CSV data
-
-                while ((line = reader.readLine()) != null) {
-                    String[] row = line.split(","); // Split by comma
-                    data.add(row);
-                }
-
-                reader.close();
-                inputStream.close();
-
-                // Now 'data' contains the CSV data as a List of String arrays.
-                // Process the data as needed (e.g., display in a RecyclerView, save to database, etc.)
-                displayCsvData(data); // Call a method to display or handle the data.
-
-            } else {
-                Toast.makeText(getContext(), "Failed to open file", Toast.LENGTH_SHORT).show();
-            }
-        } catch (IOException e) {
-            //noinspection CallToPrintStackTrace
-            e.printStackTrace();
-            Toast.makeText(getContext(), "Error processing CSV file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void displayCsvData(List<String[]> data) {
-        // Example: Display the first few rows in a TextView or log.
-        StringBuilder stringBuilder = new StringBuilder();
-        int rowsToDisplay = Math.min(10, data.size()); // Display up to 10 rows
-        for (int i = 0; i < rowsToDisplay; i++) {
-            String[] row = data.get(i);
-            for (String cell : row) {
-                stringBuilder.append(cell).append("\t"); // Use tab for separation
-            }
-            stringBuilder.append("\n");
-        }
-        //You can use a recycler view here instead.
-        TextView displayTextView = requireView().findViewById(R.id.csvDataDisplayTextView);
-        if(displayTextView != null){
-            displayTextView.setText(stringBuilder.toString());
+        if(CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)){
+            ImportCSVParser.parseTransactions(this.context, fileUri);
+            Snackbar.make(viewGroup.getRootView(),"Upload Successful", Snackbar.LENGTH_LONG).show();
         }
         else{
-            android.util.Log.d("CSV_DATA", stringBuilder.toString()); // Log the data
-        }
+            Toast.makeText(this.context, "File is not a CSV", Toast.LENGTH_SHORT).show();
+            ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
+                @Override
+                public void onConversionComplete(Uri csvFileUri) {
+                    ImportCSVParser.parseTransactions(context, csvFileUri);
+                }
 
+                @Override
+                public void onConversionFailed(String errorMessage) {
+                    Snackbar.make(viewGroup.getRootView(), "Conversion failed: " + errorMessage, Snackbar.LENGTH_LONG).show();
+                    Log.e("UploadCSVFragment", "Conversion failed: " + errorMessage);
+                }
+            });
+            try {
+                convertor.convertExcelToCsv(fileUri);
+            }
+            catch (Exception e){
+                Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
+            }
+        }
     }
 }

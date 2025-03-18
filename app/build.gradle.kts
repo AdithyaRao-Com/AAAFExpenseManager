@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.mpandroidchart)
     implementation(libs.poi)
     implementation(libs.poi.ooxml)
+    implementation(libs.work.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

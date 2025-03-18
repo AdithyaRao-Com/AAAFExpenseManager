@@ -17,6 +17,7 @@ navigationUi = "2.6.0"
 navigationUiKtx = "2.8.7"
 legacySupportV4 = "1.0.0"
 poi = "5.2.3"
+workRuntime = "2.10.0"
 zip4j = "2.11.5"
 roomRuntime = "2.6.1"
 roomCompiler = "2.6.1"
@@ -40,6 +41,7 @@ navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.
 legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 poi = { module = "org.apache.poi:poi", version.ref = "poi" }
 poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
+work-runtime = { module = "androidx.work:work-runtime", version.ref = "workRuntime" }
 zip4j = { module = "net.lingala.zip4j:zip4j", version.ref = "zip4j" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }

@@ -15,7 +15,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.adithya.aaafexpensemanager.databinding.ActivityMainBinding;
 import com.adithya.aaafexpensemanager.recurring.RecurringRepository;
 import com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionRepository;
-import com.adithya.aaafexpensemanager.util.SetupTestData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 

@@ -61,8 +61,12 @@ public class ImportDataRecord {
         try {
             return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
         } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return null;
+            try{
+                return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+            }
+            catch (Exception e1){
+                return LocalDate.now().minusDays(365);
+            }
         }
     }
     public double getAmount() {

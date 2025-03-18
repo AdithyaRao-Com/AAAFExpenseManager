@@ -43,12 +43,10 @@ public class ExcelToCsvConverter {
             Uri result = doInBackground(excelFileUri);
             if (result != null) {
                 listener.onConversionComplete(result);
-                // Switch to main thread for UI updates
                 android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
                 mainHandler.post(() -> Toast.makeText(context, "Conversion successful. CSV saved to Downloads.", Toast.LENGTH_SHORT).show());
             } else {
                 listener.onConversionFailed(errorMessage);
-                // Switch to main thread for UI updates
                 android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
                 mainHandler.post(() -> Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show());
             }
@@ -64,12 +62,19 @@ public class ExcelToCsvConverter {
 
         try {
             inputStream = context.getContentResolver().openInputStream(excelFileUri);
-            assert inputStream != null;
-            Workbook workbook = WorkbookFactory.create(inputStream);
-            Sheet sheet = workbook.getSheetAt(0); // Assuming the first sheet
+            if (inputStream == null) {
+                errorMessage = "Failed to open input stream for the Excel file.";
+                return null;
+            }
+            Workbook workbook = WorkbookFactory.create(inputStream); //Handles .xls and .xlsx
+            Sheet sheet = workbook.getSheetAt(0);
 
             String csvFileName = "converted_" + System.currentTimeMillis() + ".csv";
             File csvFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), csvFileName);
+            if (csvFile == null) {
+                errorMessage = "Failed to create file in download directory";
+                return null;
+            }
             fileOutputStream = new FileOutputStream(csvFile);
             writer = new OutputStreamWriter(fileOutputStream);
 
@@ -98,7 +103,6 @@ public class ExcelToCsvConverter {
                             }
                             break;
                         case BLANK:
-                            // Handle blank cells
                             break;
                         default:
                             line.append("\"").append(cell.toString().replace("\"", "\"\"")).append("\"");
@@ -111,7 +115,6 @@ public class ExcelToCsvConverter {
             return Uri.fromFile(csvFile);
 
         } catch (Exception e) {
-            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             errorMessage = "Conversion failed: " + e.getMessage();
             return null;
@@ -121,7 +124,6 @@ public class ExcelToCsvConverter {
                 if (writer != null) writer.close();
                 if (fileOutputStream != null) fileOutputStream.close();
             } catch (IOException e) {
-                //noinspection CallToPrintStackTrace
                 e.printStackTrace();
             }
         }

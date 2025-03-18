@@ -3,6 +3,7 @@ package com.adithya.aaafexpensemanager.importdata;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.net.Uri;
 
 import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.category.Category;
@@ -26,20 +27,20 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace*/
 public class ImportCSVParser {
-    public static void parseTransactions(Context context) {
+    public static void parseTransactions(Context context,
+                                         Uri fileUri) {
         CategoryRepository categoryRepository = new CategoryRepository((Application) context.getApplicationContext());
         AccountRepository accountRepository = new AccountRepository((Application) context.getApplicationContext());
         TransactionRepository transactionRepository = new TransactionRepository((Application) context.getApplicationContext());
         RecentTransactionRepository recentTransactionRepository = new RecentTransactionRepository((Application) context.getApplicationContext());
         AccountTypeRepository accountTypeRepository = new AccountTypeRepository((Application) context.getApplicationContext());
-        AssetManager assetManager = context.getAssets();
         accountRepository.deleteAll();
         categoryRepository.deleteAll();
         transactionRepository.deleteAll();
         recentTransactionRepository.deleteAll();
         transactionRepository.recordCount = 0;
         //noinspection deprecation
-        try(InputStream inputStream = assetManager.open("transaction.csv");
+        try(InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
             InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
             CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)){
             List<CSVRecord> records = csvParser.getRecords();
