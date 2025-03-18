@@ -30,13 +30,13 @@ import java.util.concurrent.TimeUnit;
     public class DailyDataSaver {
     private static final String TAG = "DailyDataSaver";
     private static final String WORK_TAG = "aaaf_expense_manager_backup";
-
+    // TODO - Only scheduling issue is pending to be tested completely.
     public static void scheduleDailySave(Context context) {
         Constraints constraints = new Constraints.Builder()
                 .build();
 
         PeriodicWorkRequest saveRequest = new PeriodicWorkRequest.Builder(
-                DataSaveWorker.class, 1, TimeUnit.MINUTES) // For debugging
+                DataSaveWorker.class, 1, TimeUnit.HOURS) // For debugging
                 .setConstraints(constraints)
                 .build();
         WorkManager.getInstance(context).cancelUniqueWork(WORK_TAG);
