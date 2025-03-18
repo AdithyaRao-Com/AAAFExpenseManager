@@ -213,12 +213,15 @@ public class CreateAccountFragment extends Fragment {
                     new ConfirmationDialog(getContext(),
                             "Delete Account",
                             "Are you sure you want to delete this account?",
-                            ()-> viewModel.deleteAccount(originalAccount.accountName),
+                            ()-> {
+                                    viewModel.deleteAccount(originalAccount.accountName);
+                                    Snackbar.make(view, "Account deleted successfully", Snackbar.LENGTH_SHORT).show();
+                                    Navigation.findNavController(getView()).navigate(R.id.nav_account);
+                                },
                             ()->{},
                             "Delete",
                             "Cancel"
                             );
-                    Navigation.findNavController(getView()).navigate(R.id.nav_account);
                     return true;
                 }
                 else if(menuItem.getItemId()==R.id.action_show_account_transactions){
