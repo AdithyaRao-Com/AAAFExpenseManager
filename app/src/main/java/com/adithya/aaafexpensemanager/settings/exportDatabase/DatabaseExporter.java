@@ -14,7 +14,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-/** @noinspection SameParameterValue*/
+/**
+ * @noinspection SameParameterValue
+ */
 public class DatabaseExporter {
 
     private static final String TAG = "DatabaseExporter";
@@ -50,7 +52,9 @@ public class DatabaseExporter {
         }
     }
 
-    /** @noinspection resource*/
+    /**
+     * @noinspection resource
+     */
     private void zipDatabase(File databaseFile, File zipFile, String password) throws ZipException {
         ZipParameters zipParameters = new ZipParameters();
         zipParameters.setEncryptFiles(true);

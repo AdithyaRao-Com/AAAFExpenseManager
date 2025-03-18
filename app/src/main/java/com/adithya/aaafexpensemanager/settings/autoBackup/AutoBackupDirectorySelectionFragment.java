@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +29,8 @@ public class AutoBackupDirectorySelectionFragment extends Fragment {
     /** @noinspection FieldCanBeLocal*/
     private Button selectDirectoryButton;
     private Uri selectedDirectoryUri;
-    private SharedPreferences sharedPreferences;
+    private CheckBox autoBackupEnabledCheckBox;
+    private AutoBackUpSharedPrefs autoBackUpSharedPrefs;
 
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> directoryPickerLauncher = registerForActivityResult(
@@ -52,7 +54,7 @@ public class AutoBackupDirectorySelectionFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        sharedPreferences = context.getSharedPreferences("directory_prefs", Context.MODE_PRIVATE);
+        autoBackUpSharedPrefs = new AutoBackUpSharedPrefs(context);
     }
 
     @SuppressLint("SetTextI18n")
@@ -60,31 +62,28 @@ public class AutoBackupDirectorySelectionFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_autobackup_directory_selection, container, false);
-
         selectedDirectoryTextView = view.findViewById(R.id.selectedDirectoryTextView);
         selectDirectoryButton = view.findViewById(R.id.selectDirectoryButton);
-
         selectDirectoryButton.setOnClickListener(v -> {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
             directoryPickerLauncher.launch(intent);
         });
-
         // Load previously saved directory
-        String savedDirectoryUriString = sharedPreferences.getString("selected_directory", null);
+        String savedDirectoryUriString = autoBackUpSharedPrefs.getAutoBackupDirectory();
         if (savedDirectoryUriString != null) {
             selectedDirectoryUri = Uri.parse(savedDirectoryUriString);
             selectedDirectoryTextView.setText("Selected directory: " + selectedDirectoryUri.getPath());
         }
-
+        autoBackupEnabledCheckBox = view.findViewById(R.id.autoBackup_enabled);
+        autoBackupEnabledCheckBox.setChecked(autoBackUpSharedPrefs.getKeyIsAutoBackupEnabled());
+        autoBackupEnabledCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            autoBackUpSharedPrefs.setKeyIsAutoBackupEnabled(isChecked);
+        });
         return view;
     }
-
     private void storeDirectoryInPreferences(Uri directoryUri) {
         String directoryPath = directoryUri.toString(); // Store URI as String
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("selected_directory", directoryPath);
-        editor.apply();
-
+        autoBackUpSharedPrefs.setAutoBackupDirectory(directoryPath);
         Toast.makeText(getContext(), "Directory stored successfully", Toast.LENGTH_SHORT).show();
     }
 }

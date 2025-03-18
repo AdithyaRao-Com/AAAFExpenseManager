@@ -16,7 +16,6 @@ import com.adithya.aaafexpensemanager.R;
 /** @noinspection FieldCanBeLocal*/
 public class SettingsFragment extends Fragment {
     //TODO - Export CSV Feature
-    //TODO - Import CSV Feature
     private TextView accountTypeTextView;
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
