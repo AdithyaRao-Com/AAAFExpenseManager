@@ -1,5 +1,7 @@
 package com.adithya.aaafexpensemanager.util;
+
 import android.net.Uri;
+import android.provider.DocumentsContract;
 
 public class UriUtils {
 
@@ -66,6 +68,28 @@ public class UriUtils {
                 // No directory part, assume it's in the root
                 return Uri.parse("/" + fileName);
             }
+        }
+    }
+
+    /**
+     * Converts a tree URI to a document URI.
+     *
+     * @param treeUri The tree URI to convert.
+     * @return The document URI representing the root of the tree, or null if the input is invalid.
+     * @throws IllegalArgumentException if treeUri is null.
+     */
+    public static Uri treeUriToDocumentUri(Uri treeUri) {
+        if (treeUri == null) {
+            throw new IllegalArgumentException("Tree URI cannot be null.");
+        }
+
+        if (DocumentsContract.isTreeUri(treeUri)) {
+            return DocumentsContract.buildDocumentUriUsingTree(
+                    treeUri,
+                    DocumentsContract.getTreeDocumentId(treeUri)
+            );
+        } else {
+            return null; // Not a tree URI
         }
     }
 }

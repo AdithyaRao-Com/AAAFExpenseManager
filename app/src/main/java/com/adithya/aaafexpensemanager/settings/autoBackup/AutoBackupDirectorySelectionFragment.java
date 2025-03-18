@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/** @noinspection FieldCanBeLocal*/
 public class AutoBackupDirectorySelectionFragment extends Fragment {
 
     private TextView selectedDirectoryTextView;
@@ -41,6 +41,9 @@ public class AutoBackupDirectorySelectionFragment extends Fragment {
                     if (data != null) {
                         selectedDirectoryUri = data.getData();
                         if (selectedDirectoryUri != null) {
+                            // Take persistent permissions
+                            takePersistablePermissions(selectedDirectoryUri);
+
                             selectedDirectoryTextView.setText("Selected directory: " + selectedDirectoryUri.getPath());
                             storeDirectoryInPreferences(selectedDirectoryUri);
                         }
@@ -76,14 +79,20 @@ public class AutoBackupDirectorySelectionFragment extends Fragment {
         }
         autoBackupEnabledCheckBox = view.findViewById(R.id.autoBackup_enabled);
         autoBackupEnabledCheckBox.setChecked(autoBackUpSharedPrefs.getKeyIsAutoBackupEnabled());
-        autoBackupEnabledCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            autoBackUpSharedPrefs.setKeyIsAutoBackupEnabled(isChecked);
-        });
+        autoBackupEnabledCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> autoBackUpSharedPrefs.setKeyIsAutoBackupEnabled(isChecked));
         return view;
     }
+
     private void storeDirectoryInPreferences(Uri directoryUri) {
         String directoryPath = directoryUri.toString(); // Store URI as String
         autoBackUpSharedPrefs.setAutoBackupDirectory(directoryPath);
         Toast.makeText(getContext(), "Directory stored successfully", Toast.LENGTH_SHORT).show();
+    }
+
+    private void takePersistablePermissions(Uri directoryUri) {
+        if (getContext() != null) {
+            getContext().getContentResolver().takePersistableUriPermission(directoryUri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        }
     }
 }

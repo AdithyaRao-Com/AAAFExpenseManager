@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.adithya.aaafexpensemanager.dailyBackup.DailyDataSaver;
 import com.adithya.aaafexpensemanager.databinding.ActivityMainBinding;
 import com.adithya.aaafexpensemanager.recurring.RecurringRepository;
 import com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionRepository;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-//        new SetupTestData(getApplication()).setUpTestData();
+        DailyDataSaver.scheduleDailySave(getApplicationContext());
         try{
             FutureTransactionRepository futureTransactionRepository = new FutureTransactionRepository(getApplication());
             futureTransactionRepository.applyRecurringTransactions();
