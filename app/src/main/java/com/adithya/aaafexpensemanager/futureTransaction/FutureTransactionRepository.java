@@ -273,8 +273,8 @@ public class FutureTransactionRepository {
             futureTransactions.add(new FutureTransaction(recurringSchedule,referenceDate));
         }
         LocalDate referenceEndDate;
-        if(referenceDate.plusDays(367).isBefore(recurringSchedule.getRecurringEndDateLocalDate())){
-            referenceEndDate = referenceDate.plusDays(367);
+        if(referenceDate.plusDays(375).isBefore(recurringSchedule.getRecurringEndDateLocalDate())){
+            referenceEndDate = referenceDate.plusDays(375);
         }
         else {
             referenceEndDate = recurringSchedule.getRecurringEndDateLocalDate().plusDays(1);

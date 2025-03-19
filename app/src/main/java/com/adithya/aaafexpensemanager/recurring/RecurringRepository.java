@@ -50,9 +50,15 @@ public class RecurringRepository {
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
         assert queryParms != null;
-        String orderByArgs = "next_date ASC,create_date DESC LIMIT <<batchSize>> OFFSET <<offset>>"
-                .replace("<<batchSize>>",String.valueOf(batchSize))
-                .replace("<<offset>>",String.valueOf((pageNumber-1)*batchSize));
+        String orderByArgs;
+        if(pageNumber<0) {
+            orderByArgs = "next_date ASC,create_date DESC";
+        }
+        else {
+            orderByArgs = "next_date ASC,create_date DESC LIMIT <<batchSize>> OFFSET <<offset>>"
+                    .replace("<<batchSize>>",String.valueOf(batchSize))
+                    .replace("<<offset>>",String.valueOf((pageNumber-1)*batchSize));
+        }
         try (Cursor cursor = db.query("RecurringScheduleNextDate", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
             if (cursor.moveToFirst()) {
                 do {
@@ -123,6 +129,21 @@ public class RecurringRepository {
             return true;
         } catch (SQLException e) {
             //noinspection CallToPrintStackTrace
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean keepFutureTransactionsUpToDate(){
+        try{
+            List<RecurringSchedule> recurringSchedules =
+                    getAllRecurringSchedules(new TransactionFilter(),-1);
+            for(RecurringSchedule recurringSchedule : recurringSchedules){
+                futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
+            }
+            return true;
+        }
+        catch (Exception e){
             e.printStackTrace();
             return false;
         }

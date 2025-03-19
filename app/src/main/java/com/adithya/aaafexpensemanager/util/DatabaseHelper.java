@@ -8,23 +8,17 @@ import android.util.Log;
 
 import java.io.File;
 
+/** @noinspection FieldCanBeLocal*/
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final Application context;
     private final File databaseFile;
-
-    // Constructor for the live database
+    private final DataHelperSharedPrefs dataHelperSharedPrefs;
     public DatabaseHelper(Context context) {
         super(context, AppConstants.DATABASE_NAME, null, AppConstants.DATABASE_VERSION);
         this.context = (Application) context.getApplicationContext();
         this.databaseFile = context.getDatabasePath(AppConstants.DATABASE_NAME);
+        this.dataHelperSharedPrefs = new DataHelperSharedPrefs(context);
     }
-
-    public DatabaseHelper(Context context, File file) {
-        super(context, file.getAbsolutePath(), null, AppConstants.DATABASE_VERSION);
-        this.context = (Application) context.getApplicationContext();
-        this.databaseFile = file;
-    }
-
     public File getDatabaseFile() {
         return databaseFile;
     }
@@ -35,19 +29,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("Database Helper","Started onUpgrade");
-        // Handle database upgrades if needed.  Example:
-//        if ((newVersion > oldVersion)||(newVersion==1)) {
-//            Log.d("Database Helper","Dropping tables");
-//            // Drop the view first if it exists
-//            DBHelperActions.dropActions(db);
-//            DBHelperActions.createActions(db);
-//            if(AppConstants.IS_DEV_MODE){
-//                SetupTestData.updateIsSetupData(
-//                        (Application) context.getApplicationContext(),
-//                        true);
-//            }
-//        }
+        onUpgradeOrDowngrade(db, oldVersion, newVersion);
     }
-
-
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        Log.d("Database Helper","Started onDowngrade");
+        onUpgradeOrDowngrade(db, oldVersion, newVersion);
+    }
+    private void onUpgradeOrDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        int currentDataBaseVersion = dataHelperSharedPrefs.getCurrentDataBaseVersion(oldVersion);
+        if(currentDataBaseVersion< newVersion){
+            dataHelperSharedPrefs.setCurrentDataBaseVersion(newVersion);
+            DBHelperActions.dropActions(db);
+            DBHelperActions.createActions(db);
+        }
+    }
 }

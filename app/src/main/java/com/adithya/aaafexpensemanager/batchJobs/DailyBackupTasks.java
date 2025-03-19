@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.dailyBackup;
+package com.adithya.aaafexpensemanager.batchJobs;
 
 import android.app.Application;
 import android.content.Context;
@@ -14,6 +14,7 @@ import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 import androidx.documentfile.provider.DocumentFile;
 
+import com.adithya.aaafexpensemanager.recurring.RecurringRepository;
 import com.adithya.aaafexpensemanager.settings.SettingsRepository;
 import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackUpSharedPrefs;
 import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupSchedule;
@@ -24,20 +25,18 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalUnit;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /** @noinspection CallToPrintStackTrace*/
-    public class DailyDataSaver {
+    public class DailyBackupTasks {
     private static final String TAG = "DailyDataSaver";
     private static final String WORK_TAG = "aaaf_expense_manager_backup";
-    // TODO - Only scheduling issue is pending to be tested completely.
     public static void scheduleDailySave(Context context) {
         Constraints constraints = new Constraints.Builder()
                 .build();
-        long delay = new AutoBackupSchedule(Duration.ofHours(1)).calculateDelay();
+        long delay = new AutoBackupSchedule(Duration.ofHours(12)).calculateDelay();
         OneTimeWorkRequest saveRequest = new OneTimeWorkRequest.Builder(
                 DataSaveWorker.class)
                 .setInitialDelay(delay, TimeUnit.MILLISECONDS)
@@ -74,10 +73,43 @@ import java.util.concurrent.TimeUnit;
         }
 
         private void getDataToSave(Context context) {
-            autoBackupDatabaseEveryDay(context);
+            BatchRunRepository batchRunRepository
+                    = new BatchRunRepository((Application) context.getApplicationContext());
+            BatchRunLog batchRunLog = new BatchRunLog();
+            batchRunRepository.addBatchRunLog(batchRunLog);
+            batchRunRepository.addBatchRunDetailLog(
+                    new BatchRunDetailLog(batchRunLog,
+                            "autoBackupDatabaseEveryDay",
+                            "autoBackupDatabaseEveryDay starting"));
+            autoBackupDatabaseEveryDay(context,batchRunLog);
+            batchRunRepository.addBatchRunDetailLog(
+                    new BatchRunDetailLog(batchRunLog,
+                            "autoBackupDatabaseEveryDay",
+                            "autoBackupDatabaseEveryDay completed"));
+            batchRunRepository.addBatchRunDetailLog(
+                    new BatchRunDetailLog(batchRunLog,
+                            "dailyRecurringTransactionsSetup",
+                            "dailyRecurringTransactionsSetup starting"));
+            dailyRecurringTransactionsSetup(context,batchRunLog);
+            batchRunRepository.addBatchRunDetailLog(
+                    new BatchRunDetailLog(batchRunLog,
+                            "dailyRecurringTransactionsSetup",
+                            "dailyRecurringTransactionsSetup completed"));
+            batchRunRepository.removeOldEntriesRunDetail();
+            batchRunRepository.removeOldEntriesRun();
+        }
+        private void dailyRecurringTransactionsSetup(Context context, BatchRunLog batchRunLog) {
+            try{
+                RecurringRepository recurringScheduleRepository =
+                        new RecurringRepository((Application) context.getApplicationContext());
+                recurringScheduleRepository.keepFutureTransactionsUpToDate();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
-        private void autoBackupDatabaseEveryDay(Context context) {
+        private void autoBackupDatabaseEveryDay(Context context, BatchRunLog batchRunLog) {
             try{
                 SettingsRepository settingsRepository = new SettingsRepository((Application)
                         context.getApplicationContext());

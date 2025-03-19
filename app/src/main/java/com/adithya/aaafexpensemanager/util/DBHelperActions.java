@@ -17,6 +17,8 @@ public class DBHelperActions {
         db.execSQL("DROP TABLE IF EXISTS recurring_schedules");
         db.execSQL("DROP TABLE IF EXISTS recurring_transactions");
         db.execSQL("DROP TABLE IF EXISTS setting_pairs");
+        db.execSQL("DROP TABLE IF EXISTS batch_run_log");
+        db.execSQL("DROP TABLE IF EXISTS batch_run_detail_log");
         Log.d("Database Helper","Dropped tables");
         Log.d("DatabaseHelper","Recreating tables");
     }
@@ -103,6 +105,19 @@ public class DBHelperActions {
                 "setting_name TEXT PRIMARY KEY, " +
                 "setting_value TEXT )";
         db.execSQL(SETTINGS_TABLE_QUERY);
+        String BATCH_RUN_LOG = "CREATE TABLE batch_run_log " +
+                "( " +
+                "batch_run_uuid TEXT PRIMARY KEY, " +
+                "batch_run_date INTEGER)";
+        db.execSQL(BATCH_RUN_LOG);
+        String BATCH_RUN_DETAIL_LOG = "CREATE TABLE batch_run_detail_log " +
+                "( " +
+                "batch_run_detail_uuid TEXT PRIMARY KEY, " +
+                "batch_run_uuid TEXT, " +
+                "tag            TEXT, "+
+                "log_text       TEXT, " +
+                "log_date       INTEGER )";
+        db.execSQL(BATCH_RUN_DETAIL_LOG);
     }
     private static void recurringScheduleNextDate(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS RecurringScheduleNextDate AS " +  // Use IF NOT EXISTS for upgrades
