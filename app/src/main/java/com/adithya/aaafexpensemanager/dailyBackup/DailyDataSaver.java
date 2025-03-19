@@ -7,8 +7,8 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Constraints;
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -16,12 +16,15 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.adithya.aaafexpensemanager.settings.SettingsRepository;
 import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackUpSharedPrefs;
+import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupSchedule;
 import com.adithya.aaafexpensemanager.settings.exportDatabase.DatabaseExporter;
 import com.adithya.aaafexpensemanager.util.UriUtils;
 
 import java.io.File;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -34,15 +37,14 @@ import java.util.concurrent.TimeUnit;
     public static void scheduleDailySave(Context context) {
         Constraints constraints = new Constraints.Builder()
                 .build();
-
-        PeriodicWorkRequest saveRequest = new PeriodicWorkRequest.Builder(
-                DataSaveWorker.class, 1, TimeUnit.DAYS)
-                .setConstraints(constraints)
+        long delay = new AutoBackupSchedule(Duration.ofHours(1)).calculateDelay();
+        OneTimeWorkRequest saveRequest = new OneTimeWorkRequest.Builder(
+                DataSaveWorker.class)
+                .setInitialDelay(delay, TimeUnit.MILLISECONDS)
                 .build();
-        WorkManager.getInstance(context).cancelUniqueWork(WORK_TAG);
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+        WorkManager.getInstance(context).enqueueUniqueWork(
                 WORK_TAG,
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingWorkPolicy.REPLACE,
                 saveRequest
         );
     }
@@ -61,6 +63,7 @@ import java.util.concurrent.TimeUnit;
                 return Result.failure();
             }
             Log.d(TAG, "DataSaveWorker: doWork finished");
+            scheduleDailySave(getApplicationContext());
             return Result.success();
         }
 
@@ -106,15 +109,6 @@ import java.util.concurrent.TimeUnit;
                 Log.e(TAG, "Database export failed: " + e.getMessage());
                 e.printStackTrace();
             }
-        }
-    }
-
-    public static void cancelDailySave(Context context) {
-        try {
-            WorkManager.getInstance(context).cancelUniqueWork(WORK_TAG);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error cancelling daily save: " + e.getMessage());
         }
     }
 }
