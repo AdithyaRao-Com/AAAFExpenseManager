@@ -12,6 +12,7 @@ import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import java.util.List;
 import java.util.UUID;
 
+/** @noinspection UnusedReturnValue*/
 public class FutureTransactionViewModel extends AndroidViewModel {
     private final FutureTransactionRepository repository;
     private final MutableLiveData<List<FutureTransaction>> futureTransactions = new MutableLiveData<>();
@@ -63,5 +64,9 @@ public class FutureTransactionViewModel extends AndroidViewModel {
 
     public void setRecurringSchedule(RecurringSchedule recurringSchedule) {
         repository.setRecurringSchedule(recurringSchedule);
+    }
+
+    public boolean applyFutureTransaction(FutureTransaction originalTransaction) {
+        return repository.applyFutureTransaction(originalTransaction);
     }
 }

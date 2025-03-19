@@ -6,4 +6,7 @@
         <item name="android:textSize">@dimen/large_text_size</item>
         <item name="android:padding">@dimen/default_padding</item>
     </style>
+    <style name="ToolbarTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

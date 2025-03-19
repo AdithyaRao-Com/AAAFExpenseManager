@@ -89,13 +89,13 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
     /** @noinspection deprecation*/
     @SuppressLint("UseCompatLoadingForDrawables")
-    private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, FutureTransaction transaction) {
-        holder.transactionNameTextView.setText(transaction.transactionName);
-        holder.transactionDateTextView.setText(transaction.getFormattedTransactionDate());
-        holder.amountTextView.setText(transaction.amountToIndianFormat());
-        holder.accountNameTextView.setText(transaction.accountName);
-        holder.categoryNameTextView.setText(transaction.category);
-        String transactionType = transaction.transactionType;
+    private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, FutureTransaction futureTransaction) {
+        holder.transactionNameTextView.setText(futureTransaction.transactionName);
+        holder.transactionDateTextView.setText(futureTransaction.getFormattedTransactionDate());
+        holder.amountTextView.setText(futureTransaction.amountToIndianFormat());
+        holder.accountNameTextView.setText(futureTransaction.accountName);
+        holder.categoryNameTextView.setText(futureTransaction.category);
+        String transactionType = futureTransaction.transactionType;
         int amountColor;
         if ("Income".equals(transactionType)) {
             amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
@@ -107,7 +107,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         holder.amountTextView.setTextColor(amountColor);
 
 
-        String transferInd = transaction.transferInd;
+        String transferInd = futureTransaction.transferInd;
         if ("Income".equals(transferInd)) {
             amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
         } else if ("Expense".equals(transferInd)) {
@@ -123,11 +123,12 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             if (actionMode != null) {
                 toggleSelection(holder, position);
             } else {
-// TODO - Open details of the recurring transaction so that it can be modified
+                Bundle args = new Bundle();
+                args.putParcelable("futureTransaction", futureTransaction);
+                NavHostFragment.findNavController(transactionFragment)
+                        .navigate(R.id.action_recurringTransactionFragment_to_updateFutureTransactionFragment, args);
             }
         });
-
-
         holder.itemView.setOnLongClickListener(v -> {
             if (actionMode == null) {
                 startActionMode();

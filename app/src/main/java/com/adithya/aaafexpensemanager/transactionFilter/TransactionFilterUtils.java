@@ -44,8 +44,13 @@ public final class TransactionFilterUtils {
         String TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY = " AND transaction_date BETWEEN ? AND ? ";
         if(transactionFilter.fromTransactionDate !=0){
             if(transactionFilter.toTransactionDate ==0){
-                transactionFilter.toTransactionDate = Integer.parseInt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                transactionFilter.toTransactionDate = Integer.parseInt(LocalDate.now().plusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             }
+            queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
+            opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
+            opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
+        } else if (transactionFilter.toTransactionDate !=0) {
+            transactionFilter.fromTransactionDate = Integer.parseInt(LocalDate.now().minusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
             queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
             opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
             opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));

@@ -166,6 +166,22 @@
             app:destination="@id/nav_create_recurring"
             app:popUpTo="@id/nav_create_recurring"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_recurringTransactionFragment_to_updateFutureTransactionFragment"
+            app:destination="@id/nav_update_future_transaction"
+            app:popUpTo="@id/nav_update_future_transaction"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_update_future_transaction"
+        android:name="com.adithya.aaafexpensemanager.futureTransaction.UpdateFutureTransactionFragment"
+        android:label="Update Future Transaction"
+        tools:layout="@layout/fragment_create_transaction">
+        <action
+            android:id="@+id/action_updateFutureTransactionFragment_to_recurringTransactionFragment"
+            app:destination="@id/nav_future_transactions"
+            app:popUpTo="@id/nav_future_transactions"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/nav_export_database"

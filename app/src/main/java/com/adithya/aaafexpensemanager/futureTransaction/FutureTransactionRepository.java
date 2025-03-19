@@ -355,4 +355,17 @@ public class FutureTransactionRepository {
             e.printStackTrace();
         }
     }
+
+    public boolean applyFutureTransaction(FutureTransaction originalTransaction) {
+        try{
+            originalTransaction.setTransactionLocalDate(LocalDate.now());
+            transactionRepository.addTransaction(originalTransaction.getTransaction());
+            deleteFutureTransaction(originalTransaction);
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

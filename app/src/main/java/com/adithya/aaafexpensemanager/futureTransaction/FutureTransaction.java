@@ -72,6 +72,9 @@ public class FutureTransaction implements Parcelable {
             return null;
         }
     }
+    public void setTransactionLocalDate(LocalDate transactionDate) {
+        this.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    }
 
     public String getFormattedTransactionDate() {
         LocalDate localDate = getTransactionLocalDate();

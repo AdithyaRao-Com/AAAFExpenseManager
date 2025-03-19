@@ -97,4 +97,5 @@
     <string name="auto_backup_enabled">Auto Backup Enabled</string>
     <string name="no_directory_selected">No directory selected</string>
     <string name="select_directory">Select Directory</string>
+    <string name="apply_transaction_now">Apply Transaction Now</string>
 </resources>
