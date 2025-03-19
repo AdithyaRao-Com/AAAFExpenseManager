@@ -36,11 +36,10 @@ import java.util.concurrent.TimeUnit;
                 .build();
 
         PeriodicWorkRequest saveRequest = new PeriodicWorkRequest.Builder(
-                DataSaveWorker.class, 1, TimeUnit.HOURS) // For debugging
+                DataSaveWorker.class, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .build();
         WorkManager.getInstance(context).cancelUniqueWork(WORK_TAG);
-        // Enqueue the new work request
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
                 WORK_TAG,
                 ExistingPeriodicWorkPolicy.KEEP,
