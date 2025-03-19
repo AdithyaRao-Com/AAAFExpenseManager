@@ -71,50 +71,40 @@ import java.util.concurrent.TimeUnit;
         }
 
         private void getDataToSave(Context context) {
-            SettingsRepository settingsRepository = new SettingsRepository((Application)
-                    context.getApplicationContext());
-            File file = settingsRepository.getDatabaseFile();
-            DatabaseExporter databaseExporter = new DatabaseExporter();
-            AutoBackUpSharedPrefs autoBackUpSharedPrefs = new AutoBackUpSharedPrefs(context);
-            if (autoBackUpSharedPrefs.getKeyIsAutoBackupEnabled()) {
-                String directory = autoBackUpSharedPrefs.getAutoBackupDirectory();
-                Uri uriDirectory = Uri.parse(directory);
-                String localDateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-                Log.d(TAG, "localDateString" + localDateString);
-                String fileName = "AAAF_Expense_Manager_Backup_AUTO_" +
-                        localDateString +
-                        ".zip";
+            autoBackupDatabaseEveryDay(context);
+        }
 
-                try {
-                    // Convert tree URI to document URI
+        private void autoBackupDatabaseEveryDay(Context context) {
+            try{
+                SettingsRepository settingsRepository = new SettingsRepository((Application)
+                        context.getApplicationContext());
+                File file = settingsRepository.getDatabaseFile();
+                DatabaseExporter databaseExporter = new DatabaseExporter();
+                AutoBackUpSharedPrefs autoBackUpSharedPrefs = new AutoBackUpSharedPrefs(context);
+                if (autoBackUpSharedPrefs.getKeyIsAutoBackupEnabled()) {
+                    String directory = autoBackUpSharedPrefs.getAutoBackupDirectory();
+                    Uri uriDirectory = Uri.parse(directory);
+                    String localDateString = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+                    String fileName = "AAAF_Expense_Manager_Backup_AUTO_" +
+                            localDateString +
+                            ".zip";
                     Uri documentUri = UriUtils.treeUriToDocumentUri(uriDirectory);
-
-                    if (documentUri != null) {
-
-                        // Create a DocumentFile for the directory
-                        DocumentFile dirDocFile = DocumentFile.fromTreeUri(context, documentUri);
-
-                        if (dirDocFile != null && dirDocFile.exists() && dirDocFile.isDirectory()) {
-                            // Create the new file
-                            DocumentFile newFile = dirDocFile.createFile("application/zip", fileName);
-
-                            if (newFile != null) {
-                                // Export the database using the new file's URI
-                                databaseExporter.exportDatabase(context, file, newFile.getUri());
-                            } else {
-                                Log.e(TAG, "Failed to create file: " + fileName);
-                            }
-                        } else {
-                            Log.e(TAG, "Directory not found or invalid: " + uriDirectory);
-                        }
-                    } else {
-                        Log.e(TAG, "Invalid tree uri: " + uriDirectory);
+                    DocumentFile dirDocFile = UriUtils.getValidDirectory(context, documentUri);
+                    if (!(dirDocFile != null && dirDocFile.exists() && dirDocFile.isDirectory())) {
+                        throw new RuntimeException("Error while getting directory. Directory URI is invalid" +
+                                " or directory does not exist" +
+                                " or URI is not a directory");
                     }
-
-                } catch (Exception e) {
-                    Log.e(TAG, "Database export failed: " + e.getMessage());
-                    e.printStackTrace();
+                    DocumentFile newFile = dirDocFile.createFile("application/zip", fileName);
+                    if (newFile == null) {
+                        throw new RuntimeException("Failed to create file: " + fileName);
+                    }
+                    databaseExporter.exportDatabase(context, file, newFile.getUri());
                 }
+            }
+            catch (Exception e) {
+                Log.e(TAG, "Database export failed: " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }

@@ -1,10 +1,14 @@
 package com.adithya.aaafexpensemanager.util;
 
+import android.content.Context;
 import android.net.Uri;
 import android.provider.DocumentsContract;
+import android.util.Log;
+
+import androidx.documentfile.provider.DocumentFile;
 
 public class UriUtils {
-
+    private static final String TAG = "UriUtils";
     /**
      * Adds a file name to a directory URI.
      *
@@ -91,5 +95,19 @@ public class UriUtils {
         } else {
             return null; // Not a tree URI
         }
+    }
+    public static DocumentFile getValidDirectory(Context context, Uri uriDirectory) {
+        Uri documentUri = UriUtils.treeUriToDocumentUri(uriDirectory);
+        if (documentUri == null) {
+            Log.e(TAG, "Invalid tree uri: " + uriDirectory);
+            return null;
+        }
+
+        DocumentFile dirDocFile = DocumentFile.fromTreeUri(context, documentUri);
+        if (dirDocFile == null || !dirDocFile.exists() || !dirDocFile.isDirectory()) {
+            Log.e(TAG, "Directory not found or invalid: " + uriDirectory);
+            return null;
+        }
+        return dirDocFile;
     }
 }
