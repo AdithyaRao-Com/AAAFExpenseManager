@@ -16,6 +16,11 @@ public class Currency implements Parcelable {
         this.conversionFactor = conversionFactor;
         this.primaryCurrencyName = primaryCurrencyName;
     }
+    public Currency(String currencyName, double conversionFactor) {
+        this.currencyName = currencyName;
+        this.isPrimary = false;
+        this.conversionFactor = conversionFactor;
+    }
 
     protected Currency(Parcel in) {
         currencyName = in.readString();

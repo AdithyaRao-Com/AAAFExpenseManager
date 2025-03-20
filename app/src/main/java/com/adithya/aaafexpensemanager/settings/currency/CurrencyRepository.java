@@ -61,7 +61,7 @@ public class CurrencyRepository {
             return null;
         }
     }
-    public void setPrimaryAccount(String currencyName){
+    public void setPrimaryCurrency(String currencyName){
         try {
             db.delete("primary_currency", null, null);
             ContentValues contentValuesPrimary = new ContentValues();
@@ -86,9 +86,24 @@ public class CurrencyRepository {
                 String[] selectionArgs = new String[]{currency.currencyName};
                 ContentValues values = new ContentValues();
                 double conversionFactor = currency.conversionFactor / primaryCurrency.conversionFactor;
-                values.put("conversion_factor", Math.round(conversionFactor*1000000)/100000);
+                values.put("conversion_factor", Math.round(conversionFactor*1000000)/1000000.0);
                 db.update("currency", values, selection, selectionArgs);
             }
+            primaryCurrency.conversionFactor = 1.0;
+            updateCurrency(primaryCurrency);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void updateCurrency(Currency currency) {
+        try{
+            String selection = "currency_name = ?";
+            String[] selectionArgs = new String[]{currency.currencyName};
+            ContentValues values = new ContentValues();
+            values.put("currency_name", currency.currencyName);
+            values.put("conversion_factor", Math.round(currency.conversionFactor*1000000)/1000000.0);
+            db.update("currency", values, selection, selectionArgs);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -100,13 +115,14 @@ public class CurrencyRepository {
         if(isRecordExists){
             throw new CurrencyExistsException(currency.currencyName);
         }
-        if(checkPrimaryCurrencyExists()){
+        if(!checkPrimaryCurrencyExists()){
             currency.isPrimary =true;
             currency.conversionFactor = 1.0;
+            setPrimaryCurrency(currency.currencyName);
         }
         ContentValues values = new ContentValues();
         values.put("currency_name", currency.currencyName);
-        values.put("conversion_factor", Math.round(currency.conversionFactor*1000000)/100000);
+        values.put("conversion_factor", Math.round(currency.conversionFactor*1000000)/1000000.0);
         long result = db.insert("currency", null, values);
     }
 
@@ -131,6 +147,7 @@ public class CurrencyRepository {
 
     public void deleteAll(){
         int rowsAffected = db.delete("currency", null, null);
+        rowsAffected = db.delete("primary_currency", null, null);
     }
 
     public List<Currency> filterCurrencies(String searchText) {
@@ -147,5 +164,18 @@ public class CurrencyRepository {
         }
         cursor.close();
         return filteredCurrencies;
+    }
+
+    public String getPrimaryCurrency() {
+        try{
+            Cursor cursor = db.query("primary_currency", null, null, null, null, null, null);
+            if (cursor.moveToFirst()) {
+                return cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_name"));
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return "N/A";
     }
 }

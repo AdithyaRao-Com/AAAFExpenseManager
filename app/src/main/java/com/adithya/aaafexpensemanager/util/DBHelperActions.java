@@ -8,6 +8,7 @@ public class DBHelperActions {
         db.execSQL("DROP VIEW IF EXISTS SplitTransfers");
         db.execSQL("DROP VIEW IF EXISTS accounts_all_view");
         db.execSQL("DROP VIEW IF EXISTS RecurringScheduleNextDate");
+        db.execSQL("DROP VIEW IF EXISTS currency_all_details");
         // Drop the table if it exists
         db.execSQL("DROP TABLE IF EXISTS transactions");
         db.execSQL("DROP TABLE IF EXISTS accounts");
@@ -127,6 +128,7 @@ public class DBHelperActions {
                 "currency_name TEXT PRIMARY KEY, " +
                 "conversion_factor REAL)";
         db.execSQL(CREATE_CURRENCY_TABLE);
+        currencyAllDetails(db);
     }
     private static void currencyAllDetails(SQLiteDatabase db){
         db.execSQL("CREATE VIEW IF NOT EXISTS currency_all_details AS " +
@@ -136,7 +138,7 @@ public class DBHelperActions {
                 "pc1.primary_currency_name, " +
                 "CASE WHEN c1.currency_name = pc1.primary_currency_name THEN 1 ELSE 0 END AS is_primary " +
                 "FROM currency c1 " +
-                "CROSS JOIN primary_currency pc1 " +
+                "LEFT JOIN primary_currency pc1 " +
                 "ON (1=1)");
     }
     private static void recurringScheduleNextDate(SQLiteDatabase db) {

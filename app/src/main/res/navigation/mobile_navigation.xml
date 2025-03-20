@@ -106,6 +106,11 @@
             app:destination="@id/nav_autobackup_dir_sel"
             app:popUpTo="@id/nav_autobackup_dir_sel"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_currencyHomeFragment"
+            app:destination="@id/nav_currency_home"
+            app:popUpTo="@id/nav_currency_home"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/nav_account_type"
@@ -242,5 +247,54 @@
         android:name="com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupDirectorySelectionFragment"
         android:label="Auto Backup"
         tools:layout="@layout/fragment_setting_autobackup_directory_selection">
+    </fragment>
+    <fragment
+        android:id="@+id/nav_currency"
+        android:name="com.adithya.aaafexpensemanager.settings.currency.CurrencyFragment"
+        android:label="Currency"
+        tools:layout="@layout/fragment_list_currency">
+        <action
+            android:id="@+id/action_currencyFragment_to_createCurrencyFragment"
+            app:destination="@id/nav_create_currency"
+            app:popUpTo="@id/nav_create_currency"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_currency"
+        android:name="com.adithya.aaafexpensemanager.settings.currency.CreateCurrencyFragment"
+        android:label="Create Currency"
+        tools:layout="@layout/fragment_create_currency">
+        <action
+            android:id="@+id/action_createCurrencyFragment_to_currencyFragment"
+            app:destination="@id/nav_currency"
+            app:popUpTo="@id/nav_currency"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_currency_home"
+        android:name="com.adithya.aaafexpensemanager.settings.currency.CurrencyHomeFragment"
+        android:label="Currency Home"
+        tools:layout="@layout/fragment_currency_home">
+        <action
+            android:id="@+id/action_currencyHomeFragment_to_currencyFragment"
+            app:destination="@id/nav_currency"
+            app:popUpTo="@id/nav_currency"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_currencyHomeFragment_to_createPrimaryCurrencyFragment"
+            app:destination="@id/nav_create_primary_currency"
+            app:popUpTo="@id/nav_create_primary_currency"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_create_primary_currency"
+        android:name="com.adithya.aaafexpensemanager.settings.currency.CreatePrimaryCurrencyFragment"
+        android:label="Set Primary Currency"
+        tools:layout="@layout/fragment_create_primary_currency">
+        <action
+            android:id="@+id/action_createPrimaryCurrencyFragment_to_currencyHomeFragment"
+            app:destination="@id/nav_currency_home"
+            app:popUpTo="@id/nav_currency_home"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

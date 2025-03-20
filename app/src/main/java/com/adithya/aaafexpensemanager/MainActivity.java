@@ -79,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             else if (item.getItemId() == R.id.nav_reports) {
                 navController.navigate(R.id.nav_reports);
             }
+            else if (item.getItemId() == R.id.nav_currency) {
+                navController.navigate(R.id.nav_currency);
+            }
             drawer.close();
             return true;
         });
@@ -99,6 +102,9 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             }
             else if(destination.getId() == R.id.nav_recurring){
                 fabDestination = R.id.nav_create_recurring;
+            }
+            else if(destination.getId() == R.id.nav_currency){
+                fabDestination = R.id.nav_create_currency;
             }
             else{
                 fabDestination = 0;

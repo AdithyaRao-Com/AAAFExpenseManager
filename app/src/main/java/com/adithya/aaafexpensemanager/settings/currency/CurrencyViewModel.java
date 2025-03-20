@@ -11,9 +11,6 @@ import com.adithya.aaafexpensemanager.settings.currency.exception.CurrencyExists
 import java.util.List;
 
 public class CurrencyViewModel extends AndroidViewModel {
-    // TODO - Create fragment for display currencies
-    // TODO - Create fragment for adding currencies
-    // TODO - Create fragment for changing primary currency
     private final CurrencyRepository repository;
     private final LiveData<List<Currency>> currencies;
 
@@ -35,7 +32,7 @@ public class CurrencyViewModel extends AndroidViewModel {
 
     public void deleteCurrency(Currency currency) {
         repository.deleteCurrency(currency);
-        loadCurrencies(); // Reload after deleting
+        loadCurrencies();
     }
 
     private void loadCurrencies() {
@@ -47,7 +44,21 @@ public class CurrencyViewModel extends AndroidViewModel {
         ((MutableLiveData<List<Currency>>) currencies).setValue(filteredCurrencies);
     }
     public void setPrimaryCurrency(String currencyName) {
-        repository.setPrimaryAccount(currencyName);
+        repository.setPrimaryCurrency(currencyName);
+        loadCurrencies();
+    }
+    public String getPrimaryCurrency() {
+        return repository.getPrimaryCurrency();
+    }
+
+
+    public void updateCurrency(Currency originalCurrency) throws CurrencyExistsException {
+        repository.addCurrency(originalCurrency);
+        loadCurrencies();
+    }
+
+    public void deleteAll() {
+        repository.deleteAll();
         loadCurrencies();
     }
 }

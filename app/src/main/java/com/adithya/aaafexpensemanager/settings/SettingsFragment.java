@@ -23,6 +23,7 @@ public class SettingsFragment extends Fragment {
     private TextView futureTransactionsTextView;
     private TextView importCSVTextView;
     private TextView autoBackupTextView;
+    private TextView currenciesTextView;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class SettingsFragment extends Fragment {
         importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importCSVFragment));
         autoBackupTextView = view.findViewById(R.id.autobackup_text_view);
         autoBackupTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_autoBackupFragment));
+        currenciesTextView = view.findViewById(R.id.currencies_text_view);
+        currenciesTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_currencyHomeFragment));
         return view;
     }
 

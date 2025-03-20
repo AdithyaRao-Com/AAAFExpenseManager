@@ -9,4 +9,7 @@
     <style name="ToolbarTitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">16sp</item>
     </style>
+    <declare-styleable name="DecimalLimitEditText">
+        <attr name="decimalPlaces" format="integer" />
+    </declare-styleable>
 </resources>
