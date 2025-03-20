@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.category;
+package com.adithya.aaafexpensemanager.settings.category;
 
 import android.app.Application;
 import android.content.ContentValues;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.adithya.aaafexpensemanager.account.AccountRepository;
-import com.adithya.aaafexpensemanager.category.exception.CategoryExistsException;
+import com.adithya.aaafexpensemanager.settings.category.exception.CategoryExistsException;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;

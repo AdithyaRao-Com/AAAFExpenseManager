@@ -19,6 +19,8 @@ public class DBHelperActions {
         db.execSQL("DROP TABLE IF EXISTS setting_pairs");
         db.execSQL("DROP TABLE IF EXISTS batch_run_log");
         db.execSQL("DROP TABLE IF EXISTS batch_run_detail_log");
+        db.execSQL("DROP TABLE IF EXISTS primary_currency");
+        db.execSQL("DROP TABLE IF EXISTS currency");
         Log.d("Database Helper","Dropped tables");
         Log.d("DatabaseHelper","Recreating tables");
     }
@@ -118,6 +120,24 @@ public class DBHelperActions {
                 "log_text       TEXT, " +
                 "log_date       INTEGER )";
         db.execSQL(BATCH_RUN_DETAIL_LOG);
+        String CREATE_PRIMARY_CURRENCY_TABLE = "CREATE TABLE primary_currency (" +
+                "primary_currency_name TEXT PRIMARY KEY)";
+        db.execSQL(CREATE_PRIMARY_CURRENCY_TABLE);
+        String CREATE_CURRENCY_TABLE = "CREATE TABLE currency (" +
+                "currency_name TEXT PRIMARY KEY, " +
+                "conversion_factor REAL)";
+        db.execSQL(CREATE_CURRENCY_TABLE);
+    }
+    private static void currencyAllDetails(SQLiteDatabase db){
+        db.execSQL("CREATE VIEW IF NOT EXISTS currency_all_details AS " +
+                "SELECT " +
+                "c1.currency_name," +
+                "c1.conversion_factor," +
+                "pc1.primary_currency_name, " +
+                "CASE WHEN c1.currency_name = pc1.primary_currency_name THEN 1 ELSE 0 END AS is_primary " +
+                "FROM currency c1 " +
+                "CROSS JOIN primary_currency pc1 " +
+                "ON (1=1)");
     }
     private static void recurringScheduleNextDate(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS RecurringScheduleNextDate AS " +  // Use IF NOT EXISTS for upgrades

@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.category;
+package com.adithya.aaafexpensemanager.settings.category;
 
 import android.os.Parcel;
 import android.os.Parcelable;

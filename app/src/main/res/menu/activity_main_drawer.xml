@@ -10,9 +10,6 @@
             android:id="@+id/nav_transaction"
             android:title="@string/menu_transaction" />
         <item
-            android:id="@+id/nav_category"
-            android:title="@string/menu_category" />
-        <item
             android:id="@+id/nav_recurring"
             android:title="@string/recurring_schedule" />
         <item

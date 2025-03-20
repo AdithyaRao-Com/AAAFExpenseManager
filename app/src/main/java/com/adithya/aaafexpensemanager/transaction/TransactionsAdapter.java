@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
-import com.adithya.aaafexpensemanager.category.CategoryViewModel;
+import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.EditTextDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.LookupDialog;

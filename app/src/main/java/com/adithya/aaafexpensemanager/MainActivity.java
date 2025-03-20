@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_account,
                 R.id.nav_transaction,
-                R.id.nav_category,
                 R.id.nav_recurring,
                 R.id.nav_settings,
                 R.id.nav_reports)
@@ -61,11 +60,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             }
             else if(item.getItemId() == R.id.nav_transaction){
                 navController.navigate(R.id.nav_transaction);
-
             }
-            else if(item.getItemId() == R.id.nav_category){
-                navController.navigate(R.id.nav_category);
-            } else if (item.getItemId() == R.id.nav_recurring) {
+            else if (item.getItemId() == R.id.nav_recurring) {
                 navController.navigate(R.id.nav_recurring);
             }
             else if (item.getItemId() == R.id.nav_settings) {

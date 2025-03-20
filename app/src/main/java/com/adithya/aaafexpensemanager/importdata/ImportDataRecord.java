@@ -1,7 +1,7 @@
 package com.adithya.aaafexpensemanager.importdata;
 
 import com.adithya.aaafexpensemanager.account.Account;
-import com.adithya.aaafexpensemanager.category.Category;
+import com.adithya.aaafexpensemanager.settings.category.Category;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 
 import org.apache.commons.csv.CSVRecord;

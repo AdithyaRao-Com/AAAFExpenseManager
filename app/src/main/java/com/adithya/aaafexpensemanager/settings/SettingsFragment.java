@@ -17,6 +17,7 @@ import com.adithya.aaafexpensemanager.R;
 public class SettingsFragment extends Fragment {
     //TODO - Export CSV Feature
     private TextView accountTypeTextView;
+    private TextView categoriesTextView;
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
     private TextView futureTransactionsTextView;
@@ -31,6 +32,8 @@ public class SettingsFragment extends Fragment {
             // Navigate to AccountTypeFragment
             Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_accountTypeFragment);
         });
+        categoriesTextView = view.findViewById(R.id.categories_text_view);
+        categoriesTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_categoryFragment));
         exportDatabaseTextView = view.findViewById(R.id.export_database_text_view);
         exportDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_exportDatabaseFragment));
         importDatabaseTextView = view.findViewById(R.id.import_database_text_view);

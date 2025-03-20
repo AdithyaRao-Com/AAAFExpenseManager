@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.category;
+package com.adithya.aaafexpensemanager.settings.category;
 
 import android.app.Application;
 
@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.adithya.aaafexpensemanager.category.exception.CategoryExistsException;
+import com.adithya.aaafexpensemanager.settings.category.exception.CategoryExistsException;
 
 import java.util.List;
 

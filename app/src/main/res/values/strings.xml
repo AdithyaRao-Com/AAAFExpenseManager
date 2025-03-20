@@ -98,4 +98,5 @@
     <string name="no_directory_selected">No directory selected</string>
     <string name="select_directory">Select Directory</string>
     <string name="apply_transaction_now">Apply Transaction Now</string>
+    <string name="manage_categories">Manage Categories</string>
 </resources>

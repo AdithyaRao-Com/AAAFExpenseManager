@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_category"
-        android:name="com.adithya.aaafexpensemanager.category.CategoryFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.category.CategoryFragment"
         android:label="@string/menu_category"
         tools:layout="@layout/fragment_list_category">
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_category"
-        android:name="com.adithya.aaafexpensemanager.category.CreateCategoryFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.category.CreateCategoryFragment"
         android:label="@string/menu_create_category"
         tools:layout="@layout/fragment_create_category">
         <action
@@ -75,6 +75,11 @@
             android:id="@+id/action_settingsFragment_to_accountTypeFragment"
             app:destination="@id/nav_account_type"
             app:popUpTo="@id/nav_account_type"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_categoryFragment"
+            app:destination="@id/nav_category"
+            app:popUpTo="@id/nav_category"
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_settingsFragment_to_exportDatabaseFragment"

@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.category.exception;
+package com.adithya.aaafexpensemanager.settings.category.exception;
 
 /** @noinspection unused*/
 public class CategoryExistsException extends Exception {

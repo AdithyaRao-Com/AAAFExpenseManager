@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.category;
+package com.adithya.aaafexpensemanager.settings.category;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

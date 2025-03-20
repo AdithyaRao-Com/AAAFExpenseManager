@@ -8,8 +8,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -17,7 +15,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
-import com.adithya.aaafexpensemanager.category.CategoryViewModel;
+import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
