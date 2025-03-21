@@ -80,22 +80,30 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     style="@style/LargeText"/>
-
             </com.google.android.material.textfield.TextInputLayout>
-
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="@string/currency_code">
+                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                    android:id="@+id/currencyCodeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    style="@style/LargeText"/>
+            </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_tags_hash_separated">
-
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/accountTagsEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     style="@style/LargeText"/>
-
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

@@ -63,6 +63,7 @@ public class AccountRepository {
         values.put("account_type", account.accountType);
         values.put("account_tags", account.accountTags);
         values.put("display_order", account.displayOrder);
+        values.put("currency_code", account.currencyCode);
         if(isNew){
             values.put("account_name", account.accountName);
             values.put("account_balance", Math.round(account.accountBalance*100.0)/100.0);
@@ -105,7 +106,8 @@ public class AccountRepository {
         double balance = cursor.getDouble(cursor.getColumnIndexOrThrow("account_balance"));
         String tags = cursor.getString(cursor.getColumnIndexOrThrow("account_tags"));
         int displayOrder = cursor.getInt(cursor.getColumnIndexOrThrow("display_order"));
-        return new Account(accountName, type, balance, tags,displayOrder);
+        String currencyCode = cursor.getString(cursor.getColumnIndexOrThrow("currency_code"));
+        return new Account(accountName, type, balance, tags,displayOrder,currencyCode);
     }
     public void deleteAll(){
         //noinspection unused

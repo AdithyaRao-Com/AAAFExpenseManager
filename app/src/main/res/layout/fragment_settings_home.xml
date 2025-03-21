@@ -30,12 +30,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/manage_currencies"
-        android:visibility="gone"
         style="@style/LargeText"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:visibility="gone"
         android:background="@color/separator_color"/>
     <TextView
         android:id="@+id/export_database_text_view"

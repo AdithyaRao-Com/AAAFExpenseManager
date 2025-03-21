@@ -108,12 +108,13 @@ public class ImportDataRecord {
         return new Category(this.category,this.categoryGroupName);
     }
 
-    public Account toAccount(){
+    public Account toAccount(String defaultCurrency){
         return new Account(this.account,
                 "Cash",
                 0.0,
                 "",
-                999);
+                999,
+                defaultCurrency);
     }
 }
 

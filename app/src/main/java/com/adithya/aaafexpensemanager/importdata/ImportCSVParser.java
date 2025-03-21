@@ -9,6 +9,8 @@ import com.adithya.aaafexpensemanager.settings.category.Category;
 import com.adithya.aaafexpensemanager.settings.category.CategoryRepository;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionRepository;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeRepository;
+import com.adithya.aaafexpensemanager.settings.currency.Currency;
+import com.adithya.aaafexpensemanager.settings.currency.CurrencyRepository;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
 
@@ -33,10 +35,21 @@ public class ImportCSVParser {
         TransactionRepository transactionRepository = new TransactionRepository((Application) context.getApplicationContext());
         RecentTransactionRepository recentTransactionRepository = new RecentTransactionRepository((Application) context.getApplicationContext());
         AccountTypeRepository accountTypeRepository = new AccountTypeRepository((Application) context.getApplicationContext());
+        CurrencyRepository currencyRepository = new CurrencyRepository((Application) context.getApplicationContext());
         accountRepository.deleteAll();
         categoryRepository.deleteAll();
         transactionRepository.deleteAll();
         recentTransactionRepository.deleteAll();
+        if(!currencyRepository.checkPrimaryCurrencyExists()){
+            try{
+                currencyRepository.addCurrency(new Currency("INR",1.0d));
+                currencyRepository.setPrimaryCurrency("INR");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        String defaultCurrency = currencyRepository.getPrimaryCurrency();
         transactionRepository.recordCount = 0;
         //noinspection deprecation
         try(InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
@@ -45,7 +58,7 @@ public class ImportCSVParser {
             List<CSVRecord> records = csvParser.getRecords();
             records.stream()
                     .map(ImportDataRecord::new)
-                    .map(ImportDataRecord::toAccount)
+                    .map(importRecord -> importRecord.toAccount(defaultCurrency))
                     .distinct()
                     .forEach(accountRepository::createAccount);
             Set<Category> uniqueValues = new HashSet<>();

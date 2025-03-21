@@ -14,13 +14,15 @@ public class Account implements Parcelable {
     public double accountBalance;
     public String accountTags;
     public int displayOrder;
+    public String currencyCode;
 
-    public Account(String accountName, String accountType, double accountBalance, String accountTags,int displayOrder) {
+    public Account(String accountName, String accountType, double accountBalance, String accountTags,int displayOrder,String currencyCode) {
         this.accountName = accountName;
         this.accountType = accountType;
         this.accountBalance = accountBalance;
         this.accountTags = accountTags;
         this.displayOrder = displayOrder;
+        this.currencyCode = currencyCode;
     }
 
     protected Account(Parcel in) {
@@ -29,6 +31,7 @@ public class Account implements Parcelable {
         accountBalance = in.readDouble();
         accountTags = in.readString();
         displayOrder = in.readInt();
+        currencyCode = in.readString();
     }
 
     @Override
@@ -43,6 +46,7 @@ public class Account implements Parcelable {
         dest.writeDouble(accountBalance);
         dest.writeString(accountTags);
         dest.writeInt(displayOrder);
+        dest.writeString(currencyCode);
     }
 
     public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<>() {
@@ -71,9 +75,9 @@ public class Account implements Parcelable {
     }
 
     public String accountBalanceToIndianFormat(){
-        return CurrencyFormatter.formatIndianStyle(accountBalance,"INR");
+        return CurrencyFormatter.formatIndianStyle(accountBalance,currencyCode);
     }
     public String accountBalanceToStandardFormat(){
-        return CurrencyFormatter.formatStandardStyle(accountBalance,"INR");
+        return CurrencyFormatter.formatStandardStyle(accountBalance,currencyCode);
     }
 }

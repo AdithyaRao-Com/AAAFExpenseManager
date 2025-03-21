@@ -23,6 +23,8 @@ import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
+import com.adithya.aaafexpensemanager.settings.currency.Currency;
+import com.adithya.aaafexpensemanager.settings.currency.CurrencyViewModel;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,6 +41,7 @@ public class CreateAccountFragment extends Fragment {
     private FloatingActionButton  createAccountButton;
     private LookupEditText accountTypeSpinner;
     private EditText displayOrderEditText;
+    private LookupEditText currencyCodeEditText;
     CheckBox updateBalanceCheckBox;
     private AccountViewModel viewModel;
     private boolean isEditing = false;
@@ -56,6 +59,14 @@ public class CreateAccountFragment extends Fragment {
         AccountTypeViewModel accountTypeViewModel = new ViewModelProvider(this).get(AccountTypeViewModel.class);
         List<String> accountTypes = accountTypeViewModel.getAccountTypes().stream().map(accountType -> accountType.accountType).collect(Collectors.toList());
         accountTypeSpinner.setItems(accountTypes);
+        CurrencyViewModel currencyViewModel = new ViewModelProvider(this).get(CurrencyViewModel.class);
+        List<String> currencies = currencyViewModel
+                .getCurrencies()
+                .getValue()
+                .stream()
+                .map(curr -> curr.currencyName)
+                .toList();
+        currencyCodeEditText.setItems(currencies);
         // Check for arguments (if we're viewing details)
         Bundle args = getArguments();
         getArgumentsAndSetFields(args);
@@ -91,6 +102,10 @@ public class CreateAccountFragment extends Fragment {
                 displayOrderEditText.setError("Invalid display order");
                 return;
             }
+            String currencyCode = currencyCodeEditText.getText().toString();
+            if(currencyCode.isBlank()){
+                currencyCode = currencyViewModel.getPrimaryCurrency();
+            }
             double balance;
             try {
                 balance = Double.parseDouble(balanceStr);
@@ -98,7 +113,7 @@ public class CreateAccountFragment extends Fragment {
                 accountBalanceEditText.setError("Invalid account balance");
                 return;
             }
-            Account account = new Account(name, type, balance, tags,displayOrder);
+            Account account = new Account(name, type, balance, tags,displayOrder,currencyCode);
             if (isEditing) {
                 originalAccount = viewModel.getAccountByName(originalAccount.accountName);
                 double difference = balance - originalAccount.accountBalance;
@@ -131,6 +146,7 @@ public class CreateAccountFragment extends Fragment {
                 accountBalanceEditText.setText("0"); // Reset balance
                 accountTagsEditText.setText("");
                 displayOrderEditText.setText("0");
+                currencyCodeEditText.setText("");
                 Snackbar.make(this.getView(), "Account created successfully", Snackbar.LENGTH_SHORT).show();
             }
             Navigation.findNavController(v).navigate(R.id.nav_account);
@@ -151,11 +167,8 @@ public class CreateAccountFragment extends Fragment {
             accountTagsEditText.setText(originalAccount.accountTags);
             accountTypeSpinner.setText(originalAccount.accountType);
             displayOrderEditText.setText(String.valueOf(originalAccount.displayOrder));
-            accountNameEditText.setEnabled(true);
-            accountTypeSpinner.setEnabled(true);
-            accountTagsEditText.setEnabled(true);
+            currencyCodeEditText.setText(originalAccount.currencyCode);
             accountBalanceEditText.setEnabled(false);
-            displayOrderEditText.setEnabled(true);
         } else {
             isEditing=false;
             accountBalanceEditText.setText("0");
@@ -172,6 +185,7 @@ public class CreateAccountFragment extends Fragment {
         createAccountButton = view.findViewById(R.id.createAccountFab);
         accountTypeSpinner = view.findViewById(R.id.accountTypeSpinner);
         displayOrderEditText = view.findViewById(R.id.displayOrder);
+        currencyCodeEditText = view.findViewById(R.id.currencyCodeEditText);
     }
 
     private void validateAccountTags(){
