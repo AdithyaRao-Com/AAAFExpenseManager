@@ -23,7 +23,6 @@ import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
-import com.adithya.aaafexpensemanager.settings.currency.Currency;
 import com.adithya.aaafexpensemanager.settings.currency.CurrencyViewModel;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
