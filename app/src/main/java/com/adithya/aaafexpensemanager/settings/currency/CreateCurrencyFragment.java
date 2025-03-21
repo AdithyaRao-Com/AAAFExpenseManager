@@ -74,7 +74,7 @@ public class CreateCurrencyFragment extends Fragment {
                     return;
                 }
                 try{
-                    conversionFactor = (double) Math.round(Double.parseDouble(conversionFactorString) * 1000000) /1000000;
+                    conversionFactor = (double) Math.round(Double.parseDouble(conversionFactorString) * 1000000.0) /1000000.0;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

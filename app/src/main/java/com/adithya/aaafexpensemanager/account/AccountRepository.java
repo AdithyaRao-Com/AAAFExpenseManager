@@ -65,7 +65,7 @@ public class AccountRepository {
         values.put("display_order", account.displayOrder);
         if(isNew){
             values.put("account_name", account.accountName);
-            values.put("account_balance", Math.round(account.accountBalance*100)/100);
+            values.put("account_balance", Math.round(account.accountBalance*100.0)/100.0);
         }
         return values;
     }
@@ -81,7 +81,7 @@ public class AccountRepository {
     public void updateAccountBalance(String accountName, double newBalance) {
         try {
             ContentValues values = new ContentValues();
-            values.put("account_balance", Math.round(newBalance*100)/100);
+            values.put("account_balance", Math.round(newBalance*100.0)/100.0);
             db.update("accounts", values, "account_name = ?", new String[]{accountName});
         } catch (Exception ignored) {
         }

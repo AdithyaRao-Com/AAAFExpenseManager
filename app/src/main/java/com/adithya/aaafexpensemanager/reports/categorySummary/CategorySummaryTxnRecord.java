@@ -30,8 +30,8 @@ public class CategorySummaryTxnRecord {
         this.amount = amount;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.pct = (double) Math.round(pct * 100.0)/100;
-        this.totalAmount = (double) Math.round(totalAmount * 100.0)/100;
+        this.pct = (double) Math.round(pct * 100.0)/100.0;
+        this.totalAmount = (double) Math.round(totalAmount * 100.0)/100.0;
     }
 
     public CategorySummaryTxnRecord(String category, LocalDate startDate, LocalDate endDate) {

@@ -83,7 +83,7 @@ public class RecentTransactionRepository {
             values.put("transaction_type", recentTransaction.transactionType);
             values.put("category", recentTransaction.category);
             values.put("notes", recentTransaction.notes);
-            values.put("amount", Math.round(recentTransaction.amount*100)/100);
+            values.put("amount", Math.round(recentTransaction.amount*100.0)/100.0);
             values.put("account_name", recentTransaction.accountName);
             values.put("to_account_name", recentTransaction.toAccountName);
             values.put("create_date", recentTransaction.createDateTime);

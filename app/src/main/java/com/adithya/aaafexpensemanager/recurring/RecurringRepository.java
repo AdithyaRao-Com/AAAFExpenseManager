@@ -168,7 +168,7 @@ public class RecurringRepository {
         values.put("transfer_ind", recurringSchedule.transactionType);
         values.put("category", recurringSchedule.category);
         values.put("notes", recurringSchedule.notes);
-        values.put("amount", Math.round(recurringSchedule.amount*100)/100);
+        values.put("amount", Math.round(recurringSchedule.amount*100.0)/100.0);
         values.put("account_name", recurringSchedule.accountName);
         values.put("to_account_name", recurringSchedule.toAccountName);
         if(operationType.equals(INSERTS)){

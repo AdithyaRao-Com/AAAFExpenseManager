@@ -31,7 +31,7 @@ public class CategorySummaryRepository {
         var categorySummaryTxnRecordHashMap = new HashMap<Integer, CategorySummaryTxnRecord>();
         double totalAmount = 0.0;
         for(Transaction transaction : transactions){
-            totalAmount = totalAmount + ((double) Math.round(transaction.amount * 100) /100);
+            totalAmount = totalAmount + ((double) Math.round(transaction.amount * 100.0) /100.0);
         }
         for(Transaction transaction : transactions){
             var startDateLocalDate = timePeriod.truncateToStart(transaction.getTransactionLocalDate());
@@ -42,9 +42,9 @@ public class CategorySummaryRepository {
             var categorySummaryTxnRecord = categorySummaryTxnRecordHashMap.get(categorySummaryHashCode);
             double tempAmount;
             if(transaction.transactionType.equals("Income")){
-                tempAmount = (double) Math.round(transaction.amount * 100) /100;
+                tempAmount = (double) Math.round(transaction.amount * 100.0) /100.0;
             }else{
-                tempAmount = (double) Math.round(-1*transaction.amount * 100) /100;
+                tempAmount = (double) Math.round(-1*transaction.amount * 100.0) /100.0;
             }
             if(categorySummaryTxnRecord==null){
                 categorySummaryTxnRecord =  new CategorySummaryTxnRecord(
@@ -52,12 +52,12 @@ public class CategorySummaryRepository {
                         tempAmount,
                         timePeriod.truncateToStart(transaction.getTransactionLocalDate()),
                         timePeriod.truncateToEnd(transaction.getTransactionLocalDate()),
-                        (double) Math.round(tempAmount * 100 /totalAmount * 100) /100,
+                        (double) Math.round(tempAmount * 100 /totalAmount * 100.0) /100.0,
                         totalAmount);
             }
             else {
                 categorySummaryTxnRecord.amount += tempAmount;
-                categorySummaryTxnRecord.pct = (double) Math.round(Math.abs(categorySummaryTxnRecord.amount) * 100 /totalAmount * 100) /100;
+                categorySummaryTxnRecord.pct = (double) Math.round(Math.abs(categorySummaryTxnRecord.amount) * 100.0 /totalAmount * 100.0) /100.0;
                 categorySummaryTxnRecord.totalAmount = totalAmount;
             }
             categorySummaryTxnRecordHashMap.put(categorySummaryHashCode,categorySummaryTxnRecord);

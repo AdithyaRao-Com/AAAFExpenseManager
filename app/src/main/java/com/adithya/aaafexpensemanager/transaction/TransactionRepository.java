@@ -145,7 +145,7 @@ public class TransactionRepository {
         values.put("transfer_ind", transaction.transactionType);
         values.put("category", transaction.category);
         values.put("notes", transaction.notes);
-        values.put("amount", Math.round(transaction.amount*100)/100);
+        values.put("amount", Math.round(transaction.amount*100.0)/100.0);
         values.put("account_name", transaction.accountName);
         values.put("to_account_name", transaction.toAccountName);
         values.put("last_update_date", transaction.lastUpdateDateTime);

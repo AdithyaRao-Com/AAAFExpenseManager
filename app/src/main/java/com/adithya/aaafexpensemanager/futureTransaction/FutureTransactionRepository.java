@@ -172,7 +172,7 @@ public class FutureTransactionRepository {
         values.put("transfer_ind", futureTransaction.transactionType);
         values.put("category", futureTransaction.category);
         values.put("notes", futureTransaction.notes);
-        values.put("amount", Math.round(futureTransaction.amount*100)/100);
+        values.put("amount", Math.round(futureTransaction.amount*100.0)/100.0);
         values.put("account_name", futureTransaction.accountName);
         values.put("to_account_name", futureTransaction.toAccountName);
         if(operationType.equals(INSERTS)){

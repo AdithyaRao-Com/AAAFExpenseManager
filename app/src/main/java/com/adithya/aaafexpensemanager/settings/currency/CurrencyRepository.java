@@ -86,7 +86,7 @@ public class CurrencyRepository {
                 String[] selectionArgs = new String[]{currency.currencyName};
                 ContentValues values = new ContentValues();
                 double conversionFactor = currency.conversionFactor / primaryCurrency.conversionFactor;
-                values.put("conversion_factor", Math.round(conversionFactor*1000000)/1000000.0);
+                values.put("conversion_factor", Math.round(conversionFactor*1000000.0)/1000000.0);
                 db.update("currency", values, selection, selectionArgs);
             }
             primaryCurrency.conversionFactor = 1.0;
@@ -102,7 +102,7 @@ public class CurrencyRepository {
             String[] selectionArgs = new String[]{currency.currencyName};
             ContentValues values = new ContentValues();
             values.put("currency_name", currency.currencyName);
-            values.put("conversion_factor", Math.round(currency.conversionFactor*1000000)/1000000.0);
+            values.put("conversion_factor", Math.round(currency.conversionFactor*1000000.0)/1000000.0);
             db.update("currency", values, selection, selectionArgs);
         }
         catch (Exception e){
@@ -122,7 +122,7 @@ public class CurrencyRepository {
         }
         ContentValues values = new ContentValues();
         values.put("currency_name", currency.currencyName);
-        values.put("conversion_factor", Math.round(currency.conversionFactor*1000000)/1000000.0);
+        values.put("conversion_factor", Math.round(currency.conversionFactor*1000000.0)/1000000.0);
         long result = db.insert("currency", null, values);
     }
 
