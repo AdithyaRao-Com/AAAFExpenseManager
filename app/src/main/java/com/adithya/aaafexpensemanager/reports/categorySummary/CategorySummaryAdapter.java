@@ -8,9 +8,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
+
+import java.util.List;
 
 public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummaryAdapter.ViewHolder> {
     private List<CategorySummaryTxnRecord> records;

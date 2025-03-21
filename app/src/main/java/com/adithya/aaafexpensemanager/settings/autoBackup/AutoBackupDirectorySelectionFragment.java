@@ -1,7 +1,5 @@
 package com.adithya.aaafexpensemanager.settings.autoBackup;
 
-import com.adithya.aaafexpensemanager.R;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +19,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import com.adithya.aaafexpensemanager.R;
 
 /** @noinspection FieldCanBeLocal*/
 public class AutoBackupDirectorySelectionFragment extends Fragment {

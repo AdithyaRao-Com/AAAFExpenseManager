@@ -21,10 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
-import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.EditTextDialog;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.LookupDialog;
+import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.util.AppConstants;
 import com.google.android.material.snackbar.Snackbar;

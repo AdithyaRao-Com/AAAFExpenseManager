@@ -1,7 +1,5 @@
 package com.adithya.aaafexpensemanager.settings.autoBackup;
 
-import androidx.annotation.NonNull;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

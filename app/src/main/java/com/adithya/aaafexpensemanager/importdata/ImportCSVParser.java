@@ -5,10 +5,10 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.adithya.aaafexpensemanager.account.AccountRepository;
-import com.adithya.aaafexpensemanager.settings.category.Category;
-import com.adithya.aaafexpensemanager.settings.category.CategoryRepository;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionRepository;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeRepository;
+import com.adithya.aaafexpensemanager.settings.category.Category;
+import com.adithya.aaafexpensemanager.settings.category.CategoryRepository;
 import com.adithya.aaafexpensemanager.settings.currency.Currency;
 import com.adithya.aaafexpensemanager.settings.currency.CurrencyRepository;
 import com.adithya.aaafexpensemanager.transaction.Transaction;

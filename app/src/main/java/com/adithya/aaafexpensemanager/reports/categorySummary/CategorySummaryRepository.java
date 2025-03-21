@@ -8,7 +8,6 @@ import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

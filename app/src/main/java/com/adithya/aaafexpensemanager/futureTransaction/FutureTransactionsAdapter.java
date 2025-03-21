@@ -3,7 +3,6 @@ package com.adithya.aaafexpensemanager.futureTransaction;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /** @noinspection deprecation*/
 public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

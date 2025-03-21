@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
-import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
+import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.google.android.material.textfield.TextInputEditText;
 

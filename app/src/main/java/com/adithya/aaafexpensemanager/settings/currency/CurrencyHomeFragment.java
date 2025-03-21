@@ -8,11 +8,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanager.R;
-import com.google.android.material.snackbar.Snackbar;
 
 public class CurrencyHomeFragment extends Fragment {
     @Override
