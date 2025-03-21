@@ -26,13 +26,22 @@ public class DBHelperActions {
         Log.d("DatabaseHelper","Recreating tables");
     }
     public static void createActions(SQLiteDatabase db) {
+        String CREATE_PRIMARY_CURRENCY_TABLE = "CREATE TABLE primary_currency (" +
+                "primary_currency_name TEXT PRIMARY KEY)";
+        db.execSQL(CREATE_PRIMARY_CURRENCY_TABLE);
+        String CREATE_CURRENCY_TABLE = "CREATE TABLE currency (" +
+                "currency_name TEXT PRIMARY KEY, " +
+                "conversion_factor REAL)";
+        db.execSQL(CREATE_CURRENCY_TABLE);
+        currencyAllDetails(db);
         String CREATE_ACCOUNTS_TABLE = "CREATE TABLE accounts (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "account_name TEXT NOT NULL," +
                 "account_type TEXT," +
                 "account_balance REAL," +
                 "account_tags TEXT," +
-                "display_order INTEGER)";
+                "display_order INTEGER," +
+                "currency_code TEXT)";
         db.execSQL(CREATE_ACCOUNTS_TABLE);
         String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE transactions (" +
                 "transaction_uuid TEXT PRIMARY KEY," +
@@ -121,14 +130,6 @@ public class DBHelperActions {
                 "log_text       TEXT, " +
                 "log_date       INTEGER )";
         db.execSQL(BATCH_RUN_DETAIL_LOG);
-        String CREATE_PRIMARY_CURRENCY_TABLE = "CREATE TABLE primary_currency (" +
-                "primary_currency_name TEXT PRIMARY KEY)";
-        db.execSQL(CREATE_PRIMARY_CURRENCY_TABLE);
-        String CREATE_CURRENCY_TABLE = "CREATE TABLE currency (" +
-                "currency_name TEXT PRIMARY KEY, " +
-                "conversion_factor REAL)";
-        db.execSQL(CREATE_CURRENCY_TABLE);
-        currencyAllDetails(db);
     }
     private static void currencyAllDetails(SQLiteDatabase db){
         db.execSQL("CREATE VIEW IF NOT EXISTS currency_all_details AS " +
@@ -159,10 +160,17 @@ public class DBHelperActions {
                 "t1.create_date, " +
                 "t1.last_update_date," +
                 "t1.transfer_ind, " +
+                "curr1.currency_name, " +
+                "curr1.conversion_factor, " +
+                "curr1.primary_currency_name, " +
                 "MIN(t2.transaction_date) AS next_date " +
                 "FROM recurring_schedules t1 " +
                 "LEFT JOIN recurring_transactions t2 " +
                 "ON t1.recurring_schedule_uuid = t2.recurring_schedule_uuid " +
+                "LEFT JOIN accounts ac1 " +
+                "ON t1.account_name = ac1.account_name " +
+                "LEFT JOIN currency_all_details curr1 " +
+                "ON t1.currency_code = curr1.currency_name " +
                 "WHERE 1=1 " +
                 "GROUP BY "+
                 "t1.recurring_schedule_uuid , " +
@@ -179,10 +187,13 @@ public class DBHelperActions {
                 "t1.to_account_name, " +
                 "t1.create_date, " +
                 "t1.last_update_date," +
-                "t1.transfer_ind ");
+                "t1.transfer_ind, " +
+                "curr1.currency_name, " +
+                "curr1.conversion_factor, " +
+                "curr1.primary_currency_name ");
     }
     private static void createSplitTransfersView(SQLiteDatabase db) {
-        db.execSQL("CREATE VIEW IF NOT EXISTS SplitTransfers AS " +  // Use IF NOT EXISTS for upgrades
+        db.execSQL("CREATE VIEW IF NOT EXISTS SplitTransfers AS " +
                 "SELECT " +
                 "transaction_uuid, " +
                 "transaction_name, " +
@@ -198,6 +209,10 @@ public class DBHelperActions {
                 "transaction_type transfer_ind," +
                 "recurring_schedule_uuid " +
                 "FROM transactions " +
+                "LEFT JOIN accounts ac1 " +
+                "ON transactions.account_name = ac1.account_name " +
+                "LEFT JOIN currency_all_details curr1 " +
+                "ON ac1.currency_code = curr1.currency_name " +
                 "WHERE transaction_type != 'Transfer' " +
                 "UNION ALL " +
                 "SELECT " +
@@ -215,7 +230,11 @@ public class DBHelperActions {
                 "transaction_type transfer_ind," +
                 "recurring_schedule_uuid " +
                 "FROM transactions " +
-                "WHERE transaction_type = 'Transfer' " +
+                "LEFT JOIN accounts ac1 " +
+                "ON transactions.account_name = ac1.account_name " +
+                "LEFT JOIN currency_all_details curr1 " +
+                "ON ac1.currency_code = curr1.currency_name " +
+                "WHERE transaction_type != 'Transfer' " +
                 "UNION ALL " +
                 "SELECT " +
                 "transaction_uuid, " +
@@ -232,14 +251,23 @@ public class DBHelperActions {
                 "transaction_type transfer_ind," +
                 "recurring_schedule_uuid " +
                 "FROM transactions " +
-                "WHERE transaction_type = 'Transfer'");
+                "LEFT JOIN accounts ac1 " +
+                "ON transactions.to_account_name = ac1.account_name " +
+                "LEFT JOIN currency_all_details curr1 " +
+                "ON ac1.currency_code = curr1.currency_name " +
+                "WHERE transaction_type != 'Transfer' ");
     }
     private static void createAccountsAllView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS accounts_all_view AS \n" +
-                "select ac1.*\n" +
+                "select ac1.*,\n" +
+                "  curr1.currency_name, "+
+                "  curr1.conversion_factor, "+
+                "  curr1.primary_currency_name "+
                 "  from accounts ac1\n" +
                 "  left join account_types at1\n" +
                 "         on ac1.account_type = at1.account_type\n" +
+                " left join currency_all_details curr1 " +
+                "        on ac1.currency_code = curr1.currency_name " +
                 "order by at1.account_type_display_order ASC, ac1.display_order ASC");
     }
 }
