@@ -29,10 +29,11 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
 
     public void updateAccount(Account account) {
         accountRepository.updateAccount(account);
+        loadAccountNames();
     }
     public void deleteAccount(String accountName) {
         accountRepository.deleteAccount(accountName);
-        loadAccountNames(); // Refresh the list after deleting
+        loadAccountNames();
     }
 
     public void createAccount(Account account) {
@@ -55,5 +56,6 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     public void addTransaction(Transaction transaction) {
         // Use your TransactionRepository to insert the transaction into the database
         transactionRepository.addTransaction(transaction);
+        loadAccountNames();
     }
 }

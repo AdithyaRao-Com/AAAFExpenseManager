@@ -137,7 +137,7 @@ public class FutureTransactionRepository {
         String orderByArgs = "transaction_date ASC, create_date ASC LIMIT <<batchSize>> OFFSET <<offset>>"
                 .replace("<<batchSize>>",String.valueOf(batchSize))
                 .replace("<<offset>>",String.valueOf((pageNumber-1)* batchSize));
-        try(Cursor cursor = db.query("recurring_transactions", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
+        try(Cursor cursor = db.query("recurring_transactions_view", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
             if (cursor.moveToFirst()) {
                 do {
                     FutureTransaction transaction = getRecurringTransactionFromCursor(cursor);
@@ -151,7 +151,7 @@ public class FutureTransactionRepository {
     }
 
     public FutureTransaction getFutureTransaction(UUID transactionUUID){
-        try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
+        try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions_view WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
             if (cursor.moveToFirst()) {
                 return getRecurringTransactionFromCursor(cursor);
             }
@@ -323,7 +323,7 @@ public class FutureTransactionRepository {
     }
 
     public List<FutureTransaction> getRecurringTransactionsCurrentDate() {
-        try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions WHERE transaction_date <= ?", new String[]{LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))})) {
+        try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions_view WHERE transaction_date <= ?", new String[]{LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))})) {
             List<FutureTransaction> futureTransactions = new ArrayList<>();
             while (cursor.moveToNext()) {
                 futureTransactions.add(getRecurringTransactionFromCursor(cursor));

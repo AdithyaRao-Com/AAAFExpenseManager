@@ -200,29 +200,16 @@ public class TransactionRepository {
         }
     }
     public Transaction getTransactionById(UUID transactionUUID) {
-        final Transaction[] result = new Transaction[1]; // Array to hold the result
-        Thread thread = getTransactionByIdBG(transactionUUID, result);
-        try {
-            thread.join(); // Wait for the background thread to finish
-        } catch (InterruptedException e) {
-            return null; // Or handle the interruption as needed
-        }
-        return result[0]; // Return the result
-    }
-
-    @NonNull
-    private Thread getTransactionByIdBG(UUID transactionUUID, Transaction[] result) {
-        Thread thread = new Thread(() -> {
-            try (Cursor cursor = db.rawQuery("SELECT * FROM transactions WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
-                if (cursor.moveToFirst()) {
-                    result[0] = getTransactionFromCursor(cursor);
-                }
+        try (Cursor cursor = db.rawQuery("SELECT * FROM transactions_view WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
+            if (cursor.moveToFirst()) {
+                return getTransactionFromCursor(cursor);
             }
-        });
-        thread.start();
-        return thread;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
-
     public void deleteTransaction(Transaction transaction) {
         try {
             if (updateAccountBalances(transaction,TransactionRepository.DELETES)) return;

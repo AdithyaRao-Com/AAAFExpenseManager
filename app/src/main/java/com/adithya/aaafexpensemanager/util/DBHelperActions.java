@@ -9,6 +9,8 @@ public class DBHelperActions {
         db.execSQL("DROP VIEW IF EXISTS accounts_all_view");
         db.execSQL("DROP VIEW IF EXISTS RecurringScheduleNextDate");
         db.execSQL("DROP VIEW IF EXISTS currency_all_details");
+        db.execSQL("DROP VIEW IF EXISTS recurring_transactions_view");
+        db.execSQL("DROP VIEW IF EXISTS transactions_view");
         // Drop the table if it exists
         db.execSQL("DROP TABLE IF EXISTS transactions");
         db.execSQL("DROP TABLE IF EXISTS accounts");
@@ -113,6 +115,7 @@ public class DBHelperActions {
         db.execSQL(CREATE_RECURRING_TRANSACTIONS_TABLE);
         recurringScheduleNextDate(db);
         createRecurringTransactionsView(db);
+        createTransactionsAllView(db);
         String SETTINGS_TABLE_QUERY = "CREATE TABLE setting_pairs " +
                 "( " +
                 "setting_name TEXT PRIMARY KEY, " +
@@ -241,7 +244,7 @@ public class DBHelperActions {
                 "ON t1.account_name = ac1.account_name " +
                 "LEFT JOIN currency_all_details curr1 " +
                 "ON ac1.currency_code = curr1.currency_code " +
-                "WHERE transaction_type != 'Transfer' " +
+                "WHERE transaction_type = 'Transfer' " +
                 "UNION ALL " +
                 "SELECT " +
                 "t1.transaction_uuid, " +
@@ -265,7 +268,7 @@ public class DBHelperActions {
                 "ON t1.to_account_name = ac1.account_name " +
                 "LEFT JOIN currency_all_details curr1 " +
                 "ON ac1.currency_code = curr1.currency_code " +
-                "WHERE transaction_type != 'Transfer' ");
+                "WHERE transaction_type = 'Transfer' ");
     }
     private static void createAccountsAllView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS accounts_all_view AS \n" +
@@ -300,6 +303,31 @@ public class DBHelperActions {
                 "curr1.conversion_factor, " +
                 "curr1.primary_currency_code " +
                 " FROM recurring_transactions t1 " +
+                " LEFT JOIN accounts ac1 " +
+                " ON t1.account_name = ac1.account_name " +
+                " LEFT JOIN currency_all_details curr1 " +
+                " ON ac1.currency_code = curr1.currency_code");
+    }
+    private static void createTransactionsAllView(SQLiteDatabase db) {
+        db.execSQL("CREATE VIEW IF NOT EXISTS transactions_view AS " +
+                "SELECT " +
+                "t1.transaction_uuid, " +
+                "t1.recurring_schedule_uuid, " +
+                "t1.transaction_name, " +
+                "t1.transaction_date, " +
+                "t1.transaction_type, " +
+                "t1.category, " +
+                "t1.notes, " +
+                "t1.amount, " +
+                "t1.account_name, " +
+                "t1.to_account_name," +
+                "t1.create_date," +
+                "t1.last_update_date," +
+                "t1.transfer_ind, " +
+                "curr1.currency_code, " +
+                "curr1.conversion_factor, " +
+                "curr1.primary_currency_code " +
+                " FROM transactions t1 " +
                 " LEFT JOIN accounts ac1 " +
                 " ON t1.account_name = ac1.account_name " +
                 " LEFT JOIN currency_all_details curr1 " +
