@@ -40,7 +40,7 @@ public class CurrencyRepository {
 
     public Currency getCurrencyById(String currencyName) {
         Currency currency = null;
-        try (Cursor cursor = db.query("currency_all_details", null, "currency_name = ?", new String[]{currencyName}, null, null, null)) {
+        try (Cursor cursor = db.query("currency_all_details", null, "currency_code = ?", new String[]{currencyName}, null, null, null)) {
             if (cursor.moveToFirst()) {
                 currency = getCurrencyFromCursor(cursor);
             }
@@ -50,11 +50,11 @@ public class CurrencyRepository {
 
     private Currency getCurrencyFromCursor(Cursor cursor) {
         try {
-            String currencyName = cursor.getString(cursor.getColumnIndexOrThrow("currency_name"));
+            String currencyName = cursor.getString(cursor.getColumnIndexOrThrow("currency_code"));
             boolean isPrimary;
             isPrimary = cursor.getInt(cursor.getColumnIndexOrThrow("is_primary")) == 1;
             double conversionFactor = cursor.getDouble(cursor.getColumnIndexOrThrow("conversion_factor"));
-            String primaryCurrencyName = cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_name"));
+            String primaryCurrencyName = cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_code"));
             return new Currency(currencyName,isPrimary,conversionFactor,primaryCurrencyName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class CurrencyRepository {
         try {
             db.delete("primary_currency", null, null);
             ContentValues contentValuesPrimary = new ContentValues();
-            contentValuesPrimary.put("primary_currency_name", currencyName);
+            contentValuesPrimary.put("primary_currency_code", currencyName);
             db.insertOrThrow("primary_currency", null, contentValuesPrimary);
             updateConversionFactors(currencyName);
         }
@@ -82,7 +82,7 @@ public class CurrencyRepository {
                     .filter( currency -> {return !(currency.currencyName.equals(primaryCurrencyName));})
                     .toList();
             for(Currency currency:currencies){
-                String selection = "currency_name = ?";
+                String selection = "currency_code = ?";
                 String[] selectionArgs = new String[]{currency.currencyName};
                 ContentValues values = new ContentValues();
                 double conversionFactor = currency.conversionFactor / primaryCurrency.conversionFactor;
@@ -98,10 +98,10 @@ public class CurrencyRepository {
     }
     public void updateCurrency(Currency currency) {
         try{
-            String selection = "currency_name = ?";
+            String selection = "currency_code = ?";
             String[] selectionArgs = new String[]{currency.currencyName};
             ContentValues values = new ContentValues();
-            values.put("currency_name", currency.currencyName);
+            values.put("currency_code", currency.currencyName);
             values.put("conversion_factor", Math.round(currency.conversionFactor*1000000.0)/1000000.0);
             db.update("currency", values, selection, selectionArgs);
         }
@@ -121,13 +121,13 @@ public class CurrencyRepository {
             setPrimaryCurrency(currency.currencyName);
         }
         ContentValues values = new ContentValues();
-        values.put("currency_name", currency.currencyName);
+        values.put("currency_code", currency.currencyName);
         values.put("conversion_factor", Math.round(currency.conversionFactor*1000000.0)/1000000.0);
         long result = db.insert("currency", null, values);
     }
 
     public boolean checkCurrencyExists(String currencyName) {
-        String selection = "(currency_name = ?)";
+        String selection = "(currency_code = ?)";
         String[] selectionArgs = new String[]{currencyName};
         try(Cursor cursor = db.query("currency", null, selection, selectionArgs, null, null, null)){
             if(cursor.getCount() > 0){
@@ -142,7 +142,7 @@ public class CurrencyRepository {
         }
     }
     public void deleteCurrency(Currency currency) {
-        int rowsAffected = db.delete("currency", "currency_name = ?", new String[]{currency.currencyName});
+        int rowsAffected = db.delete("currency", "currency_code = ?", new String[]{currency.currencyName});
     }
 
     public void deleteAll(){
@@ -152,7 +152,7 @@ public class CurrencyRepository {
 
     public List<Currency> filterCurrencies(String searchText) {
         List<Currency> filteredCurrencies = new ArrayList<>();
-        String selection = "currency_name LIKE ?";
+        String selection = "currency_code LIKE ?";
         String[] selectionArgs = new String[]{"%" + searchText + "%"};
 
         Cursor cursor = db.query("currency_all_details", null, selection, selectionArgs, null, null, null);
@@ -170,7 +170,7 @@ public class CurrencyRepository {
         try{
             Cursor cursor = db.query("primary_currency", null, null, null, null, null, null);
             if (cursor.moveToFirst()) {
-                return cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_name"));
+                return cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_code"));
             }
         }
         catch (Exception e){
