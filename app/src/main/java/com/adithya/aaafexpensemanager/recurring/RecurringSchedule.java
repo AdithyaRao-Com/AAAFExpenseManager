@@ -33,8 +33,17 @@ public class RecurringSchedule implements Parcelable {
     public long lastUpdateDateTime;
     public String transferInd;
     public int nextRecurringDate;
+    public String currencyCode;
+    public double conversionFactor;
+    public String primaryCurrencyCode;
 
-    public RecurringSchedule(UUID recurringScheduleUUID, String transactionName, String recurringScheduleName, int repeatIntervalDays, int recurringStartDate, int recurringEndDate, String notes, String transactionType, String category, double amount, String accountName, String toAccountName, long createDateTime, long lastUpdateDateTime, String transferInd, int nextRecurringDate) {
+    public RecurringSchedule(UUID recurringScheduleUUID, String transactionName,
+                             String recurringScheduleName, int repeatIntervalDays,
+                             int recurringStartDate, int recurringEndDate, String notes,
+                             String transactionType, String category, double amount,
+                             String accountName, String toAccountName, long createDateTime,
+                             long lastUpdateDateTime, String transferInd, int nextRecurringDate,
+                             String currencyCode, double conversionFactor, String primaryCurrencyCode) {
         this.category = category;
         this.recurringScheduleUUID = recurringScheduleUUID;
         this.transactionName = transactionName;
@@ -57,9 +66,16 @@ public class RecurringSchedule implements Parcelable {
         catch (Exception e){
             this.nextRecurringDate = Integer.parseInt(AppConstants.TRANSACTION_DATE_DUMMY.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         }
+        this.currencyCode = currencyCode;
+        this.conversionFactor = conversionFactor;
+        this.primaryCurrencyCode = primaryCurrencyCode;
     }
 
-    public RecurringSchedule(String transactionName, String recurringScheduleName, int repeatIntervalDays, LocalDate recurringStartDate, LocalDate recurringEndDate, String category, String notes, String transactionType, double amount, String accountName, String toAccountName, String transferInd) {
+    public RecurringSchedule(String transactionName, String recurringScheduleName,
+                             int repeatIntervalDays, LocalDate recurringStartDate,
+                             LocalDate recurringEndDate, String category, String notes,
+                             String transactionType, double amount, String accountName,
+                             String toAccountName, String transferInd) {
         this.recurringScheduleUUID = UUID.randomUUID();
         this.transactionName = transactionName;
         this.recurringScheduleName = recurringScheduleName;
@@ -76,7 +92,10 @@ public class RecurringSchedule implements Parcelable {
         this.lastUpdateDateTime = this.createDateTime;
         this.transferInd = transferInd;
     }
-    public RecurringSchedule(String transactionName, String recurringScheduleName, int repeatIntervalDays, int recurringStartDate, int recurringEndDate, String category, String notes, String transactionType, double amount, String accountName, String toAccountName, String transferInd) {
+    public RecurringSchedule(String transactionName, String recurringScheduleName,
+                             int repeatIntervalDays, int recurringStartDate, int recurringEndDate,
+                             String category, String notes, String transactionType, double amount,
+                             String accountName, String toAccountName, String transferInd) {
         this.recurringScheduleUUID = UUID.randomUUID();
         this.transactionName = transactionName;
         this.recurringScheduleName = recurringScheduleName;
@@ -113,6 +132,9 @@ public class RecurringSchedule implements Parcelable {
         lastUpdateDateTime = in.readInt();
         transferInd = in.readString();
         nextRecurringDate = in.readInt();
+        currencyCode = in.readString();
+        conversionFactor = in.readDouble();
+        primaryCurrencyCode = in.readString();
     }
 
     public RecurringSchedule() {
@@ -132,6 +154,9 @@ public class RecurringSchedule implements Parcelable {
         this.lastUpdateDateTime = this.createDateTime;
         this.transferInd = "Expense";
         this.nextRecurringDate = Integer.parseInt(AppConstants.TRANSACTION_DATE_DUMMY.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        this.currencyCode = "INR";
+        this.conversionFactor = 1.0;
+        this.primaryCurrencyCode = "INR";
     }
 
     public RecurringSchedule(Transaction transaction,
@@ -154,6 +179,9 @@ public class RecurringSchedule implements Parcelable {
         this.createDateTime = System.currentTimeMillis();
         this.lastUpdateDateTime = this.createDateTime;
         this.transferInd = transaction.transferInd;
+        this.currencyCode = transaction.currencyCode;
+        this.conversionFactor = transaction.conversionFactor;
+        this.primaryCurrencyCode = transaction.primaryCurrencyCode;
     }
 
     public RecurringSchedule(Transaction tran) {
@@ -187,6 +215,9 @@ public class RecurringSchedule implements Parcelable {
         dest.writeLong(lastUpdateDateTime);
         dest.writeString(transferInd);
         dest.writeInt(nextRecurringDate);
+        dest.writeString(currencyCode);
+        dest.writeDouble(conversionFactor);
+        dest.writeString(primaryCurrencyCode);
     }
     public static final Parcelable.Creator<RecurringSchedule> CREATOR = new Parcelable.Creator<>() {
         @Override
@@ -264,6 +295,10 @@ public class RecurringSchedule implements Parcelable {
                 ", createDateTime=" + createDateTime +
                 ", lastUpdateDateTime=" + lastUpdateDateTime +
                 ", transferInd='" + transferInd + '\'' +
+                ", nextRecurringDate=" + nextRecurringDate +
+                ", currencyCode='" + currencyCode + '\'' +
+                ", conversionFactor=" + conversionFactor +
+                ", primaryCurrencyCode='" + primaryCurrencyCode + '\'' +
                 '}';
     }
     public String amountToIndianFormat() {

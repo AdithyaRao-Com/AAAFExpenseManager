@@ -25,6 +25,9 @@ public class Transaction implements Parcelable {
     public String transferInd;
     public long lastUpdateDateTime;
     public String recurringScheduleUUID;
+    public String currencyCode;
+    public double conversionFactor;
+    public String primaryCurrencyCode;
 
     public Transaction(String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName,String transferInd, String recurringScheduleUUID) {
         this.transactionUUID = UUID.randomUUID();
@@ -42,7 +45,11 @@ public class Transaction implements Parcelable {
         this.recurringScheduleUUID = recurringScheduleUUID;
     }
 
-    public Transaction(UUID transactionUUID, String transactionName, int transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, long createDateTime, long lastUpdateDateTime,String transferInd,String recurringScheduleUUID) {
+    public Transaction(UUID transactionUUID, String transactionName, int transactionDate,
+                       String transactionType, String category, String notes, double amount,
+                       String accountName, String toAccountName, long createDateTime,
+                       long lastUpdateDateTime,String transferInd,String recurringScheduleUUID,
+                       String currencyCode, double conversionFactor, String primaryCurrencyCode) {
         this.transactionUUID = transactionUUID;
         this.transactionName = transactionName;
         this.transactionDate = transactionDate;
@@ -56,6 +63,9 @@ public class Transaction implements Parcelable {
         this.createDateTime = createDateTime;
         this.lastUpdateDateTime = lastUpdateDateTime;
         this.recurringScheduleUUID = recurringScheduleUUID;
+        this.currencyCode = currencyCode;
+        this.conversionFactor = conversionFactor;
+        this.primaryCurrencyCode = primaryCurrencyCode;
     }
 
     public Transaction(Transaction transaction) {
@@ -72,6 +82,9 @@ public class Transaction implements Parcelable {
         this.createDateTime = System.currentTimeMillis();
         this.lastUpdateDateTime = this.createDateTime;
         this.recurringScheduleUUID = "";
+        this.currencyCode = transaction.currencyCode;
+        this.conversionFactor = transaction.conversionFactor;
+        this.primaryCurrencyCode = transaction.primaryCurrencyCode;
     }
 
     public double getSignedAmount(){
@@ -119,6 +132,9 @@ public class Transaction implements Parcelable {
         this.createDateTime = in.readLong();
         this.lastUpdateDateTime = in.readLong();
         this.recurringScheduleUUID = in.readString();
+        this.currencyCode = in.readString();
+        this.conversionFactor = in.readDouble();
+        this.primaryCurrencyCode = in.readString();
     }
 
     @Override
@@ -141,6 +157,9 @@ public class Transaction implements Parcelable {
         dest.writeLong(createDateTime);
         dest.writeLong(lastUpdateDateTime);
         dest.writeString(recurringScheduleUUID);
+        dest.writeString(currencyCode);
+        dest.writeDouble(conversionFactor);
+        dest.writeString(primaryCurrencyCode);
     }
 
     public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<>() {

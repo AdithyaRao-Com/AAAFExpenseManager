@@ -94,6 +94,9 @@ public class RecurringRepository {
             int lastUpdateDateTimeIndex = cursor.getColumnIndexOrThrow("last_update_date");
             int transferIndIndex = cursor.getColumnIndexOrThrow("transfer_ind");
             int nextDateIndex = cursor.getColumnIndexOrThrow("next_date");
+            int currencyCodeIndex = cursor.getColumnIndexOrThrow("currency_code");
+            int conversionFactorIndex = cursor.getColumnIndexOrThrow("conversion_factor");
+            int primaryCurrencyCodeIndex = cursor.getColumnIndexOrThrow("primary_currency_code");
             String transactionUUIDStr = cursor.getString(uuidIndex);
             UUID transactionUUID = UUID.fromString(transactionUUIDStr);
             String transactionName = cursor.getString(nameIndex);
@@ -111,7 +114,13 @@ public class RecurringRepository {
             long lastUpdateDateTime = cursor.getLong(lastUpdateDateTimeIndex);
             String transferInd = cursor.getString(transferIndIndex);
             int nextDate = cursor.getInt(nextDateIndex);
-            return new RecurringSchedule(transactionUUID,transactionName,recurringSchedule,repeatIntervalDays,recurringStartDate,recurringEndDate,notes,transactionType,category,amount,accountName,toAccountName,createDateTime,lastUpdateDateTime,transferInd,nextDate);
+            String currencyCode = cursor.getString(currencyCodeIndex);
+            double conversionFactor = cursor.getDouble(conversionFactorIndex);
+            String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
+            return new RecurringSchedule(transactionUUID,transactionName,recurringSchedule,
+                    repeatIntervalDays,recurringStartDate,recurringEndDate,notes,transactionType,
+                    category,amount,accountName,toAccountName,createDateTime,lastUpdateDateTime,
+                    transferInd,nextDate,currencyCode,conversionFactor,primaryCurrencyCode);
         } catch (Exception e) {
             return null;
         }

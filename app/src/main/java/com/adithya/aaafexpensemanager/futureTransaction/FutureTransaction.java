@@ -26,11 +26,24 @@ public class FutureTransaction implements Parcelable {
     public long createDateTime;
     public String transferInd;
     public long lastUpdateDateTime;
+    public String currencyCode;
+    public double conversionFactor;
+    public String primaryCurrencyCode;
+
     public FutureTransaction(UUID recurringScheduleUUID, String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, String transferInd) {
-        this(UUID.randomUUID(),recurringScheduleUUID, transactionName, Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))), transactionType, category, notes, amount, accountName, toAccountName, System.currentTimeMillis(), System.currentTimeMillis(),transferInd);
+        this(UUID.randomUUID(),recurringScheduleUUID, transactionName,
+                Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))),
+                transactionType, category, notes, amount, accountName, toAccountName,
+                System.currentTimeMillis(), System.currentTimeMillis(),transferInd,
+                "",1.0,"");
     }
 
-    public FutureTransaction(UUID transactionUUID, UUID recurringScheduleUUID, String transactionName, int transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, long createDateTime, long lastUpdateDateTime, String transferInd) {
+    public FutureTransaction(UUID transactionUUID, UUID recurringScheduleUUID,
+                             String transactionName, int transactionDate, String transactionType,
+                             String category, String notes, double amount, String accountName,
+                             String toAccountName, long createDateTime, long lastUpdateDateTime,
+                             String transferInd,String currencyCode, double conversionFactor,
+                             String primaryCurrencyCode) {
         this.transactionUUID = transactionUUID;
         this.recurringScheduleUUID = recurringScheduleUUID;
         this.transactionName = transactionName;
@@ -47,6 +60,9 @@ public class FutureTransaction implements Parcelable {
         this.toAccountName = toAccountName;
         this.createDateTime = createDateTime;
         this.lastUpdateDateTime = lastUpdateDateTime;
+        this.currencyCode = currencyCode;
+        this.conversionFactor = conversionFactor;
+        this.primaryCurrencyCode = primaryCurrencyCode;
     }
 
     public FutureTransaction(RecurringSchedule recurringSchedule, LocalDate transactionDate) {
@@ -63,6 +79,9 @@ public class FutureTransaction implements Parcelable {
         this.toAccountName = recurringSchedule.toAccountName;
         this.createDateTime = System.currentTimeMillis();
         this.lastUpdateDateTime = this.createDateTime;
+        this.currencyCode = recurringSchedule.currencyCode;
+        this.conversionFactor = recurringSchedule.conversionFactor;
+        this.primaryCurrencyCode = recurringSchedule.primaryCurrencyCode;
     }
     public LocalDate getTransactionLocalDate() {
         try {
@@ -108,6 +127,9 @@ public class FutureTransaction implements Parcelable {
         this.toAccountName = in.readString();
         this.createDateTime = in.readLong();
         this.lastUpdateDateTime = in.readLong();
+        this.currencyCode = in.readString();
+        this.conversionFactor = in.readDouble();
+        this.primaryCurrencyCode = in.readString();
     }
 
     @Override
@@ -130,6 +152,9 @@ public class FutureTransaction implements Parcelable {
         dest.writeString(toAccountName);
         dest.writeLong(createDateTime);
         dest.writeLong(lastUpdateDateTime);
+        dest.writeString(currencyCode);
+        dest.writeDouble(conversionFactor);
+        dest.writeString(primaryCurrencyCode);
     }
 
     public static final Parcelable.Creator<FutureTransaction> CREATOR = new Parcelable.Creator<FutureTransaction>() {
@@ -162,7 +187,10 @@ public class FutureTransaction implements Parcelable {
                 this.createDateTime,
                 this.lastUpdateDateTime,
                 this.transferInd,
-                this.recurringScheduleUUID.toString());
+                this.recurringScheduleUUID.toString(),
+                this.currencyCode,
+                this.conversionFactor,
+                this.primaryCurrencyCode);
     }
     public String amountToIndianFormat() {
         return CurrencyFormatter.formatIndianStyle(this.amount,"INR");

@@ -197,6 +197,9 @@ public class FutureTransactionRepository {
             int createDateTimeIndex = cursor.getColumnIndexOrThrow("create_date");
             int lastUpdateDateTimeIndex = cursor.getColumnIndexOrThrow("last_update_date");
             int transferIndIndex = cursor.getColumnIndexOrThrow("transfer_ind");
+            int currencyCodeIndex = cursor.getColumnIndexOrThrow("currency_code");
+            int conversionFactorIndex = cursor.getColumnIndexOrThrow("conversion_factor");
+            int primaryCurrencyCodeIndex = cursor.getColumnIndexOrThrow("primary_currency_code");
             String transactionUUIDStr = cursor.getString(uuidIndex);
             UUID transactionUUID = UUID.fromString(transactionUUIDStr);
             UUID scheduleUUID = UUID.fromString(cursor.getString(scheduleUuidIndex));
@@ -211,6 +214,9 @@ public class FutureTransactionRepository {
             long createDateTime = cursor.getLong(createDateTimeIndex);
             long lastUpdateDateTime = cursor.getLong(lastUpdateDateTimeIndex);
             String transferInd = cursor.getString(transferIndIndex);
+            String currencyCode = cursor.getString(currencyCodeIndex);
+            double conversionFactor = cursor.getDouble(conversionFactorIndex);
+            String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
             return new FutureTransaction(transactionUUID,
                     scheduleUUID,
                     transactionName,
@@ -223,7 +229,10 @@ public class FutureTransactionRepository {
                     toAccountName,
                     createDateTime,
                     lastUpdateDateTime,
-                    transferInd);
+                    transferInd,
+                    currencyCode,
+                    conversionFactor,
+                    primaryCurrencyCode);
 
         } catch (IllegalArgumentException e) { // Catch column not found
             return null;
