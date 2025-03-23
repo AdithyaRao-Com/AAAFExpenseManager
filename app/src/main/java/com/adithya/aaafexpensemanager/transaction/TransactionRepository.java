@@ -152,7 +152,7 @@ public class TransactionRepository {
             Account accountFrom = accountRepository.getAccountByName(transaction.accountName);
             Account accountTo = accountRepository.getAccountByName(transaction.toAccountName);
             if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))){
-                throw new InterCurrencyTransferNotSupported();
+                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode,accountTo.currencyCode);
             }
         }
     }

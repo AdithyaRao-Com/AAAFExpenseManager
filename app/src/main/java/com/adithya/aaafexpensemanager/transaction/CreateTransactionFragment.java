@@ -2,7 +2,9 @@ package com.adithya.aaafexpensemanager.transaction;
 
 import static java.lang.Math.min;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,7 +42,6 @@ import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
 import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -259,11 +260,19 @@ public class CreateTransactionFragment extends Fragment {
                     NavHostFragment.findNavController(this).navigate(R.id.action_createTransactionFragment_to_transactionFragment);
                 }
                 catch (InterCurrencyTransferNotSupported e){
-                    Snackbar errorSnackBar = Snackbar.make(getView(),e.getMessage(),Snackbar.LENGTH_INDEFINITE);
-                    errorSnackBar.setAction("OK",v1 ->
-                            NavHostFragment.findNavController(this)
-                                    .navigate(R.id.action_createTransactionFragment_to_transactionFragment));
-                    errorSnackBar.show();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Error")
+                            .setMessage(e.getMessage())
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    NavHostFragment.findNavController(getParentFragment())
+                                            .navigate(R.id.action_createTransactionFragment_to_transactionFragment);
+                                }
+                            })
+                            .create()
+                            .show();
                 }
             }
         });
