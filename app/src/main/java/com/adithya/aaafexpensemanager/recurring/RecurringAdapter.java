@@ -104,7 +104,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if ("Expense".equals(transactionType)) {
             amountColor = recurringFragment.getResources().getColor(android.R.color.holo_red_dark);
         } else {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.black);
+            amountColor = recurringFragment.getResources().getColor(android.R.color.white);
         }
         holder.amountTextView.setTextColor(amountColor);
 
@@ -117,7 +117,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else if ("Transfer".equals(transferInd)) {
             amountColor = recurringFragment.getResources().getColor(android.R.color.holo_blue_dark);
         } else {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.black);
+            amountColor = recurringFragment.getResources().getColor(android.R.color.white);
         }
         holder.transferIndImageView.setBackgroundColor(amountColor);
 

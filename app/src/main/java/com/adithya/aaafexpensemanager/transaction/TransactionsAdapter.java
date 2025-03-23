@@ -113,7 +113,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if ("Expense".equals(transactionType)) {
             amountColor = transactionFragment.getResources().getColor(android.R.color.holo_red_dark);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.black);
+            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
         }
         holder.amountTextView.setTextColor(amountColor);
 
@@ -126,7 +126,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else if ("Transfer".equals(transferInd)) {
             amountColor = transactionFragment.getResources().getColor(android.R.color.holo_blue_dark);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.black);
+            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
         }
         holder.transferIndImageView.setBackgroundColor(amountColor);
 
@@ -290,9 +290,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 Snackbar.make(transactionFragment.getView(),"Update Account is successful",Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (selectedText)->{
-                                Snackbar.make(transactionFragment.getView(),"Update Account is failed",Snackbar.LENGTH_SHORT).show();
-                            },
+                            (selectedText)-> Snackbar.make(transactionFragment.getView(),"Update Account is failed",Snackbar.LENGTH_SHORT).show(),
                             "Account Name");
                 }
                 else if(item.getItemId() == R.id.action_update_category){
@@ -346,7 +344,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                 Snackbar.make(transactionFragment.getView(),"Update To Account is successful",Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (selectedText)->{Snackbar.make(transactionFragment.getView(),"Update To Account is failed",Snackbar.LENGTH_SHORT).show();},
+                            (selectedText)-> Snackbar.make(transactionFragment.getView(),"Update To Account is failed",Snackbar.LENGTH_SHORT).show(),
                             "To Account Name");
                 }
                 return false;

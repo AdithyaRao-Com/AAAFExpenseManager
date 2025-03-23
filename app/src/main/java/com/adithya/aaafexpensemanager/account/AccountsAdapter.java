@@ -19,7 +19,6 @@ import java.util.List;
 
 /** */
 public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    // TODO - The account type group by is not happening properly.
     public interface NavigationListener{
         void changeNavigation(int id, Bundle args);
     }
