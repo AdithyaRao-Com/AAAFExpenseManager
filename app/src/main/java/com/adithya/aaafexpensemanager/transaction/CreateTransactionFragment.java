@@ -53,6 +53,8 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace, DataFlowIssue */
 public class CreateTransactionFragment extends Fragment {
+    // TODO - Implement do not show in drop down
+    // TODO - Implement a method to show the currency in the amount field
     private TransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private EditText transactionDateEditText;
