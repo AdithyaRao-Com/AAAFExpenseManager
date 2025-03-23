@@ -41,6 +41,8 @@ public class CreateAccountFragment extends Fragment {
     private LookupEditText accountTypeSpinner;
     private EditText displayOrderEditText;
     private LookupEditText currencyCodeEditText;
+    private CheckBox closeAccountCheckBox;
+    private CheckBox doNotShowInDropdownCheckBox;
     CheckBox updateBalanceCheckBox;
     private AccountViewModel viewModel;
     private boolean isEditing = false;
@@ -112,7 +114,9 @@ public class CreateAccountFragment extends Fragment {
                 accountBalanceEditText.setError("Invalid account balance");
                 return;
             }
-            Account account = new Account(name, type, balance, tags,displayOrder,currencyCode);
+            boolean closeAccountInd = closeAccountCheckBox.isChecked();
+            boolean doNotShowInDropdownInd = doNotShowInDropdownCheckBox.isChecked();
+            Account account = new Account(name, type, balance, tags,displayOrder,currencyCode,closeAccountInd,doNotShowInDropdownInd);
             if (isEditing) {
                 originalAccount = viewModel.getAccountByName(originalAccount.accountName);
                 double difference = balance - originalAccount.accountBalance;
@@ -166,6 +170,8 @@ public class CreateAccountFragment extends Fragment {
             accountTagsEditText.setText(originalAccount.accountTags);
             accountTypeSpinner.setText(originalAccount.accountType);
             displayOrderEditText.setText(String.valueOf(originalAccount.displayOrder));
+            closeAccountCheckBox.setChecked(originalAccount.closeAccountInd);
+            doNotShowInDropdownCheckBox.setChecked(originalAccount.doNotShowInDropdownInd);
             currencyCodeEditText.setText(originalAccount.currencyCode);
             accountBalanceEditText.setEnabled(false);
         } else {
@@ -185,6 +191,8 @@ public class CreateAccountFragment extends Fragment {
         accountTypeSpinner = view.findViewById(R.id.accountTypeSpinner);
         displayOrderEditText = view.findViewById(R.id.displayOrder);
         currencyCodeEditText = view.findViewById(R.id.currencyCodeEditText);
+        closeAccountCheckBox = view.findViewById(R.id.closeAccountCheckBox);
+        doNotShowInDropdownCheckBox = view.findViewById(R.id.doNotShowInDropdownCheckBox);
     }
 
     private void validateAccountTags(){

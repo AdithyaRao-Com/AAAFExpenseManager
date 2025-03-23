@@ -107,7 +107,9 @@ public class AccountRepository {
         String tags = cursor.getString(cursor.getColumnIndexOrThrow("account_tags"));
         int displayOrder = cursor.getInt(cursor.getColumnIndexOrThrow("display_order"));
         String currencyCode = cursor.getString(cursor.getColumnIndexOrThrow("currency_code"));
-        return new Account(accountName, type, balance, tags,displayOrder,currencyCode);
+        boolean closeAccountInd = cursor.getInt(cursor.getColumnIndexOrThrow("close_account_ind")) == 1;
+        boolean doNotShowInDropdownInd = cursor.getInt(cursor.getColumnIndexOrThrow("do_not_show_in_dropdown")) == 1;
+        return new Account(accountName, type, balance, tags,displayOrder,currencyCode,closeAccountInd,doNotShowInDropdownInd);
     }
     public void deleteAll(){
         //noinspection unused

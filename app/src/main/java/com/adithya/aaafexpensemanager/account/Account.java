@@ -15,8 +15,12 @@ public class Account implements Parcelable {
     public String accountTags;
     public int displayOrder;
     public String currencyCode;
+    public boolean closeAccountInd;
+    public boolean doNotShowInDropdownInd;
 
-    public Account(String accountName, String accountType, double accountBalance, String accountTags,int displayOrder,String currencyCode) {
+    public Account(String accountName, String accountType, double accountBalance,
+                   String accountTags,int displayOrder,String currencyCode,boolean closeAccountInd,
+                   boolean doNotShowInDropdownInd) {
         this.accountName = accountName;
         this.accountType = accountType;
         this.accountBalance = accountBalance;
@@ -32,6 +36,8 @@ public class Account implements Parcelable {
         accountTags = in.readString();
         displayOrder = in.readInt();
         currencyCode = in.readString();
+        closeAccountInd = in.readByte() != 0;
+        doNotShowInDropdownInd = in.readByte() != 0;
     }
 
     @Override
@@ -47,6 +53,8 @@ public class Account implements Parcelable {
         dest.writeString(accountTags);
         dest.writeInt(displayOrder);
         dest.writeString(currencyCode);
+        dest.writeByte((byte) (closeAccountInd ? 1 : 0));
+        dest.writeByte((byte) (doNotShowInDropdownInd ? 1 : 0));
     }
 
     public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<>() {

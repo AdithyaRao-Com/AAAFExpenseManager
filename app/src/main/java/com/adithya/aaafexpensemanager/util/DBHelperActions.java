@@ -38,12 +38,14 @@ public class DBHelperActions {
         currencyAllDetails(db);
         String CREATE_ACCOUNTS_TABLE = "CREATE TABLE accounts (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "account_name TEXT NOT NULL," +
+                "account_name TEXT NOT NULL UNIQUE," +
                 "account_type TEXT," +
                 "account_balance REAL," +
                 "account_tags TEXT," +
                 "display_order INTEGER," +
-                "currency_code TEXT)";
+                "currency_code TEXT NOT NULL, " +
+                "close_account_ind INTEGER DEFAULT 0, " +
+                "do_not_show_in_dropdown INTEGER DEFAULT 0 )";
         db.execSQL(CREATE_ACCOUNTS_TABLE);
         String CREATE_TRANSACTIONS_TABLE = "CREATE TABLE transactions (" +
                 "transaction_uuid TEXT PRIMARY KEY," +

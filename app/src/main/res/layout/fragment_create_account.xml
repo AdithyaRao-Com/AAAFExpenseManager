@@ -105,7 +105,18 @@
                     android:inputType="text"
                     style="@style/LargeText"/>
             </com.google.android.material.textfield.TextInputLayout>
-
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/doNotShowInDropdownCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/do_not_show_in_accounts_dropdown"
+                style="@style/LargeText"/>
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/closeAccountCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/closed_account"
+                style="@style/LargeText"/>
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
