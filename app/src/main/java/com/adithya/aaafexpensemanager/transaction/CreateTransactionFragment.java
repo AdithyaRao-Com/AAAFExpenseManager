@@ -37,8 +37,10 @@ import com.adithya.aaafexpensemanager.recurring.RecurringSchedule;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +51,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-/** @noinspection CallToPrintStackTrace*/
+/** @noinspection CallToPrintStackTrace, DataFlowIssue */
 public class CreateTransactionFragment extends Fragment {
     private TransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
@@ -244,21 +246,26 @@ public class CreateTransactionFragment extends Fragment {
                         toAccountName,
                         transactionType,""
                 );
-
-                viewModel.addTransaction(transaction);
-
-                Toast.makeText(requireContext(), "Transaction added", Toast.LENGTH_SHORT).show();
-
-                transactionNameTextView.setText("");
-                transactionDateEditText.setText("");
-                categoryAutoCompleteTextView.setText("");
-                notesEditText.setText("");
-                amountEditText.setText("");
-                accountNameAutoComplete.setText("");
-                toAccountNameAutoComplete.setText("");
+                try {
+                    viewModel.addTransaction(transaction);
+                    Toast.makeText(requireContext(), "Transaction added", Toast.LENGTH_SHORT).show();
+                    transactionNameTextView.setText("");
+                    transactionDateEditText.setText("");
+                    categoryAutoCompleteTextView.setText("");
+                    notesEditText.setText("");
+                    amountEditText.setText("");
+                    accountNameAutoComplete.setText("");
+                    toAccountNameAutoComplete.setText("");
+                    NavHostFragment.findNavController(this).navigate(R.id.action_createTransactionFragment_to_transactionFragment);
+                }
+                catch (InterCurrencyTransferNotSupported e){
+                    Snackbar errorSnackBar = Snackbar.make(getView(),e.getMessage(),Snackbar.LENGTH_INDEFINITE);
+                    errorSnackBar.setAction("OK",v1 ->
+                            NavHostFragment.findNavController(this)
+                                    .navigate(R.id.action_createTransactionFragment_to_transactionFragment));
+                    errorSnackBar.show();
+                }
             }
-
-            NavHostFragment.findNavController(this).navigate(R.id.action_createTransactionFragment_to_transactionFragment);
         });
     }
 

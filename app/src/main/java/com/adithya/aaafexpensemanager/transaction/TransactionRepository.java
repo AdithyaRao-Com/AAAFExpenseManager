@@ -13,6 +13,8 @@ import com.adithya.aaafexpensemanager.account.Account;
 import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionRepository;
 import com.adithya.aaafexpensemanager.recurring.RecurringSchedule;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
+import com.adithya.aaafexpensemanager.transaction.exception.InvalidAccountDataException;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterUtils;
 import com.adithya.aaafexpensemanager.util.AppConstants;
@@ -119,7 +121,7 @@ public class TransactionRepository {
                     createDateTime, lastUpdateDateTime, transferInd,recurringScheduleUUID,
                     currencyCode,conversionFactor,primaryCurrencyCode);
 
-        } catch (IllegalArgumentException e) { // Catch column not found
+        } catch (IllegalArgumentException e) {
             return null;
         } catch (Exception e) {
             return null;
@@ -136,13 +138,28 @@ public class TransactionRepository {
             if(this.recordCount%100==0){
                 Log.d("TransactionRepository",this.recordCount + "records added");
             }
-        } catch (SQLException e) {
+        }
+        catch (IndexOutOfBoundsException e){
+            throw new InterCurrencyTransferNotSupported(e.getMessage());
+        }
+        catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    private void checkInterCurrencyTransfers(Transaction transaction) {
+        if(transaction.transferInd.equals("Transfer")) {
+            Account accountFrom = accountRepository.getAccountByName(transaction.accountName);
+            Account accountTo = accountRepository.getAccountByName(transaction.toAccountName);
+            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))){
+                throw new InterCurrencyTransferNotSupported();
+            }
+        }
+    }
+
     @NonNull
-    private static ContentValues getContentValues(Transaction transaction,String operation) {
+    private ContentValues getContentValues(Transaction transaction,String operation) {
+        checkInterCurrencyTransfers(transaction);
         ContentValues values = new ContentValues();
         if(operation.equals(TransactionRepository.INSERTS)){
             values.put("transaction_uuid", transaction.transactionUUID.toString());
@@ -240,7 +257,8 @@ public class TransactionRepository {
             case "Expense": {
                 Account account = accountRepository.getAccountByName(transaction.accountName);
                 if (account == null) {
-                    return true;
+                    throw new InvalidAccountDataException(
+                            InvalidAccountDataException.INVALID_ACCOUNT_DATA_NULL);
                 }
                 double newBalance = account.accountBalance - modifiedAmount;
                 accountRepository.updateAccountBalance(transaction.accountName, newBalance);
@@ -249,7 +267,8 @@ public class TransactionRepository {
             case "Income": {
                 Account account = accountRepository.getAccountByName(transaction.accountName);
                 if (account == null) {
-                    return true;
+                    throw new InvalidAccountDataException(
+                            InvalidAccountDataException.INVALID_ACCOUNT_DATA_NULL);
                 }
                 double newBalance = account.accountBalance + modifiedAmount;
                 accountRepository.updateAccountBalance(transaction.accountName, newBalance);
@@ -259,7 +278,8 @@ public class TransactionRepository {
                 Account accountFrom = accountRepository.getAccountByName(transactionActual.accountName);
                 Account accountTo = accountRepository.getAccountByName(transactionActual.toAccountName);
                 if ((accountFrom == null) || (accountTo == null)) {
-                    return true;
+                    throw new InvalidAccountDataException(
+                            InvalidAccountDataException.INVALID_ACCOUNT_DATA_NULL);
                 }
                 double newBalanceFrom = accountFrom.accountBalance - modifiedAmount;
                 accountRepository.updateAccountBalance(transactionActual.accountName, newBalanceFrom);
@@ -273,11 +293,16 @@ public class TransactionRepository {
         try {
             db.beginTransaction();
             for(Transaction transaction : transactions){
-                ContentValues values = getContentValues(transaction,TransactionRepository.INSERTS);
-                db.insertOrThrow("transactions", null, values);
-                this.recordCount = this.recordCount + 1;
-                if (this.recordCount % 100 == 0) {
-                    Log.d("TransactionRepository", this.recordCount + "records added");
+                try {
+                    ContentValues values = getContentValues(transaction, TransactionRepository.INSERTS);
+                    db.insertOrThrow("transactions", null, values);
+                    this.recordCount = this.recordCount + 1;
+                    if (this.recordCount % 100 == 0) {
+                        Log.d("TransactionRepository", this.recordCount + "records added");
+                    }
+                }
+                catch (InterCurrencyTransferNotSupported e){
+                    e.printStackTrace();
                 }
             }
             db.setTransactionSuccessful();

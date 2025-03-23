@@ -54,7 +54,6 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
         this.accounts.setValue(accounts);
     }
     public void addTransaction(Transaction transaction) {
-        // Use your TransactionRepository to insert the transaction into the database
         transactionRepository.addTransaction(transaction);
         loadAccountNames();
     }
