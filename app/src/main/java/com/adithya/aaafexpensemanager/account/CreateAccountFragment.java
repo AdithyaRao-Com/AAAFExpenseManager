@@ -68,7 +68,6 @@ public class CreateAccountFragment extends Fragment {
                 .map(curr -> curr.currencyName)
                 .toList();
         currencyCodeEditText.setItems(currencies);
-        // Check for arguments (if we're viewing details)
         Bundle args = getArguments();
         getArgumentsAndSetFields(args);
         updateBalanceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -146,7 +145,7 @@ public class CreateAccountFragment extends Fragment {
                 // Clear the input fields after creating the account
                 accountNameEditText.setText("");
                 accountTypeSpinner.setText("");
-                accountBalanceEditText.setText("0"); // Reset balance
+                accountBalanceEditText.setText("0");
                 accountTagsEditText.setText("");
                 displayOrderEditText.setText("0");
                 currencyCodeEditText.setText("");
@@ -156,7 +155,6 @@ public class CreateAccountFragment extends Fragment {
         });
         return view;
     }
-
     /** @noinspection deprecation*/
     private void getArgumentsAndSetFields(Bundle args) {
         if (args != null && args.containsKey("account")) {

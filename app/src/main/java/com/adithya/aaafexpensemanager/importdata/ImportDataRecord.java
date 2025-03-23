@@ -114,7 +114,9 @@ public class ImportDataRecord {
                 0.0,
                 "",
                 999,
-                defaultCurrency);
+                defaultCurrency,
+                false,
+                false);
     }
 }
 

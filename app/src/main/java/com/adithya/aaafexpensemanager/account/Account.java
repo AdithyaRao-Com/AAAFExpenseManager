@@ -27,6 +27,8 @@ public class Account implements Parcelable {
         this.accountTags = accountTags;
         this.displayOrder = displayOrder;
         this.currencyCode = currencyCode;
+        this.closeAccountInd = closeAccountInd;
+        this.doNotShowInDropdownInd = doNotShowInDropdownInd;
     }
 
     protected Account(Parcel in) {

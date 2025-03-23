@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -28,8 +29,15 @@ public class AccountRepository {
         this.application = application;
     }
     public List<Account> getAccounts() {
+        return getAccounts(false);
+    }
+    public List<Account> getAccounts(boolean showClosedAccounts) {
         List<Account> accounts = new ArrayList<>();
-        Cursor cursor = db.query("accounts_all_view", null, null, null, null, null, null);
+        String selection = "1=1";
+        if(!showClosedAccounts){
+            selection += " AND close_account_ind = 0";
+        }
+        Cursor cursor = db.query("accounts_all_view", null, selection, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 accounts.add(getAccountFromCursor(cursor));
@@ -38,9 +46,12 @@ public class AccountRepository {
         cursor.close();
         return accounts;
     }
-    public List<Account> filterAccounts(String searchText) {
+    public List<Account> filterAccounts(String searchText,boolean showClosedAccounts) {
         List<Account> filteredAccounts = new ArrayList<>();
-        String selection = "account_name LIKE ?";
+        String selection = "1=1 AND account_name LIKE ? ";
+        if(!showClosedAccounts){
+            selection += "AND close_account_ind = 0";
+        }
         String[] selectionArgs = new String[]{"%" + searchText + "%"}; // Use wildcards for "contains"
         Cursor cursor = db.query("accounts_all_view", null, selection, selectionArgs, null, null, null);
         if (cursor.moveToFirst()) {
@@ -64,6 +75,8 @@ public class AccountRepository {
         values.put("account_tags", account.accountTags);
         values.put("display_order", account.displayOrder);
         values.put("currency_code", account.currencyCode);
+        values.put("close_account_ind", account.closeAccountInd?1:0);
+        values.put("do_not_show_in_dropdown", account.doNotShowInDropdownInd?1:0);
         if(isNew){
             values.put("account_name", account.accountName);
             values.put("account_balance", Math.round(account.accountBalance*100.0)/100.0);
@@ -73,7 +86,9 @@ public class AccountRepository {
 
     public void updateAccountOnly(Account account) {
         ContentValues values = getContentValues(account,false);
-        db.update("accounts", values, "account_name = ?", new String[]{account.accountName}); // Update based on name (or ID if you have one)
+        int t1 = db.update("accounts", values, "account_name = ?", new String[]{account.accountName}); // Update based on name (or ID if you have one)
+        Log.d("AccountRepository", "Rows updated: " + t1);
+        Account acc1 = getAccountByName(account.accountName);
     }
     public void updateAccount(Account account) {
         updateAccountOnly(account);

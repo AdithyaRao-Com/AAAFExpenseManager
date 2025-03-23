@@ -16,6 +16,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final MutableLiveData<List<Account>> accounts = new MutableLiveData<>();
+    private boolean showClosedAccounts = false;
 
     public AccountViewModel(Application application) { // Constructor takes Application
         super(application); // Call super constructor
@@ -45,16 +46,20 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     }
 
     public void filterAccounts(String searchText) {
-        List<Account> filteredAccounts = accountRepository.filterAccounts(searchText); // From repository
+        List<Account> filteredAccounts = accountRepository.filterAccounts(searchText,this.showClosedAccounts); // From repository
         accounts.setValue(filteredAccounts);
     }
 
     public void loadAccountNames() {
-        List<Account> accounts = accountRepository.getAccounts(); // From repository
+        List<Account> accounts = accountRepository.getAccounts(this.showClosedAccounts);
         this.accounts.setValue(accounts);
     }
     public void addTransaction(Transaction transaction) {
         transactionRepository.addTransaction(transaction);
         loadAccountNames();
+    }
+
+    public void setShowClosedAccounts(boolean showClosedAccounts) {
+        this.showClosedAccounts = showClosedAccounts;
     }
 }

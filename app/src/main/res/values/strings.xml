@@ -109,4 +109,5 @@
     <string name="clear_all_currency_data_debug">Clear All Currency Data (Debug)</string>
     <string name="closed_account">Closed Account</string>
     <string name="do_not_show_in_accounts_dropdown">Do not show in accounts dropdown</string>
+    <string name="show_hide_closed_accounts">Show/Hide Closed Accounts</string>
 </resources>

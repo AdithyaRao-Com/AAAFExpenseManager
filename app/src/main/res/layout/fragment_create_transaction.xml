@@ -40,7 +40,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/transactionTypeButton"
                     android:layout_width="wrap_content"
@@ -60,7 +59,6 @@
                     android:layout_weight="1"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="@string/amount">
-
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/amountEditText"
                         style="@style/LargeText"
@@ -70,26 +68,48 @@
                         tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="@string/account_name_hint">
-
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
-                    android:id="@+id/accountNameAutoComplete"
-                    style="@style/LargeText"
-                    android:layout_width="match_parent"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="16"
                     android:layout_height="wrap_content"
-                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="@string/account_name_hint">
+                    <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                        android:id="@+id/accountNameAutoComplete"
+                        style="@style/LargeText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/accountCurrencyTextView"
+                        style="@style/LargeText"
+                        android:layout_marginStart="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/linearLayoutDisableable"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/toAccountNameAutoCompleteWrapper"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="16"
                     android:layout_height="wrap_content"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="@string/to_account_name">
@@ -99,6 +119,19 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         style="@style/LargeText"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="5"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/toAccountCurrencyTextView"
+                        style="@style/LargeText"
+                        android:layout_marginStart="7dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
             <com.google.android.material.textfield.TextInputLayout
