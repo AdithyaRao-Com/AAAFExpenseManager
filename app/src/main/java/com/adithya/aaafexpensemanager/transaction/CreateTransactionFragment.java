@@ -4,7 +4,6 @@ import static java.lang.Math.min;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -142,112 +141,110 @@ public class CreateTransactionFragment extends Fragment {
 
     private void setupCreateTransactionButton() {
         createTransactionButton.setOnClickListener(v -> {
-            String transactionName;
             try {
-                transactionName = transactionNameTextView.getText().toString();
-                if(transactionName.isBlank()) throw new Exception();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                transactionNameTextView.setError("Please enter not empty transaction name");
-                return;
-            }
-            String transactionType;
-            try {
-                transactionType = transactionTypeIntKey.get(transactionTypePosition);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                Toast.makeText(requireContext(), "Please select a transaction type", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String category;
-            try{
-                //noinspection DataFlowIssue
-                category = categoryAutoCompleteTextView.getText().toString();
-                if(category.isBlank()) throw new Exception();
-                if(!categoryNames.contains(category)) throw new Exception();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                categoryAutoCompleteTextView.setError("Select a valid category from the list");
-                return;
-            }
-            String notes = notesEditText.getText().toString();
-
-            double amount;
-            try {
-                amount = Double.parseDouble(amountEditText.getText().toString());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                amountEditText.setError("Set a valid value in the amount field");
-                return;
-            }
-            String selectedAccountName;
-            try{
-                //noinspection DataFlowIssue
-                selectedAccountName = accountNameAutoComplete.getText().toString();
-                if(selectedAccountName.isBlank()) throw new Exception();
-                if(!accountNames.contains(selectedAccountName)) throw new Exception();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                accountNameAutoComplete.setError("Select a valid account from the list");
-                return;
-            }
-            String toAccountName;
-            try{
+                String transactionName;
                 try {
-                    //noinspection DataFlowIssue
-                    toAccountName = toAccountNameAutoComplete.getText().toString();
+                    transactionName = transactionNameTextView.getText().toString();
+                    if(transactionName.isBlank()) throw new Exception();
                 }
                 catch (Exception e){
-                    toAccountName = "";
+                    e.printStackTrace();
+                    transactionNameTextView.setError("Please enter not empty transaction name");
+                    return;
                 }
-                if("Transfer".equals(transactionType)
-                        && (toAccountName.isBlank()
-                            || !accountNames.contains(toAccountName)))
-                    throw new Exception();
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                toAccountNameAutoComplete.setError("Select a valid to account from the list");
-                return;
-            }
-            LocalDate transactionDate;
-            try{
-                transactionDate = LocalDate.parse(transactionDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                transactionDateEditText.setError("Select a valid date");
-                return;
-            }
-            if (originalTransaction != null) {
-                originalTransaction.transactionName = transactionName;
-                originalTransaction.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-                originalTransaction.transactionType = transactionType;
-                originalTransaction.category = category;
-                originalTransaction.notes = notes;
-                originalTransaction.amount = amount;
-                originalTransaction.accountName = selectedAccountName;
-                originalTransaction.toAccountName = toAccountName;
-                viewModel.updateTransaction(originalTransaction);
-                Toast.makeText(requireContext(), "Transaction updated", Toast.LENGTH_SHORT).show();
-
-            } else {
-                Transaction transaction = new Transaction(
-                        transactionName,
-                        transactionDate,
-                        transactionType,
-                        category,
-                        notes,
-                        amount,
-                        selectedAccountName,
-                        toAccountName,
-                        transactionType,""
-                );
+                String transactionType;
                 try {
+                    transactionType = transactionTypeIntKey.get(transactionTypePosition);
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Please select a transaction type", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String category;
+                try{
+                    //noinspection DataFlowIssue
+                    category = categoryAutoCompleteTextView.getText().toString();
+                    if(category.isBlank()) throw new Exception();
+                    if(!categoryNames.contains(category)) throw new Exception();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    categoryAutoCompleteTextView.setError("Select a valid category from the list");
+                    return;
+                }
+                String notes = notesEditText.getText().toString();
+                double amount;
+                try {
+                    amount = Double.parseDouble(amountEditText.getText().toString());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    amountEditText.setError("Set a valid value in the amount field");
+                    return;
+                }
+                String selectedAccountName;
+                try{
+                    //noinspection DataFlowIssue
+                    selectedAccountName = accountNameAutoComplete.getText().toString();
+                    if(selectedAccountName.isBlank()) throw new Exception();
+                    if(!accountNames.contains(selectedAccountName)) throw new Exception();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    accountNameAutoComplete.setError("Select a valid account from the list");
+                    return;
+                }
+                String toAccountName;
+                try{
+                    try {
+                        //noinspection DataFlowIssue
+                        toAccountName = toAccountNameAutoComplete.getText().toString();
+                    }
+                    catch (Exception e){
+                        toAccountName = "";
+                    }
+                    if("Transfer".equals(transactionType)
+                            && (toAccountName.isBlank()
+                                || !accountNames.contains(toAccountName)))
+                        throw new Exception();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    toAccountNameAutoComplete.setError("Select a valid to account from the list");
+                    return;
+                }
+                LocalDate transactionDate;
+                try{
+                    transactionDate = LocalDate.parse(transactionDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                    transactionDateEditText.setError("Select a valid date");
+                    return;
+                }
+                if (originalTransaction != null) {
+                    originalTransaction.transactionName = transactionName;
+                    originalTransaction.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                    originalTransaction.transactionType = transactionType;
+                    originalTransaction.category = category;
+                    originalTransaction.notes = notes;
+                    originalTransaction.amount = amount;
+                    originalTransaction.accountName = selectedAccountName;
+                    originalTransaction.toAccountName = toAccountName;
+                    viewModel.updateTransaction(originalTransaction);
+                    Toast.makeText(requireContext(), "Transaction updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    Transaction transaction = new Transaction(
+                            transactionName,
+                            transactionDate,
+                            transactionType,
+                            category,
+                            notes,
+                            amount,
+                            selectedAccountName,
+                            toAccountName,
+                            transactionType,""
+                    );
                     viewModel.addTransaction(transaction);
                     Toast.makeText(requireContext(), "Transaction added", Toast.LENGTH_SHORT).show();
                     transactionNameTextView.setText("");
@@ -257,23 +254,18 @@ public class CreateTransactionFragment extends Fragment {
                     amountEditText.setText("");
                     accountNameAutoComplete.setText("");
                     toAccountNameAutoComplete.setText("");
-                    NavHostFragment.findNavController(this).navigate(R.id.action_createTransactionFragment_to_transactionFragment);
                 }
-                catch (InterCurrencyTransferNotSupported e){
-                    new AlertDialog.Builder(getContext())
-                            .setTitle("Error")
-                            .setMessage(e.getMessage())
-                            .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    NavHostFragment.findNavController(getParentFragment())
-                                            .navigate(R.id.action_createTransactionFragment_to_transactionFragment);
-                                }
-                            })
-                            .create()
-                            .show();
-                }
+                NavHostFragment.findNavController(this).navigate(R.id.action_createTransactionFragment_to_transactionFragment);
+            }
+            catch (InterCurrencyTransferNotSupported e){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Error")
+                        .setMessage(e.getMessage())
+                        .setCancelable(false)
+                        .setPositiveButton("OK", (dialog, which) -> NavHostFragment.findNavController(getParentFragment())
+                                .navigate(R.id.action_createTransactionFragment_to_transactionFragment))
+                        .create()
+                        .show();
             }
         });
     }

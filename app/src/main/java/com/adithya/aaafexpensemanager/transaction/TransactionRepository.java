@@ -121,9 +121,8 @@ public class TransactionRepository {
                     createDateTime, lastUpdateDateTime, transferInd,recurringScheduleUUID,
                     currencyCode,conversionFactor,primaryCurrencyCode);
 
-        } catch (IllegalArgumentException e) {
-            return null;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

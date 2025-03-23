@@ -8,7 +8,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.adithya.aaafexpensemanager.account.Account;
+import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionRepository;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterUtils;
 import com.adithya.aaafexpensemanager.util.AppConstants;
@@ -35,10 +38,12 @@ public class RecurringRepository {
     private final FutureTransactionRepository futureTransactionRepository;
 
     public int recordCount = 0;
+    private final Application application;
     /** @noinspection resource*/
     public RecurringRepository(Application application) {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
+        this.application = application;
         futureTransactionRepository = new FutureTransactionRepository(application);
     }
 
@@ -127,8 +132,8 @@ public class RecurringRepository {
     }
 
     public boolean addRecurringSchedule(RecurringSchedule recurringSchedule) {
+        ContentValues values = getContentValuesForChange(recurringSchedule,INSERTS);
         try {
-            ContentValues values = getContentValuesForChange(recurringSchedule,INSERTS);
             long result = db.insertOrThrow("recurring_schedules", null, values);
             this.recordCount = this.recordCount + 1;
             if(this.recordCount%100==0){
@@ -167,6 +172,7 @@ public class RecurringRepository {
     }
     @NonNull
     private ContentValues getContentValuesForChange(RecurringSchedule recurringSchedule,String operationType) {
+        checkInterCurrencyTransfers(recurringSchedule);
         ContentValues values = new ContentValues();
         values.put("transaction_name", recurringSchedule.transactionName);
         values.put("recurring_schedule", recurringSchedule.recurringScheduleName);
@@ -187,6 +193,18 @@ public class RecurringRepository {
         values.put("last_update_date", recurringSchedule.lastUpdateDateTime);
         return values;
     }
+
+    private void checkInterCurrencyTransfers(RecurringSchedule recurringSchedule) {
+        if(recurringSchedule.transactionType.equals("Transfer")){
+            AccountRepository accountRepository = new AccountRepository(this.application);
+            Account accountFrom = accountRepository.getAccountByName(recurringSchedule.accountName);
+            Account accountTo = accountRepository.getAccountByName(recurringSchedule.toAccountName);
+            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))){
+                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode,accountTo.currencyCode);
+            }
+        }
+    }
+
     public RecurringSchedule getRecurringScheduleById(UUID recurringScheduleUUID) {
         final RecurringSchedule[] result = new RecurringSchedule[1]; // Array to hold the result
         try (Cursor cursor = db.rawQuery("SELECT * FROM RecurringScheduleNextDate WHERE recurring_schedule_uuid = ?", new String[]{recurringScheduleUUID.toString()})) {
@@ -210,12 +228,6 @@ public class RecurringRepository {
         } catch (RuntimeException ignored) {
         }
     }
-    public void addRecurringSchedules(List<RecurringSchedule> recurringSchedules) {
-        for(RecurringSchedule recurringSchedule:recurringSchedules){
-            addRecurringSchedule(recurringSchedule);
-        }
-    }
-
     public boolean deleteInvalidSchedules() {
         try {
             int rowsAffected = db.delete("recurring_schedules", "recurring_end_date < ?",

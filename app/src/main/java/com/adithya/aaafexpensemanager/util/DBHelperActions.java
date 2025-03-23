@@ -281,7 +281,10 @@ public class DBHelperActions {
                 "         on ac1.account_type = at1.account_type\n" +
                 " left join currency_all_details curr1 " +
                 "        on ac1.currency_code = curr1.currency_code " +
-                "order by at1.account_type_display_order ASC, ac1.display_order ASC");
+                "order by at1.account_type_display_order ASC," +
+                " at1.account_type ASC, " +
+                " ac1.display_order ASC, " +
+                " ac1.account_name ASC");
     }
     private static void createRecurringTransactionsView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS recurring_transactions_view AS " +

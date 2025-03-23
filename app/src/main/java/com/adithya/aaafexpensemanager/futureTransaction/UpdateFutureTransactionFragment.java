@@ -2,6 +2,7 @@ package com.adithya.aaafexpensemanager.futureTransaction;
 
 import static java.lang.Math.min;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -219,20 +221,30 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 transactionDateEditText.setError("Select a valid date");
                 return;
             }
-            if (originalTransaction != null) {
-                originalTransaction.transactionName = transactionName;
-                originalTransaction.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-                originalTransaction.transactionType = transactionType;
-                originalTransaction.category = category;
-                originalTransaction.notes = notes;
-                originalTransaction.amount = amount;
-                originalTransaction.accountName = selectedAccountName;
-                originalTransaction.toAccountName = toAccountName;
-                viewModel.updateFutureTransaction(originalTransaction);
-                Toast.makeText(requireContext(), "Transaction updated", Toast.LENGTH_SHORT).show();
-
+            try {
+                if (originalTransaction != null) {
+                    originalTransaction.transactionName = transactionName;
+                    originalTransaction.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                    originalTransaction.transactionType = transactionType;
+                    originalTransaction.category = category;
+                    originalTransaction.notes = notes;
+                    originalTransaction.amount = amount;
+                    originalTransaction.accountName = selectedAccountName;
+                    originalTransaction.toAccountName = toAccountName;
+                    viewModel.updateFutureTransaction(originalTransaction);
+                    Toast.makeText(requireContext(), "Transaction updated", Toast.LENGTH_SHORT).show();
+                }
+                NavHostFragment.findNavController(this).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment);
             }
-            NavHostFragment.findNavController(this).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment);
+            catch (InterCurrencyTransferNotSupported e){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Error")
+                        .setMessage(e.getMessage())
+                        .setCancelable(false)
+                        .setPositiveButton("OK", (dialog, which) -> NavHostFragment.findNavController(this).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment))
+                        .create()
+                        .show();
+            }
         });
     }
 

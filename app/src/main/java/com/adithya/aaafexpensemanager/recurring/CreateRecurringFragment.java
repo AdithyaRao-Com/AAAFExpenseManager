@@ -2,6 +2,7 @@ package com.adithya.aaafexpensemanager.recurring;
 
 import static java.lang.Math.min;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.icu.util.Calendar;
@@ -35,6 +36,7 @@ import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionViewModel;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.adithya.aaafexpensemanager.util.AppConstants;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -186,106 +188,115 @@ public class CreateRecurringFragment extends Fragment {
     }
     private void setupCreateTransactionButton() {
         createTransactionButton.setOnClickListener(v -> {
-            String transactionName = transactionNameTextView.getText().toString();
-            if(transactionName.isBlank()){
-                transactionNameTextView.setError("Transaction Name cannot be blank");
-                return;
-            }
-            String recurringSchedule = recurringScheduleAutoCompleteTextView.getText().toString();
-            int repeatIntervalDays;
-            try{
-                repeatIntervalDays = Integer.parseInt(repeatIntervalDaysEditText.getText().toString());
-            }
-            catch (Exception e){
-                repeatIntervalDays = 0;
-            }
-            String transactionType = transactionTypeIntKey.get(transactionTypePosition);
-            String category = categoryAutoCompleteTextView.getText().toString();
-            LocalDate recurringStartDate;
-            LocalDate recurringEndDate;
-            try{
-                recurringStartDate = LocalDate.parse(recurringStartDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-            catch (Exception e){
-                recurringStartDateEditText.setError("Invalid start date");
-                Snackbar.make(getView(), "Invalid start date", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            try{
-                recurringEndDate = LocalDate.parse(recurringEndDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-            catch (Exception e){
-                recurringEndDateEditText.setError("Invalid end date");
-                Snackbar.make(getView(), "Invalid end date", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            if(recurringStartDate.isAfter(recurringEndDate)){
-                recurringEndDateEditText.setError("End date cannot be before start date");
-                Snackbar.make(getView(), "End date cannot be before start date", Snackbar.LENGTH_SHORT).show();
-                return;
-            }
-            if (!categoryNames.contains(category)) {
-                categoryAutoCompleteTextView.setError("Select a valid category from the list");
-                return;
-            }
-            String notes = notesEditText.getText().toString();
-            double amount;
             try {
-                amount = Double.parseDouble(amountEditText.getText().toString());
-            } catch (NumberFormatException e) {
-                amountEditText.setError("Invalid amount");
-                Toast.makeText(requireContext(), "Invalid amount", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String selectedAccountName = accountNameAutoComplete.getText().toString();
-            String toAccountName = toAccountNameAutoComplete.getText().toString();
-            if (!accountNames.contains(selectedAccountName)) {
-                accountNameAutoComplete.setError("Select a valid account from the list");
-                return;
-            }
-            if ("Transfer".equals(transactionType) && (toAccountName.isEmpty() || !accountNames.contains(toAccountName))) {
-                toAccountNameAutoComplete.setError("Please select a valid 'To Account' for transfers");
-                return;
-            }
-            if (isEditing) {
-                originalRecurringSchedule.transactionName = transactionName;
-                originalRecurringSchedule.recurringScheduleName = recurringSchedule;
-                originalRecurringSchedule.repeatIntervalDays = repeatIntervalDays;
-                originalRecurringSchedule.recurringStartDate = Integer.parseInt(recurringStartDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-                originalRecurringSchedule.recurringEndDate = Integer.parseInt(recurringEndDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-                originalRecurringSchedule.transactionType = transactionType;
-                originalRecurringSchedule.category = category;
-                originalRecurringSchedule.notes = notes;
-                originalRecurringSchedule.amount = amount;
-                originalRecurringSchedule.accountName = selectedAccountName;
-                originalRecurringSchedule.toAccountName = toAccountName;
-                viewModel.updateRecurringSchedule(originalRecurringSchedule);
-                Toast.makeText(requireContext(), "Recurring schedule updated", Toast.LENGTH_SHORT).show();
-            } else {
-                RecurringSchedule transaction = new RecurringSchedule(
-                        transactionName,
-                        recurringSchedule,
-                        repeatIntervalDays,
-                        recurringStartDate,
-                        recurringEndDate,
-                        category,
-                        notes,
-                        transactionType,
-                        amount,
-                        selectedAccountName,
-                        toAccountName,
-                        transactionType
-                );
-                boolean checkInserted = viewModel.addRecurringSchedule(transaction);
-                if(checkInserted) {
-                    Toast.makeText(requireContext(), "Recurring schedule added", Toast.LENGTH_SHORT).show();
+                String transactionName = transactionNameTextView.getText().toString();
+                if (transactionName.isBlank()) {
+                    transactionNameTextView.setError("Transaction Name cannot be blank");
+                    return;
                 }
-                else{
-                    Toast.makeText(requireContext(), "Recurring schedule not added", Toast.LENGTH_SHORT).show();
+                String recurringSchedule = recurringScheduleAutoCompleteTextView.getText().toString();
+                int repeatIntervalDays;
+                try {
+                    repeatIntervalDays = Integer.parseInt(repeatIntervalDaysEditText.getText().toString());
+                } catch (Exception e) {
+                    repeatIntervalDays = 0;
                 }
-                setRecurringScheduleFields(new RecurringSchedule());
+                String transactionType = transactionTypeIntKey.get(transactionTypePosition);
+                String category = categoryAutoCompleteTextView.getText().toString();
+                LocalDate recurringStartDate;
+                LocalDate recurringEndDate;
+                try {
+                    recurringStartDate = LocalDate.parse(recurringStartDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                } catch (Exception e) {
+                    recurringStartDateEditText.setError("Invalid start date");
+                    Snackbar.make(getView(), "Invalid start date", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    recurringEndDate = LocalDate.parse(recurringEndDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                } catch (Exception e) {
+                    recurringEndDateEditText.setError("Invalid end date");
+                    Snackbar.make(getView(), "Invalid end date", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                if (recurringStartDate.isAfter(recurringEndDate)) {
+                    recurringEndDateEditText.setError("End date cannot be before start date");
+                    Snackbar.make(getView(), "End date cannot be before start date", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!categoryNames.contains(category)) {
+                    categoryAutoCompleteTextView.setError("Select a valid category from the list");
+                    return;
+                }
+                String notes = notesEditText.getText().toString();
+                double amount;
+                try {
+                    amount = Double.parseDouble(amountEditText.getText().toString());
+                } catch (NumberFormatException e) {
+                    amountEditText.setError("Invalid amount");
+                    Toast.makeText(requireContext(), "Invalid amount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String selectedAccountName = accountNameAutoComplete.getText().toString();
+                String toAccountName = toAccountNameAutoComplete.getText().toString();
+                if (!accountNames.contains(selectedAccountName)) {
+                    accountNameAutoComplete.setError("Select a valid account from the list");
+                    return;
+                }
+                if ("Transfer".equals(transactionType) && (toAccountName.isEmpty() || !accountNames.contains(toAccountName))) {
+                    toAccountNameAutoComplete.setError("Please select a valid 'To Account' for transfers");
+                    return;
+                }
+                if (isEditing) {
+                    originalRecurringSchedule.transactionName = transactionName;
+                    originalRecurringSchedule.recurringScheduleName = recurringSchedule;
+                    originalRecurringSchedule.repeatIntervalDays = repeatIntervalDays;
+                    originalRecurringSchedule.recurringStartDate = Integer.parseInt(recurringStartDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                    originalRecurringSchedule.recurringEndDate = Integer.parseInt(recurringEndDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+                    originalRecurringSchedule.transactionType = transactionType;
+                    originalRecurringSchedule.category = category;
+                    originalRecurringSchedule.notes = notes;
+                    originalRecurringSchedule.amount = amount;
+                    originalRecurringSchedule.accountName = selectedAccountName;
+                    originalRecurringSchedule.toAccountName = toAccountName;
+                    viewModel.updateRecurringSchedule(originalRecurringSchedule);
+                    Toast.makeText(requireContext(), "Recurring schedule updated", Toast.LENGTH_SHORT).show();
+                } else {
+                    RecurringSchedule transaction = new RecurringSchedule(
+                            transactionName,
+                            recurringSchedule,
+                            repeatIntervalDays,
+                            recurringStartDate,
+                            recurringEndDate,
+                            category,
+                            notes,
+                            transactionType,
+                            amount,
+                            selectedAccountName,
+                            toAccountName,
+                            transactionType
+                    );
+                    boolean checkInserted = viewModel.addRecurringSchedule(transaction);
+                    if (checkInserted) {
+                        Toast.makeText(requireContext(), "Recurring schedule added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(requireContext(), "Recurring schedule not added", Toast.LENGTH_SHORT).show();
+                    }
+                    setRecurringScheduleFields(new RecurringSchedule());
+                }
+                NavHostFragment.findNavController(this).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
             }
-            NavHostFragment.findNavController(this).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
+            catch (InterCurrencyTransferNotSupported e){
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Error")
+                        .setMessage(e.getMessage())
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                (dialog, which) ->NavHostFragment.findNavController(this)
+                                        .navigate(R.id.action_createRecurringFragment_to_recurringFragment))
+                        .create()
+                        .show();
+            }
         });
     }
     private void setupTransactionTypeButton() {

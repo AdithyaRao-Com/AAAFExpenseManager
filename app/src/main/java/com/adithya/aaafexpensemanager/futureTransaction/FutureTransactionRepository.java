@@ -5,8 +5,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.adithya.aaafexpensemanager.account.Account;
+import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.recurring.RecurringSchedule;
 import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
+import com.adithya.aaafexpensemanager.transaction.exception.InterCurrencyTransferNotSupported;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterUtils;
 import com.adithya.aaafexpensemanager.util.AppConstants;
@@ -32,10 +35,12 @@ public class FutureTransactionRepository {
     final LocalDate TRANSACTION_DATE_DUMMY = AppConstants.TRANSACTION_DATE_DUMMY;
     final TransactionRepository transactionRepository;
     private RecurringSchedule recurringSchedule;
+    private final Application application;
     public FutureTransactionRepository(Application application) {
         //noinspection resource
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
+        this.application = application;
         transactionRepository = new TransactionRepository(application);
     }
     public FutureTransaction getNextTransaction(RecurringSchedule recurringSchedule) {
@@ -164,6 +169,7 @@ public class FutureTransactionRepository {
     private ContentValues ContentValuesFromObject(
             FutureTransaction futureTransaction,
             String operationType){
+        checkInterCurrencyTransfers(futureTransaction);
         ContentValues values = new ContentValues();
         values.put("recurring_schedule_uuid", futureTransaction.recurringScheduleUUID.toString());
         values.put("transaction_name", futureTransaction.transactionName);
@@ -182,6 +188,18 @@ public class FutureTransactionRepository {
         values.put("last_update_date", futureTransaction.lastUpdateDateTime);
         return values;
     }
+
+    private void checkInterCurrencyTransfers(FutureTransaction futureTransaction) {
+        if(futureTransaction.transferInd.equals("Transfer")){
+            AccountRepository accountRepository = new AccountRepository(this.application);
+            Account accountFrom = accountRepository.getAccountByName(futureTransaction.accountName);
+            Account accountTo = accountRepository.getAccountByName(futureTransaction.toAccountName);
+            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))) {
+                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode, accountTo.currencyCode);
+            }
+        }
+    }
+
     private FutureTransaction getRecurringTransactionFromCursor(Cursor cursor) {
         try {
             int uuidIndex = cursor.getColumnIndexOrThrow("transaction_uuid");

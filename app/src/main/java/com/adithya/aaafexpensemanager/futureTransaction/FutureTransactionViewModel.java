@@ -27,10 +27,6 @@ public class FutureTransactionViewModel extends AndroidViewModel {
         return repository.getNextTransaction(recurringSchedule);
     }
 
-    public boolean addFutureTransaction(FutureTransaction futureTransaction) {
-        return repository.addFutureTransaction(futureTransaction);
-    }
-
     public boolean updateFutureTransaction(FutureTransaction futureTransaction) {
         return repository.updateFutureTransaction(futureTransaction);
     }
