@@ -55,7 +55,6 @@ import java.util.stream.Collectors;
 
 /** @noinspection DataFlowIssue*/
 public class CreateRecurringFragment extends Fragment {
-    // TODO - Implement do not show in drop down
     // TODO - Implement a method to show the currency in the amount field
     private RecurringViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;

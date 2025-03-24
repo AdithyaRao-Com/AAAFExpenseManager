@@ -16,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -52,7 +52,6 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace*/
 public class UpdateFutureTransactionFragment extends Fragment {
-    // TODO - Implement do not show in drop down
     // TODO - Implement a method to show the currency in the amount field
     private FutureTransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
@@ -63,7 +62,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
     private EditText amountEditText;
     private LookupEditText accountNameAutoComplete;
     private LookupEditText toAccountNameAutoComplete;
-    private LinearLayout linearLayoutDisableable;
+    private ConstraintLayout linearLayoutDisableable;
     private FloatingActionButton createTransactionButton;
     private LocalDate transactionDate;
     private FutureTransaction originalTransaction;
@@ -75,6 +74,8 @@ public class UpdateFutureTransactionFragment extends Fragment {
     private MaterialButton transactionTypeButton;
     private int transactionTypePosition = 0;
     private TextView transactionTypeTextView;
+    private MaterialButton accountCurrencyTextView;
+    private MaterialButton toAccountCurrencyTextView;
     private final Map<Integer, String> transactionTypeIntKey =
             Map.of(0,"Expense",
                     1,"Income",
@@ -132,7 +133,11 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 categoryAutoCompleteTextView.setText(selectedRecentTrans.category);
                 notesEditText.setText(selectedRecentTrans.notes);
                 accountNameAutoComplete.setText(selectedRecentTrans.accountName);
+                accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedRecentTrans.accountName).currencyCode);
                 toAccountNameAutoComplete.setText(selectedRecentTrans.toAccountName);
+                if(selectedRecentTrans.toAccountName!=null && !selectedRecentTrans.toAccountName.isEmpty()) {
+                    toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedRecentTrans.toAccountName).currencyCode);
+                }
                 //noinspection DataFlowIssue
                 transactionTypePosition = transactionStringKey.get(selectedRecentTrans.transactionType);
                 updateTransactionButton();
@@ -288,6 +293,10 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 notesEditText.setText(originalTransaction.notes);
                 accountNameAutoComplete.setText(originalTransaction.accountName);
                 toAccountNameAutoComplete.setText(originalTransaction.toAccountName);
+                accountCurrencyTextView.setText(accountViewModel.getAccountByName(originalTransaction.accountName).currencyCode);
+                if(originalTransaction.toAccountName!=null && !originalTransaction.toAccountName.isEmpty()) {
+                    toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(originalTransaction.toAccountName).currencyCode);
+                }
                 //noinspection DataFlowIssue
                 transactionTypePosition = transactionStringKey.get(originalTransaction.transactionType);
                 updateTransactionButton();
@@ -306,6 +315,8 @@ public class UpdateFutureTransactionFragment extends Fragment {
             this.accountNames = accountNames.stream().map(account -> account.accountName).collect(Collectors.toList());
             accountNameAutoComplete.setItems(this.accountNames);
             toAccountNameAutoComplete.setItems(this.accountNames);
+            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
+            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
         });
     }
     private void setupCategoryTypeAutocomplete() {
@@ -336,6 +347,8 @@ public class UpdateFutureTransactionFragment extends Fragment {
         amountEditText = view.findViewById(R.id.amountEditText);
         accountNameAutoComplete = view.findViewById(R.id.accountNameAutoComplete);
         toAccountNameAutoComplete = view.findViewById(R.id.toAccountNameAutoComplete);
+        accountCurrencyTextView = view.findViewById(R.id.accountCurrencyTextView);
+        toAccountCurrencyTextView = view.findViewById(R.id.toAccountCurrencyTextView);
         linearLayoutDisableable = view.findViewById(R.id.linearLayoutDisableable);
         createTransactionButton = view.findViewById(R.id.createTransactionFab);
     }
