@@ -16,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -55,7 +55,6 @@ import java.util.stream.Collectors;
 
 /** @noinspection DataFlowIssue*/
 public class CreateRecurringFragment extends Fragment {
-    // TODO - Implement a method to show the currency in the amount field
     private RecurringViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private LookupEditText recurringScheduleAutoCompleteTextView;
@@ -68,7 +67,9 @@ public class CreateRecurringFragment extends Fragment {
     private EditText amountEditText;
     private LookupEditText accountNameAutoComplete;
     private LookupEditText toAccountNameAutoComplete;
-    private LinearLayout linearLayoutDisableable;
+    private MaterialButton accountCurrencyTextView;
+    private MaterialButton toAccountCurrencyTextView;
+    private ConstraintLayout linearLayoutDisableable;
     private FloatingActionButton createTransactionButton;
     private LocalDate recurringStartDate;
     private LocalDate recurringEndDate;
@@ -131,6 +132,8 @@ public class CreateRecurringFragment extends Fragment {
         linearLayoutDisableable = view.findViewById(R.id.linearLayoutDisableable);
         createTransactionButton = view.findViewById(R.id.createRecurringFab);
         repeatDaysWrapper = view.findViewById(R.id.repeatDaysWrapper);
+        accountCurrencyTextView = view.findViewById(R.id.accountCurrencyTextView);
+        toAccountCurrencyTextView = view.findViewById(R.id.toAccountCurrencyTextView);
     }
     private void parseArgumentsAndSetFields() {
         if (getArguments() != null && getArguments().containsKey("recurringSchedule")) {
@@ -179,6 +182,8 @@ public class CreateRecurringFragment extends Fragment {
         amountEditText.setText(String.valueOf(recurringSchedule.amount));
         accountNameAutoComplete.setText(recurringSchedule.accountName);
         toAccountNameAutoComplete.setText(recurringSchedule.toAccountName);
+        accountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.accountName).currencyCode);
+        toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.toAccountName).currencyCode);
     }
 
     private void setCurrentDate() {
@@ -353,6 +358,8 @@ public class CreateRecurringFragment extends Fragment {
             this.accountNames = accountNames.stream().map(account -> account.accountName).collect(Collectors.toList());
             this.accountNameAutoComplete.setItems(this.accountNames);
             this.toAccountNameAutoComplete.setItems(this.accountNames);
+            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
+            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
         });
     }
     private void setupCategoryTypeAutocomplete() {

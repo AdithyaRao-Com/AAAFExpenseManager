@@ -138,32 +138,56 @@
                                 tools:ignore="Autofill,TextContrastCheck,VisualLintTextFieldSize" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
-                    <com.google.android.material.textfield.TextInputLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:hint="@string/account_name_hint">
-
-                        <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
-                            android:id="@+id/accountNameAutoComplete"
-                            style="@style/LargeText"
-                            android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/accountNameAutoCompleteWrapper"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:completionThreshold="0"
-                            android:inputType="text"
-                            tools:ignore="LabelFor,SpeakableTextPresentCheck,TextContrastCheck,VisualLintTextFieldSize" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                    <LinearLayout
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/accountCurrencyTextViewWrapper"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:hint="@string/account_name_hint">
+                            <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                                android:id="@+id/accountNameAutoComplete"
+                                style="@style/LargeText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:completionThreshold="0"
+                                android:inputType="text"
+                                tools:ignore="LabelFor,SpeakableTextPresentCheck,TextContrastCheck,VisualLintTextFieldSize" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/accountCurrencyTextViewWrapper"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/accountCurrencyTextView"
+                                style="@style/LargeText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="7dp"
+                                tools:ignore="TextContrastCheck,VisualLintTextFieldSize,SpeakableTextPresentCheck" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/linearLayoutDisableable"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent">
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/toAccountNameAutoCompleteWrapper"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@id/toAccountCurrencyTextViewWrapper"
+                            app:layout_constraintTop_toTopOf="parent"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:hint="@string/to_account_name">
-
                             <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                                 android:id="@+id/toAccountNameAutoComplete"
                                 style="@style/LargeText"
@@ -173,7 +197,22 @@
                                 android:inputType="text"
                                 tools:ignore="LabelFor,TextContrastCheck,TextContrastCheck,VisualLintTextFieldSize" />
                         </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/toAccountCurrencyTextViewWrapper"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/toAccountCurrencyTextView"
+                                style="@style/LargeText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="7dp"
+                                tools:ignore="TextContrastCheck,VisualLintTextFieldSize,SpeakableTextPresentCheck" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
