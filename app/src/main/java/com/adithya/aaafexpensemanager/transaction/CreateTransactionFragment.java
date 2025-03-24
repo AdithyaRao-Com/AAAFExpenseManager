@@ -52,9 +52,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-/** @noinspection CallToPrintStackTrace, DataFlowIssue */
+/** @noinspection ALL */
 public class CreateTransactionFragment extends Fragment {
-    // TODO - Implement do not show in drop down
     private TransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private EditText transactionDateEditText;
@@ -71,6 +70,7 @@ public class CreateTransactionFragment extends Fragment {
     private AccountViewModel accountViewModel;
     private RecentTransactionViewModel recentTransactionViewModel;
     private List<String> accountNames = new ArrayList<>();
+    private List<String> eligibleAccountNames = new ArrayList<>();
     private CategoryViewModel categoryViewModel;
     private ArrayAdapter<String> autoCompleteAdapterRecentTrans;
     private MaterialButton transactionTypeButton;
@@ -333,10 +333,19 @@ public class CreateTransactionFragment extends Fragment {
     }
 
     private void setupAccountNameAndToAccountNameAutocomplete() {
+        accountViewModel.loadAccountNames();
         List<Account> accounts = accountViewModel.getAccounts().getValue();
-        this.accountNames = accounts.stream().map(account -> account.accountName).collect(Collectors.toList());
-        accountNameAutoComplete.setItems(this.accountNames);
-        toAccountNameAutoComplete.setItems(this.accountNames);
+        this.accountNames = accounts
+                .stream()
+                .map(account -> account.accountName)
+                .collect(Collectors.toList());
+        this.eligibleAccountNames = accounts
+                .stream()
+                .filter(account -> !account.closeAccountInd)
+                .filter(account -> !account.doNotShowInDropdownInd)
+                .map(account -> account.accountName).collect(Collectors.toList());
+        accountNameAutoComplete.setItems(this.eligibleAccountNames);
+        toAccountNameAutoComplete.setItems(this.eligibleAccountNames);
         accountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->
                 accountCurrencyTextView.setText(accounts.get(position).currencyCode));
         toAccountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->
