@@ -16,12 +16,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -63,7 +63,7 @@ public class CreateTransactionFragment extends Fragment {
     private EditText amountEditText;
     private LookupEditText accountNameAutoComplete;
     private LookupEditText toAccountNameAutoComplete;
-    private LinearLayout linearLayoutDisableable;
+    private ConstraintLayout linearLayoutDisableable;
     private FloatingActionButton createTransactionButton;
     private LocalDate transactionDate;
     private Transaction originalTransaction;
@@ -346,10 +346,18 @@ public class CreateTransactionFragment extends Fragment {
                 .map(account -> account.accountName).collect(Collectors.toList());
         accountNameAutoComplete.setItems(this.eligibleAccountNames);
         toAccountNameAutoComplete.setItems(this.eligibleAccountNames);
-        accountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->
-                accountCurrencyTextView.setText(accounts.get(position).currencyCode));
-        toAccountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->
-                toAccountCurrencyTextView.setText(accounts.get(position).currencyCode));
+        accountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->{
+            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem))
+                    .findFirst().orElse(null)
+                            .currencyCode;
+            accountCurrencyTextView.setText(tempCurrencyCode);
+        });
+        toAccountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->{
+            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem))
+                    .findFirst().orElse(null)
+                    .currencyCode;
+            toAccountCurrencyTextView.setText(tempCurrencyCode);
+        });
     }
     private void setupCategoryTypeAutocomplete() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
