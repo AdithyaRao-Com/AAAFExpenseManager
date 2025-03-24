@@ -19,7 +19,6 @@ import java.util.List;
 
 /** */
 public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    // TODO - Show only the accounts that are not in closed state
     public interface NavigationListener{
         void changeNavigation(int id, Bundle args);
     }
