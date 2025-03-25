@@ -98,12 +98,16 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_tags_hash_separated">
-                <com.google.android.material.textfield.TextInputEditText
+<!--                <com.google.android.material.textfield.TextInputEditText-->
+<!--                    android:id="@+id/accountTagsEditText"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:inputType="text"-->
+<!--                    style="@style/LargeText"/>-->
+                <com.adithya.aaafexpensemanager.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList
                     android:id="@+id/accountTagsEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    style="@style/LargeText"/>
+                    android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/doNotShowInDropdownCheckBox"

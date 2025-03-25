@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanager.R;
+import com.adithya.aaafexpensemanager.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
@@ -36,10 +37,10 @@ import java.util.stream.Collectors;
 
 
 public class CreateAccountFragment extends Fragment {
-    // TODO - Create a new layout component for handling tags
-    // TODO - EditText + Dialog + ListView + AutoCompleteTextView + Button field
+    // TODO- Test Account Tags reusable component
     // TODO - Convert the data into GSON List of strings and insert into the DB
-    private EditText accountNameEditText, accountBalanceEditText, accountTagsEditText;
+    private EditText accountNameEditText, accountBalanceEditText;
+    private LookupAutoCompleteList accountTagsEditText;
     private FloatingActionButton  createAccountButton;
     private LookupEditText accountTypeSpinner;
     private EditText displayOrderEditText;
@@ -78,6 +79,13 @@ public class CreateAccountFragment extends Fragment {
             accountBalanceEditText.setFocusable(isChecked);
             accountBalanceEditText.setFocusableInTouchMode(isChecked);
         });
+        List<String> accountTags = new ArrayList<>();
+        accountTags.add("Test 1");
+        accountTags.add("Test 2");
+        accountTags.add("Test 3");
+        accountTags.add("Test 4");
+        accountTags.add("Test 5");
+        accountTagsEditText.setPromptList(accountTags);
         createAccountButton.setOnClickListener(v -> {
             String name = accountNameEditText.getText().toString();
             if (name.isBlank()) {
@@ -95,7 +103,7 @@ public class CreateAccountFragment extends Fragment {
                 return;
             }
             String balanceStr = accountBalanceEditText.getText().toString();
-            validateAccountTags();
+//            validateAccountTags();
             String tags = accountTagsEditText.getText().toString();
             int displayOrder;
             try{
@@ -196,27 +204,7 @@ public class CreateAccountFragment extends Fragment {
         doNotShowInDropdownCheckBox = view.findViewById(R.id.doNotShowInDropdownCheckBox);
     }
 
-    private void validateAccountTags(){
-        try {
-            ArrayList<String> outputTags = new ArrayList<>();
-            String tagsString = accountTagsEditText.getText().toString();
-            String[] tags = tagsString.split("(#|\\s)+");
-            if (tagsString.isEmpty()) {
-                return;
-            }
-            for (String tag : tags) {
-                if (tag.isEmpty()) {
-                    continue;
-                }
-                outputTags.add("#" + tag.replaceAll("[^a-zA-Z0-9]", ""));
-            }
-            accountTagsEditText.setText(String.join("", outputTags));
-        }
-        catch (Exception e){
-            accountTagsEditText.setError("Invalid tags");
-        }
-    }
-    @Override
+@Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MenuHost menuHost = requireActivity();
