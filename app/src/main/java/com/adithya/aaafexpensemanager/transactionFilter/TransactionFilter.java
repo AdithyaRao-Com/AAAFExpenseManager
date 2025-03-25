@@ -144,5 +144,12 @@ public class TransactionFilter implements Parcelable {
         catch (Exception e){
             localDate = LocalDate.now();
         }
-        return localDate;    }
+        return localDate;
+    }
+    public void setFromTransactionDate(LocalDate fromTransactionDate) {
+        this.fromTransactionDate = Integer.parseInt(fromTransactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    }
+    public void setToTransactionDate(LocalDate toTransactionDate) {
+        this.toTransactionDate = Integer.parseInt(toTransactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    }
 }

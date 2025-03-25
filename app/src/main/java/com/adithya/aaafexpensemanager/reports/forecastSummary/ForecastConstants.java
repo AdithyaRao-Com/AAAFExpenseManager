@@ -16,8 +16,14 @@ public class ForecastConstants {
 
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfMonth(1).plusMonths(1).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
 
             @NonNull
@@ -33,8 +39,14 @@ public class ForecastConstants {
             }
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfMonth(1).plusMonths(3).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
 
             @NonNull
@@ -50,8 +62,14 @@ public class ForecastConstants {
             }
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfMonth(1).plusMonths(6).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
 
             @NonNull
@@ -67,8 +85,14 @@ public class ForecastConstants {
             }
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfMonth(1).plusMonths(12).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
 
             @NonNull
@@ -89,8 +113,14 @@ public class ForecastConstants {
             }
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfYear(1).plusYears(1).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
         },
         NEXT_3_YEARS(){
@@ -100,8 +130,14 @@ public class ForecastConstants {
             }
             @NonNull
             @Override
-            public LocalDate getEndDate(LocalDate localDate) {
+            public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfYear(1).plusYears(3).minusDays(1);
+            }
+
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
             }
 
             @NonNull
@@ -111,6 +147,8 @@ public class ForecastConstants {
             }
         };
         @NonNull
-        public abstract LocalDate getEndDate(LocalDate localDate);
+        public abstract LocalDate getEndDate();
+        @NonNull
+        public abstract LocalDate getStartDate();
     }
 }

@@ -1,5 +1,7 @@
 package com.adithya.aaafexpensemanager.transactionFilter;
 
+import androidx.annotation.NonNull;
+
 import com.adithya.aaafexpensemanager.recurring.RecurringSchedule;
 
 import java.time.LocalDate;
@@ -9,10 +11,17 @@ import java.util.HashMap;
 
 public final class TransactionFilterUtils {
     public static HashMap<String,Object> generateTransactionFilterQuery(TransactionFilter transactionFilter){
-        return generateTransactionFilterQuery(transactionFilter,null);
+        return generateTransactionFilterQuery(transactionFilter,null,"");
+    }
+    public static HashMap<String,Object> generateTransactionFilterFutureQuery(TransactionFilter transactionFilter){
+        return generateTransactionFilterQuery(
+                transactionFilter,
+                null,
+                "Future");
     }
     public static HashMap<String,Object> generateTransactionFilterQuery(TransactionFilter transactionFilter,
-                                                                        RecurringSchedule recurringSchedule){
+                                                                        RecurringSchedule recurringSchedule,
+                                                                        String queryGenerationType){
         HashMap<String,Object> opHashMap = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
         ArrayList<String> opArgsList = new ArrayList<>();
@@ -29,7 +38,7 @@ public final class TransactionFilterUtils {
             buildValuesToQueryInClause(tempCategory, transactionFilter.categories,opArgsList);
             queryBuilder.append(CATEGORY_QUERY.replace("<<category>>",tempCategory.toString()));
         }
-        String ACCOUNT_TYPE_QUERY = " AND EXISTS(SELECT 1 FROM accounts ac1 LEFT JOIN account_types at1 ON ac1.account_type = at1.account_type WHERE ac1.account_name = SplitTransfers.account_name AND at1.account_type IN (<<account_type>>))";
+        String ACCOUNT_TYPE_QUERY = getAccountTypeQuery(recurringSchedule);
         if(transactionFilter.accountTypes !=null && !transactionFilter.accountTypes.isEmpty()){
             StringBuilder tempAccountType = new StringBuilder();
             buildValuesToQueryInClause(tempAccountType, transactionFilter.accountTypes,opArgsList);
@@ -41,20 +50,10 @@ public final class TransactionFilterUtils {
             buildValuesToQueryInClause(tempTransactionName, transactionFilter.transactionNames,opArgsList);
             queryBuilder.append(TRANSACTION_NAME_QUERY.replace("<<transaction_name>>",tempTransactionName.toString()));
         }
-        String TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY = " AND transaction_date BETWEEN ? AND ? ";
-        if(transactionFilter.fromTransactionDate !=0){
-            if(transactionFilter.toTransactionDate ==0){
-                transactionFilter.toTransactionDate = Integer.parseInt(LocalDate.now().plusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            }
-            queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
-            opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
-            opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
-        } else if (transactionFilter.toTransactionDate !=0) {
-            transactionFilter.fromTransactionDate = Integer.parseInt(LocalDate.now().minusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-            queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
-            opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
-            opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
-        }
+
+        if(!queryGenerationType.equals("Future")) generateDateFilterAll(transactionFilter, queryBuilder, opArgsList);
+        else generateDateFilterFuture(transactionFilter, queryBuilder, opArgsList);
+
         String TRANSACTION_TO_ACCOUNT_NAME_QUERY = " AND IN account_name IN (<<account_name>>) AND transfer_ind = 'Transfer'";
         if(transactionFilter.toAccountNames !=null && !transactionFilter.toAccountNames.isEmpty()){
             StringBuilder tempAccountName = new StringBuilder();
@@ -82,6 +81,44 @@ public final class TransactionFilterUtils {
         opHashMap.put("QUERY",queryBuilder.toString());
         opHashMap.put("VALUES",opArgsList);
         return opHashMap;
+    }
+
+    @NonNull
+    private static String getAccountTypeQuery(RecurringSchedule recurringSchedule) {
+        String ACCOUNT_TYPE_QUERY;
+        if(recurringSchedule ==null) {
+            ACCOUNT_TYPE_QUERY = " AND EXISTS(SELECT 1 FROM accounts ac1 LEFT JOIN account_types at1 ON ac1.account_type = at1.account_type WHERE ac1.account_name = SplitTransfers.account_name AND at1.account_type IN (<<account_type>>))";
+        }
+        else {
+            ACCOUNT_TYPE_QUERY = " AND EXISTS(SELECT 1 FROM accounts ac1 LEFT JOIN account_types at1 ON ac1.account_type = at1.account_type WHERE ac1.account_name = recurring_transactions_view.account_name AND at1.account_type IN (<<account_type>>))";
+        }
+        return ACCOUNT_TYPE_QUERY;
+    }
+
+    private static void generateDateFilterFuture(TransactionFilter transactionFilter, StringBuilder queryBuilder, ArrayList<String> opArgsList) {
+        String TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY = " AND transaction_date <= ? ";
+        if(transactionFilter.toTransactionDate ==0){
+            transactionFilter.toTransactionDate = Integer.parseInt(LocalDate.now().plusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+        }
+        queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
+        opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
+    }
+
+    private static void generateDateFilterAll(TransactionFilter transactionFilter, StringBuilder queryBuilder, ArrayList<String> opArgsList) {
+        String TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY = " AND transaction_date BETWEEN ? AND ? ";
+        if(transactionFilter.fromTransactionDate !=0){
+            if(transactionFilter.toTransactionDate ==0){
+                transactionFilter.toTransactionDate = Integer.parseInt(LocalDate.now().plusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            }
+            queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
+            opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
+            opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
+        } else if (transactionFilter.toTransactionDate !=0) {
+            transactionFilter.fromTransactionDate = Integer.parseInt(LocalDate.now().minusYears(5).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+            queryBuilder.append(TRANSACTION_DATE_BETWEEN_FROM_AND_TO_QUERY);
+            opArgsList.add(String.valueOf(transactionFilter.fromTransactionDate));
+            opArgsList.add(String.valueOf(transactionFilter.toTransactionDate));
+        }
     }
 
     private static void buildValuesToQueryInClause(StringBuilder tempAccountName, ArrayList<String> argsList, ArrayList<String> opArgsList) {

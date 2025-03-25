@@ -130,7 +130,7 @@ public class FutureTransactionRepository {
 
     public List<FutureTransaction> getAllFutureTransactions(TransactionFilter transactionFilters, int pageNumber){
         List<FutureTransaction> futureTransactions = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,recurringSchedule);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,recurringSchedule,"");
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         if(recurringSchedule!=null){
             queryString = queryString.replace("<<recurring_schedule_uuid>>",recurringSchedule.recurringScheduleUUID.toString());

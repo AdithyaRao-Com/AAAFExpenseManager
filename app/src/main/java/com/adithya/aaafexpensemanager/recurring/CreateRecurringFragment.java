@@ -182,8 +182,12 @@ public class CreateRecurringFragment extends Fragment {
         amountEditText.setText(String.valueOf(recurringSchedule.amount));
         accountNameAutoComplete.setText(recurringSchedule.accountName);
         toAccountNameAutoComplete.setText(recurringSchedule.toAccountName);
-        accountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.accountName).currencyCode);
-        toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.toAccountName).currencyCode);
+        if(recurringSchedule.accountName!=null && !recurringSchedule.accountName.isEmpty()){
+            accountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.accountName).currencyCode);
+        }
+        if(recurringSchedule.toAccountName!=null && !recurringSchedule.toAccountName.isEmpty()){
+            toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.toAccountName).currencyCode);
+        }
     }
 
     private void setCurrentDate() {

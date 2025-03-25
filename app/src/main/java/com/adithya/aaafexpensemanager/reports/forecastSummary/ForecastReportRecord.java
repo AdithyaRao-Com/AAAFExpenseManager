@@ -10,23 +10,23 @@ import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 import java.time.LocalDate;
 
 public class ForecastReportRecord implements Parcelable {
-    public LocalDate date;
+    public LocalDate transactionDate;
     public double amount;
     public String currency;
-    public ForecastReportRecord(LocalDate date, double amount,String currency) {
-        this.date = date;
+    public ForecastReportRecord(LocalDate transactionDate, double amount, String currency) {
+        this.transactionDate = transactionDate;
         this.amount = amount;
         this.currency = currency;
     }
     public String getDateText(){
-        return date.toString();
+        return transactionDate.toString();
     }
     public String getAmountText(){
         return CurrencyFormatter.formatIndianStyle(amount,currency);
     }
     protected ForecastReportRecord(Parcel in) {
         amount = in.readDouble();
-        date = in.readSerializable(ForecastReportRecord.class.getClassLoader(),LocalDate.class);
+        transactionDate = in.readSerializable(ForecastReportRecord.class.getClassLoader(),LocalDate.class);
         currency = in.readString();
     }
 
@@ -46,7 +46,7 @@ public class ForecastReportRecord implements Parcelable {
     }
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeSerializable(this.date);
+        dest.writeSerializable(this.transactionDate);
         dest.writeDouble(this.amount);
         dest.writeString(this.currency);
     }

@@ -23,6 +23,7 @@ import java.util.List;
 
 
 public class RecurringFragment extends Fragment {
+    // TODO - Issue with update schedule. Update schedule needs to refresh the future entries
     private RecurringViewModel viewModel;
     private final TransactionFilter transactionFilter = new TransactionFilter();
     private RecyclerView recurringRecyclerView;
