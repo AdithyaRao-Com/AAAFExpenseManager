@@ -52,7 +52,6 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace*/
 public class UpdateFutureTransactionFragment extends Fragment {
-    // TODO - Implement a method to show the currency in the amount field
     private FutureTransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private EditText transactionDateEditText;
@@ -313,10 +312,10 @@ public class UpdateFutureTransactionFragment extends Fragment {
     private void setupAccountNameAndToAccountNameAutocomplete() {
         accountViewModel.getAccounts().observe(getViewLifecycleOwner(), accountNames -> {
             this.accountNames = accountNames.stream().map(account -> account.accountName).collect(Collectors.toList());
-            accountNameAutoComplete.setItems(this.accountNames);
-            toAccountNameAutoComplete.setItems(this.accountNames);
-            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
-            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
+            accountNameAutoComplete.setItemStrings(this.accountNames);
+            toAccountNameAutoComplete.setItemStrings(this.accountNames);
+            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
+            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
         });
     }
     private void setupCategoryTypeAutocomplete() {
@@ -325,7 +324,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
             categoryNames = categories.stream()
                     .map(category -> category.categoryName)
                     .collect(Collectors.toList());
-            categoryAutoCompleteTextView.setItems(categoryNames);
+            categoryAutoCompleteTextView.setItemStrings(categoryNames);
             if (originalTransaction != null) {
                 String originalCategory = originalTransaction.category;
                 if (originalCategory != null && categoryNames != null && categoryNames.contains(originalCategory)) { // Check for nulls and if the list contains the category

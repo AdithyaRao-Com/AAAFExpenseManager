@@ -344,8 +344,8 @@ public class CreateTransactionFragment extends Fragment {
                 .filter(account -> !account.closeAccountInd)
                 .filter(account -> !account.doNotShowInDropdownInd)
                 .map(account -> account.accountName).collect(Collectors.toList());
-        accountNameAutoComplete.setItems(this.eligibleAccountNames);
-        toAccountNameAutoComplete.setItems(this.eligibleAccountNames);
+        accountNameAutoComplete.setItemStrings(this.eligibleAccountNames);
+        toAccountNameAutoComplete.setItemStrings(this.eligibleAccountNames);
         accountNameAutoComplete.setOnItemClickListener((selectedItem,position) ->{
             String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem))
                     .findFirst().orElse(null)
@@ -365,7 +365,7 @@ public class CreateTransactionFragment extends Fragment {
             categoryNames = categories.stream()
                     .map(category -> category.categoryName)
                     .collect(Collectors.toList());
-            categoryAutoCompleteTextView.setItems(categoryNames);
+            categoryAutoCompleteTextView.setItemStrings(categoryNames);
             if (originalTransaction != null) { // Editing existing transaction
                 String originalCategory = originalTransaction.category;
                 if (originalCategory != null && categoryNames != null && categoryNames.contains(originalCategory)) { // Check for nulls and if the list contains the category

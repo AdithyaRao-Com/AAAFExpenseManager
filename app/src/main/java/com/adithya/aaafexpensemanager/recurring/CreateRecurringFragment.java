@@ -356,10 +356,10 @@ public class CreateRecurringFragment extends Fragment {
     private void setupAccountNameAndToAccountNameAutocomplete() {
         accountViewModel.getAccounts().observe(getViewLifecycleOwner(), accountNames -> {
             this.accountNames = accountNames.stream().map(account -> account.accountName).collect(Collectors.toList());
-            this.accountNameAutoComplete.setItems(this.accountNames);
-            this.toAccountNameAutoComplete.setItems(this.accountNames);
-            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
-            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem).currencyCode));
+            this.accountNameAutoComplete.setItemStrings(this.accountNames);
+            this.toAccountNameAutoComplete.setItemStrings(this.accountNames);
+            accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
+            toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
         });
     }
     private void setupCategoryTypeAutocomplete() {
@@ -368,7 +368,7 @@ public class CreateRecurringFragment extends Fragment {
             categoryNames = categories.stream()
                     .map(category -> category.categoryName)
                     .collect(Collectors.toList());
-            categoryAutoCompleteTextView.setItems(categoryNames);
+            categoryAutoCompleteTextView.setItemStrings(categoryNames);
             if (originalRecurringSchedule != null) {
                 categoryAutoCompleteTextView.setText(originalRecurringSchedule.category);
             }
@@ -376,11 +376,11 @@ public class CreateRecurringFragment extends Fragment {
     }
     private void setupRecurringScheduleAutoComplete() {
         List<String> recurringSchedules = AppConstants.RECURRING_SCHEDULES;
-        recurringScheduleAutoCompleteTextView.setItems(recurringSchedules);
+        recurringScheduleAutoCompleteTextView.setItemStrings(recurringSchedules);
         if (originalRecurringSchedule != null) { // Editing existing transaction
             recurringScheduleAutoCompleteTextView.setText(originalRecurringSchedule.recurringScheduleName);
         }
-        recurringScheduleAutoCompleteTextView.setOnItemClickListener((selectedRecurringSchedule,int1)-> enableDisableRepeatDaysWrapper(selectedRecurringSchedule));
+        recurringScheduleAutoCompleteTextView.setOnItemClickListener((selectedRecurringSchedule,int1)-> enableDisableRepeatDaysWrapper(selectedRecurringSchedule.toEditTextLookupString()));
     }
 
     private void enableDisableRepeatDaysWrapper(String selectedRecurringSchedule) {

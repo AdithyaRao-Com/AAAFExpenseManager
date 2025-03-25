@@ -40,7 +40,7 @@ public class CategorySummaryFragment extends Fragment {
     private MaterialButton nextTimePeriodButton;
     private MaterialTextView totalValueTextView;
     private CategorySummaryFilterDialog filterDialog;
-    CategorySummaryTxnRecord.TimePeriod selectedTimePeriod;
+    CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LocalDate selectedLocalDate;
     private RecyclerView reportsRecyclerView;
     private CategorySummaryAdapter categorySummaryAdapter;
@@ -61,8 +61,8 @@ public class CategorySummaryFragment extends Fragment {
 
     private void setUpRecyclerView() {
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        List<CategorySummaryTxnRecord> categorySummaryTxnRecords = new ArrayList<>();
-        categorySummaryAdapter = new CategorySummaryAdapter(categorySummaryTxnRecords);
+        List<CategorySummaryRecord> categorySummaryRecords = new ArrayList<>();
+        categorySummaryAdapter = new CategorySummaryAdapter(categorySummaryRecords);
         reportsRecyclerView.setAdapter(categorySummaryAdapter);
     }
 
@@ -81,15 +81,16 @@ public class CategorySummaryFragment extends Fragment {
         });
     }
 
+    /** @noinspection deprecation*/
     private void getReportDataFromRepository() {
         if(transactionFilter==null){
             transactionFilter = new TransactionFilter();
         }
         transactionFilter.fromTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToStart(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         transactionFilter.toTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToEnd(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        List<CategorySummaryTxnRecord> records =  categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter,selectedTimePeriod);
+        List<CategorySummaryRecord> records =  categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter,selectedTimePeriod);
         categorySummaryAdapter.setRecords(records);
-        double totalAmount = records.stream().mapToDouble(c ->{return c.amount;}).sum();
+        double totalAmount = records.stream().mapToDouble(c -> c.amount).sum();
         if(totalAmount<0){
             totalValueTextView.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
@@ -101,19 +102,19 @@ public class CategorySummaryFragment extends Fragment {
 
     private void setupTheTimePeriodSelection() {
         List<Object> timePeriods = Arrays
-                .stream(CategorySummaryTxnRecord.TimePeriod.values())
+                .stream(CategorySummaryRecord.TimePeriod.values())
                 .collect(Collectors.toList());
         timePeriodSelection.setItemObjects(timePeriods);
         setDefaultValuesForTimePeriod(timePeriods);
         timePeriodSelection.setOnItemClickListener((item,int1) -> {
-            this.selectedTimePeriod = (CategorySummaryTxnRecord.TimePeriod) timePeriods.get(int1);
+            this.selectedTimePeriod = (CategorySummaryRecord.TimePeriod) timePeriods.get(int1);
             this.selectedLocalDate = LocalDate.now();
             setItemTimePeriodTextView(selectedTimePeriod, selectedLocalDate);
             getReportDataFromRepository();
         });
     }
-    private void setItemTimePeriodTextView(CategorySummaryTxnRecord.TimePeriod selectedTimePeriod,
-                                      LocalDate localDate){
+    private void setItemTimePeriodTextView(CategorySummaryRecord.TimePeriod selectedTimePeriod,
+                                           LocalDate localDate){
         this.selectedLocalDate = localDate;
         this.selectedTimePeriod = selectedTimePeriod;
         String timePeriodStartAndEndDateString = getStartEndDateAsString(selectedTimePeriod,localDate);
@@ -123,7 +124,7 @@ public class CategorySummaryFragment extends Fragment {
         Bundle args = getArguments();
         if(args==null) {
             this.selectedTimePeriod
-                    = (CategorySummaryTxnRecord.TimePeriod) timePeriods.get(0);
+                    = (CategorySummaryRecord.TimePeriod) timePeriods.get(0);
             this.selectedLocalDate = LocalDate.now();
         }
         timePeriodSelection.setText(this.selectedTimePeriod.toString());
@@ -132,7 +133,7 @@ public class CategorySummaryFragment extends Fragment {
     }
 
     @NonNull
-    private static String getStartEndDateAsString(CategorySummaryTxnRecord.TimePeriod selectedTimePeriod,
+    private static String getStartEndDateAsString(CategorySummaryRecord.TimePeriod selectedTimePeriod,
                                                   LocalDate localDate) {
         return selectedTimePeriod
                 .truncateToStart(localDate)
@@ -172,7 +173,7 @@ public class CategorySummaryFragment extends Fragment {
                     new CategorySummaryFilterDialog(requireContext(),
                             requireActivity(),
                             transactionFilter,
-                            v->{getReportDataFromRepository();})
+                            v-> getReportDataFromRepository())
                             .showDialog();
                     return true;
                 }
@@ -187,13 +188,14 @@ public class CategorySummaryFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
+    /** @noinspection deprecation*/
     public void getParseArgs(){
         Bundle args = getArguments();
         if(args!=null){
             this.transactionFilter = args.getParcelable("transactionFilter");
             String timePeriodString = args.getString("timePeriod");
             if(timePeriodString!=null){
-                this.selectedTimePeriod = CategorySummaryTxnRecord.TimePeriod.valueOf(timePeriodString);
+                this.selectedTimePeriod = CategorySummaryRecord.TimePeriod.valueOf(timePeriodString);
                 this.selectedLocalDate = transactionFilter.fromTransactionDateToLocalDate();
             }
         }

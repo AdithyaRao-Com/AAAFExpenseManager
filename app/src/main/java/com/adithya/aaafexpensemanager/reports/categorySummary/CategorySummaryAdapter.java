@@ -13,10 +13,11 @@ import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 
 import java.util.List;
 
+/** @noinspection deprecation*/
 public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummaryAdapter.ViewHolder> {
-    private List<CategorySummaryTxnRecord> records;
-    public CategorySummaryAdapter(List<CategorySummaryTxnRecord> categorySummaryTxnRecords) {
-        this.records = categorySummaryTxnRecords;
+    private List<CategorySummaryRecord> records;
+    public CategorySummaryAdapter(List<CategorySummaryRecord> categorySummaryRecords) {
+        this.records = categorySummaryRecords;
     }
 
     @NonNull
@@ -29,7 +30,7 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull CategorySummaryAdapter.ViewHolder holder, int position) {
-        CategorySummaryTxnRecord record = this.records.get(position);
+        CategorySummaryRecord record = this.records.get(position);
         holder.categoryNameTextView.setText(record.category);
         holder.amountTextView.setText(CurrencyFormatter.formatIndianStyle(record.amount,"INR"));
         if(record.amount < 0){
@@ -47,7 +48,7 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setRecords(List<CategorySummaryTxnRecord> records) {
+    public void setRecords(List<CategorySummaryRecord> records) {
         this.records = records;
         notifyDataSetChanged();
     }

@@ -54,7 +54,7 @@ public class LookupDialog {
         this.negativeButtonText = negativeButtonText;
         this.customLayout = LayoutInflater.from(context).inflate(R.layout.reuse_dialog_lookup, null);
         this.lookupEditText = customLayout.findViewById(R.id.dialogLookUpEditText);
-        this.lookupEditText.setItems(lookupItems);
+        this.lookupEditText.setItemStrings(lookupItems);
         TextInputLayout textInputLayout = customLayout.findViewById(R.id.textInputLayout);
         if(inputHint !=null && !inputHint.isBlank()){
             textInputLayout.setHint(inputHint);

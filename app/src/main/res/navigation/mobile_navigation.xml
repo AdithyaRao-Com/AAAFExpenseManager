@@ -213,6 +213,17 @@
             app:destination="@id/nav_category_summary"
             app:popUpTo="@id/nav_category_summary"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_reportsHomeFragment_to_balanceForecastFragment"
+            app:destination="@id/nav_balance_forecast"
+            app:popUpTo="@id/nav_balance_forecast"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_balance_forecast"
+        android:name="com.adithya.aaafexpensemanager.reports.forecastSummary.ForecastReportFragment"
+        android:label="Balance Forecast"
+        tools:layout="@layout/fragment_report_forecast_summary">
     </fragment>
     <fragment
         android:id="@+id/nav_category_summary"

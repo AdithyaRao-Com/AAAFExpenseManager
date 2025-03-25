@@ -31,7 +31,7 @@ public class CreatePrimaryCurrencyFragment extends Fragment {
         primaryCurrencyCodeEditText.setText(viewModel.getPrimaryCurrency());
         List<String> currenciesList = viewModel.getCurrencies().getValue().stream()
                 .map(currency->(currency.currencyName)).collect(Collectors.toList());
-        primaryCurrencyCodeEditText.setItems(currenciesList);
+        primaryCurrencyCodeEditText.setItemStrings(currenciesList);
         FloatingActionButton createPrimaryCurrencyFAB = view.findViewById(R.id.createPrimaryCurrencyFAB);
         createPrimaryCurrencyFAB.setOnClickListener(v->{
             try {

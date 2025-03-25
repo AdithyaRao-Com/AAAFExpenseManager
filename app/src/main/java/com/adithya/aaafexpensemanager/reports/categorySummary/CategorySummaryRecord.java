@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 /** @noinspection unused*/
-public class CategorySummaryTxnRecord {
+public class CategorySummaryRecord {
     public String category;
     public double amount;
     public double pct;
@@ -17,7 +17,7 @@ public class CategorySummaryTxnRecord {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CategorySummaryTxnRecord that = (CategorySummaryTxnRecord) o;
+        CategorySummaryRecord that = (CategorySummaryRecord) o;
         return Objects.equals(category, that.category) && Objects.equals(startDate, that.startDate) && Objects.equals(endDate, that.endDate);
     }
 
@@ -25,7 +25,7 @@ public class CategorySummaryTxnRecord {
     public int hashCode() {
         return Objects.hash(category, startDate, endDate);
     }
-    public CategorySummaryTxnRecord(String category, double amount, LocalDate startDate, LocalDate endDate, double pct,double totalAmount) {
+    public CategorySummaryRecord(String category, double amount, LocalDate startDate, LocalDate endDate, double pct, double totalAmount) {
         this.category = category;
         this.amount = amount;
         this.startDate = startDate;
@@ -34,7 +34,7 @@ public class CategorySummaryTxnRecord {
         this.totalAmount = (double) Math.round(totalAmount * 100.0)/100.0;
     }
 
-    public CategorySummaryTxnRecord(String category, LocalDate startDate, LocalDate endDate) {
+    public CategorySummaryRecord(String category, LocalDate startDate, LocalDate endDate) {
         this.category = category;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -72,12 +72,12 @@ public class CategorySummaryTxnRecord {
             @NonNull
             @Override
             public LocalDate truncateToStart(LocalDate localDate) {
-                return CategorySummaryTxnRecord.truncateToWeek(localDate);
+                return CategorySummaryRecord.truncateToWeek(localDate);
             }
             @NonNull
             @Override
             public LocalDate truncateToEnd(LocalDate localDate) {
-                return CategorySummaryTxnRecord.truncateToWeekEnd(localDate);
+                return CategorySummaryRecord.truncateToWeekEnd(localDate);
             }
         },
         MONTHLY(){
@@ -89,12 +89,12 @@ public class CategorySummaryTxnRecord {
             @NonNull
             @Override
             public LocalDate truncateToStart(LocalDate localDate) {
-                return CategorySummaryTxnRecord.truncateToMonth(localDate);
+                return CategorySummaryRecord.truncateToMonth(localDate);
             }
             @NonNull
             @Override
             public LocalDate truncateToEnd(LocalDate localDate) {
-                return CategorySummaryTxnRecord.truncateToMonthEnd(localDate);
+                return CategorySummaryRecord.truncateToMonthEnd(localDate);
             }
         },
         YEARLY(){

@@ -23,11 +23,11 @@ public class CategorySummaryRepository {
         db = dbHelper.getReadableDatabase();
         transactionRepository = new TransactionRepository(application);
     }
-    public List<CategorySummaryTxnRecord> getMonthlySummaryCategoryWise
+    public List<CategorySummaryRecord> getMonthlySummaryCategoryWise
             (TransactionFilter transactionFilter,
-             CategorySummaryTxnRecord.TimePeriod timePeriod){
+             CategorySummaryRecord.TimePeriod timePeriod){
         List<Transaction> transactions = transactionRepository.getAllTransactions(transactionFilter,-1);
-        var categorySummaryTxnRecordHashMap = new HashMap<Integer, CategorySummaryTxnRecord>();
+        var categorySummaryTxnRecordHashMap = new HashMap<Integer, CategorySummaryRecord>();
         double totalAmount = 0.0;
         for(Transaction transaction : transactions){
             totalAmount = totalAmount + ((double) Math.round(transaction.amount * 100.0) /100.0);
@@ -35,7 +35,7 @@ public class CategorySummaryRepository {
         for(Transaction transaction : transactions){
             var startDateLocalDate = timePeriod.truncateToStart(transaction.getTransactionLocalDate());
             var endDateLocalDate = timePeriod.truncateToEnd(transaction.getTransactionLocalDate());
-            int categorySummaryHashCode = new CategorySummaryTxnRecord(transaction.category,
+            int categorySummaryHashCode = new CategorySummaryRecord(transaction.category,
                     startDateLocalDate,
                     endDateLocalDate).hashCode();
             var categorySummaryTxnRecord = categorySummaryTxnRecordHashMap.get(categorySummaryHashCode);
@@ -46,7 +46,7 @@ public class CategorySummaryRepository {
                 tempAmount = (double) Math.round(-1*transaction.amount * 100.0) /100.0;
             }
             if(categorySummaryTxnRecord==null){
-                categorySummaryTxnRecord =  new CategorySummaryTxnRecord(
+                categorySummaryTxnRecord =  new CategorySummaryRecord(
                         transaction.category,
                         tempAmount,
                         timePeriod.truncateToStart(transaction.getTransactionLocalDate()),
@@ -61,7 +61,7 @@ public class CategorySummaryRepository {
             }
             categorySummaryTxnRecordHashMap.put(categorySummaryHashCode,categorySummaryTxnRecord);
         }
-        List<CategorySummaryTxnRecord> records = categorySummaryTxnRecordHashMap.values().stream().toList();
+        List<CategorySummaryRecord> records = categorySummaryTxnRecordHashMap.values().stream().toList();
         if(records==null){
             return new ArrayList<>();
         }

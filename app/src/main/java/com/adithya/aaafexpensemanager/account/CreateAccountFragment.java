@@ -36,6 +36,9 @@ import java.util.stream.Collectors;
 
 
 public class CreateAccountFragment extends Fragment {
+    // TODO - Create a new layout component for handling tags
+    // TODO - EditText + Dialog + ListView + AutoCompleteTextView + Button field
+    // TODO - Convert the data into GSON List of strings and insert into the DB
     private EditText accountNameEditText, accountBalanceEditText, accountTagsEditText;
     private FloatingActionButton  createAccountButton;
     private LookupEditText accountTypeSpinner;
@@ -59,7 +62,7 @@ public class CreateAccountFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         AccountTypeViewModel accountTypeViewModel = new ViewModelProvider(this).get(AccountTypeViewModel.class);
         List<String> accountTypes = accountTypeViewModel.getAccountTypes().stream().map(accountType -> accountType.accountType).collect(Collectors.toList());
-        accountTypeSpinner.setItems(accountTypes);
+        accountTypeSpinner.setItemStrings(accountTypes);
         CurrencyViewModel currencyViewModel = new ViewModelProvider(this).get(CurrencyViewModel.class);
         List<String> currencies = currencyViewModel
                 .getCurrencies()
@@ -67,7 +70,7 @@ public class CreateAccountFragment extends Fragment {
                 .stream()
                 .map(curr -> curr.currencyName)
                 .toList();
-        currencyCodeEditText.setItems(currencies);
+        currencyCodeEditText.setItemStrings(currencies);
         Bundle args = getArguments();
         getArgumentsAndSetFields(args);
         updateBalanceCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

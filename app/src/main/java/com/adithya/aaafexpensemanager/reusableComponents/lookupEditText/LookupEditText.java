@@ -20,13 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LookupEditText extends TextInputEditText implements View.OnClickListener {
-
+    public interface LookupEditTextItem{
+        String toEditTextLookupString();
+    }
     private Context context;
     private OnItemClickListener onItemClickListener;
-    private List<String> items;
+    private List<LookupEditTextItem> items;
 
     public interface OnItemClickListener {
-        void onItemClick(String selectedItem,int position);
+        void onItemClick(LookupEditTextItem selectedItem,int position);
     }
 
     public LookupEditText(Context context) {
@@ -55,13 +57,20 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
         this.onItemClickListener = listener;
     }
 
-    public void setItems(List<String> items) {
-        this.items = items;
+    public void setItemStrings(List<String> items) {
+        this.items = new ArrayList<>();
+        for(String item : items){
+            this.items.add(new DefaultLookupEditTextItem(item));
+        }
+    }
+    public void setItems(List<LookupEditTextItem> items) {
+        this.items = new ArrayList<>();
+        this.items.addAll(items);
     }
     public void setItemObjects(List<Object> items) {
         this.items = new ArrayList<>();
         for(Object item : items){
-            this.items.add(item.toString());
+            this.items.add(new DefaultLookupEditTextItem(item));
         }
     }
     @Override
@@ -107,11 +116,27 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
         alertDialog.show();
     }
 
-    private void onItemSelected(String item) {
-        setText(item);
+    private void onItemSelected(LookupEditTextItem item) {
+        setText(item.toEditTextLookupString());
         if (onItemClickListener != null) {
             int position = items.indexOf(item);
             onItemClickListener.onItemClick(item,position);
+        }
+    }
+    public static class DefaultLookupEditTextItem implements LookupEditTextItem{
+        private Object lookupEditTextItem;
+        public DefaultLookupEditTextItem(){
+            super();
+        }
+        public DefaultLookupEditTextItem(Object object){
+            this.lookupEditTextItem = object;
+        }
+        public DefaultLookupEditTextItem(String object){
+            this.lookupEditTextItem = object;
+        }
+        @Override
+        public String toEditTextLookupString() {
+            return this.lookupEditTextItem.toString();
         }
     }
 }

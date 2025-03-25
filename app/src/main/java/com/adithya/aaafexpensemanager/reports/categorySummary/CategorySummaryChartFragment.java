@@ -45,7 +45,7 @@ public class CategorySummaryChartFragment extends Fragment {
     private MaterialTextView timePeriodTextView;
     private MaterialButton nextTimePeriodButton;
     private CategorySummaryFilterDialog filterDialog;
-    CategorySummaryTxnRecord.TimePeriod selectedTimePeriod;
+    CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LocalDate selectedLocalDate;
     private CategorySummaryRepository categorySummaryRepository;
     private TransactionFilter transactionFilter;
@@ -81,15 +81,15 @@ public class CategorySummaryChartFragment extends Fragment {
         }
         transactionFilter.fromTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToStart(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         transactionFilter.toTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToEnd(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        List<CategorySummaryTxnRecord> records =  categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter,selectedTimePeriod);
+        List<CategorySummaryRecord> records =  categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter,selectedTimePeriod);
         createBarChartFromReportData(records);
     }
 
-    private void createBarChartFromReportData(List<CategorySummaryTxnRecord> records) {
+    private void createBarChartFromReportData(List<CategorySummaryRecord> records) {
         ArrayList<BarEntry> entries = new ArrayList<>();
         ArrayList<String> categoryNames = new ArrayList<>();
         int loopNumber = 0;
-        for(CategorySummaryTxnRecord record : records){
+        for(CategorySummaryRecord record : records){
             categoryNames.add(record.category);
             entries.add(new BarEntry(loopNumber,(float)record.amount));
             loopNumber++;
@@ -126,18 +126,18 @@ public class CategorySummaryChartFragment extends Fragment {
 
     private void setupTheTimePeriodSelection() {
         List<Object> timePeriods = Arrays
-                .stream(CategorySummaryTxnRecord.TimePeriod.values())
+                .stream(CategorySummaryRecord.TimePeriod.values())
                 .collect(Collectors.toList());
         timePeriodSelection.setItemObjects(timePeriods);
         setDefaultValuesForTimePeriod(timePeriods);
         timePeriodSelection.setOnItemClickListener((item,int1) -> {
-            this.selectedTimePeriod = (CategorySummaryTxnRecord.TimePeriod) timePeriods.get(int1);
+            this.selectedTimePeriod = (CategorySummaryRecord.TimePeriod) timePeriods.get(int1);
             this.selectedLocalDate = LocalDate.now();
             setItemTimePeriodTextView(selectedTimePeriod, selectedLocalDate);
             getReportDataFromRepository();
         });
     }
-    private void setItemTimePeriodTextView(CategorySummaryTxnRecord.TimePeriod selectedTimePeriod,
+    private void setItemTimePeriodTextView(CategorySummaryRecord.TimePeriod selectedTimePeriod,
                                            LocalDate localDate){
         this.selectedLocalDate = localDate;
         this.selectedTimePeriod = selectedTimePeriod;
@@ -148,7 +148,7 @@ public class CategorySummaryChartFragment extends Fragment {
         Bundle args = getArguments();
         if(args==null) {
             this.selectedTimePeriod
-                    = (CategorySummaryTxnRecord.TimePeriod) timePeriods.get(0);
+                    = (CategorySummaryRecord.TimePeriod) timePeriods.get(0);
             this.selectedLocalDate = LocalDate.now();
         }
         timePeriodSelection.setText(this.selectedTimePeriod.toString());
@@ -156,7 +156,7 @@ public class CategorySummaryChartFragment extends Fragment {
         getReportDataFromRepository();
     }
     @NonNull
-    private static String getStartEndDateAsString(CategorySummaryTxnRecord.TimePeriod selectedTimePeriod,
+    private static String getStartEndDateAsString(CategorySummaryRecord.TimePeriod selectedTimePeriod,
                                                   LocalDate localDate) {
         return selectedTimePeriod
                 .truncateToStart(localDate)
@@ -214,7 +214,7 @@ public class CategorySummaryChartFragment extends Fragment {
             this.transactionFilter = args.getParcelable("transactionFilter");
             String timePeriodString = args.getString("timePeriod");
             if(timePeriodString!=null){
-                this.selectedTimePeriod = CategorySummaryTxnRecord.TimePeriod.valueOf(timePeriodString);
+                this.selectedTimePeriod = CategorySummaryRecord.TimePeriod.valueOf(timePeriodString);
                 this.selectedLocalDate = transactionFilter.fromTransactionDateToLocalDate();
             }
         }

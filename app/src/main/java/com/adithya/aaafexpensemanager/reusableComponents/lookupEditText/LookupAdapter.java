@@ -12,22 +12,24 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText.LookupEditTextItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /** @noinspection unchecked*/
 public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder> implements Filterable {
 
-    private final List<String> originalItems;
-    private List<String> filteredItems;
+    private final List<LookupEditTextItem> originalItems;
+    private List<LookupEditTextItem> filteredItems;
     private final OnItemClickListener onItemClickListener;
     private final AlertDialog alertDialog;
 
     public interface OnItemClickListener {
-        void onItemClick(String item);
+        void onItemClick(LookupEditTextItem item);
     }
 
-    public LookupAdapter(List<String> items, OnItemClickListener listener, AlertDialog alertDialog) {
+    public LookupAdapter(List<LookupEditText.LookupEditTextItem> items, OnItemClickListener listener, AlertDialog alertDialog) {
         this.originalItems = items;
         this.filteredItems = new ArrayList<>(items);
         this.onItemClickListener = listener;
@@ -43,8 +45,8 @@ public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String item = filteredItems.get(position);
-        holder.textView.setText(item);
+        LookupEditTextItem item = filteredItems.get(position);
+        holder.textView.setText(item.toEditTextLookupString());
         holder.itemView.setOnClickListener(v -> {
             onItemClickListener.onItemClick(item);
             this.alertDialog.dismiss();
@@ -67,9 +69,9 @@ public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder
                 if (filterString.isEmpty()) {
                     results.values = originalItems;
                 } else {
-                    List<String> filteredList = new ArrayList<>();
-                    for (String item : originalItems) {
-                        if (item.toLowerCase().contains(filterString)) {
+                    List<LookupEditTextItem> filteredList = new ArrayList<>();
+                    for (LookupEditTextItem item : originalItems) {
+                        if (item.toEditTextLookupString().toLowerCase().contains(filterString)) {
                             filteredList.add(item);
                         }
                     }
@@ -82,7 +84,7 @@ public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder
             @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                filteredItems = (List<String>) results.values;
+                filteredItems = (List<LookupEditTextItem>) results.values;
                 notifyDataSetChanged();
             }
         };

@@ -25,6 +25,12 @@ public class ReportsHomeFragment extends Fragment {
                     .findNavController(getParentFragment())
                     .navigate(R.id.action_reportsHomeFragment_to_categorySummaryFragment);
         });
+        balanceForecastTextView.setOnClickListener( v->{
+            //noinspection DataFlowIssue
+            NavHostFragment
+                    .findNavController(getParentFragment())
+                    .navigate(R.id.action_reportsHomeFragment_to_balanceForecastFragment);
+        });
         return view;
     }
 }
