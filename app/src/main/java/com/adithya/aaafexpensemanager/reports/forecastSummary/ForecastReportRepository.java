@@ -21,14 +21,14 @@ public class ForecastReportRepository {
     private final SQLiteDatabase db;
     private final String DATA_QUERY_STRING = "SELECT SplitTransfers.*,ROUND(running_sum,2) signed_amount_sum\n" +
             "  FROM\n" +
-            "(SELECT t2.*,\n" +
+            "(SELECT SplitTransfers.*,\n" +
             "      SUM(\n" +
-            "\t\tROUND(signed_amount/t2.conversion_factor,2)) \n" +
+            "\t\tROUND(signed_amount/SplitTransfers.conversion_factor,2)) \n" +
             "\t   OVER(ORDER BY transaction_date) running_sum,\n" +
             "\t   ROW_NUMBER() OVER(\n" +
             "\t   PARTITION BY transaction_date \n" +
             "\t   ORDER BY transaction_uuid) row_num\n" +
-            "  FROM SplitAllTransfers t2\n" +
+            "  FROM SplitAllTransfers SplitTransfers\n" +
             " WHERE <<ALL_OTHER_FILTERS>>\n" +
             "ORDER BY transaction_date) SplitTransfers\n" +
             "WHERE row_num = 1\n" +

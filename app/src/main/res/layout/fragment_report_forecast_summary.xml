@@ -2,7 +2,8 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -11,14 +12,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/timePeriodSelectionTextInputLayout"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/filterButtonWrapper"
+                    app:layout_constraintTop_toTopOf="parent"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:hint="@string/time_period">
                     <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
@@ -27,7 +31,25 @@
                         android:layout_height="wrap_content"
                         tools:ignore="TouchTargetSizeCheck,TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/filterButtonWrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="@string/filter_parameters">
+                    <Button
+                        android:id="@+id/filterButton"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginStart="20dp"
+                        android:background="@mipmap/ic_filter_green_foreground"
+                        android:backgroundTint="@color/white"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,8 +23,8 @@ import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
     // TODO: Make sure that the future transactions are present till max date - ForecastReportFragment
-    // TODO: Add the filter button to update the transaction filter
     private LookupEditText timePeriodSelection;
+    private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
     private RecyclerView reportsRecyclerView;
     private final TransactionFilter transactionFilter = new TransactionFilter();
@@ -36,8 +37,17 @@ public class ForecastReportFragment extends Fragment {
         View view =  inflater.inflate(R.layout.fragment_report_forecast_summary, container, false);
         assignLayoutComponents(view);
         setupTimePeriodSelection();
+        setupFilterButton();
         loadReportData();
         return view;
+    }
+
+    private void setupFilterButton() {
+        filterButton.setOnClickListener(v -> new ForecastReportFilterDialog(requireContext(),
+                requireActivity(),
+                transactionFilter,
+                filter-> loadReportData())
+                .showDialog());
     }
 
     private void loadReportData() {
@@ -69,6 +79,7 @@ public class ForecastReportFragment extends Fragment {
 
     private void assignLayoutComponents(View view) {
         timePeriodSelection = view.findViewById(R.id.timePeriodSelection);
+        filterButton = view.findViewById(R.id.filterButton);
         reportsRecyclerView = view.findViewById(R.id.reportsRecyclerView);
     }
 }
