@@ -139,6 +139,7 @@ public class RecurringRepository {
             if(this.recordCount%100==0){
                 Log.d("RecurringRepository",this.recordCount + "records added");
             }
+            futureTransactionRepository.deleteFutureTransactions(recurringSchedule);
             futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
             return true;
         } catch (SQLException e) {
@@ -169,6 +170,8 @@ public class RecurringRepository {
         String whereClause = "recurring_schedule_uuid = ?";
         String[] whereArgs = new String[]{recurringSchedule.recurringScheduleUUID.toString()};
         int rowsAffected = db.update("recurring_schedules", values, whereClause, whereArgs);
+        futureTransactionRepository.deleteFutureTransactions(recurringSchedule);
+        futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
     }
     @NonNull
     private ContentValues getContentValuesForChange(RecurringSchedule recurringSchedule,String operationType) {

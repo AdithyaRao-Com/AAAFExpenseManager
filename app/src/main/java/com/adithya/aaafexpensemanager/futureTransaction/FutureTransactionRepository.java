@@ -106,7 +106,6 @@ public class FutureTransactionRepository {
             return false;
         }
     }
-
     public boolean deleteFutureTransactions(RecurringSchedule recurringSchedule){
         try{
             db.delete("recurring_transactions", "recurring_schedule_uuid = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()});
@@ -117,6 +116,7 @@ public class FutureTransactionRepository {
             return false;
         }
     }
+
     public boolean deleteAll(){
         try{
             db.delete("recurring_transactions", null, null);
