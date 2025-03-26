@@ -26,10 +26,15 @@ public class DBHelperActions {
         db.execSQL("DROP TABLE IF EXISTS batch_run_detail_log");
         db.execSQL("DROP TABLE IF EXISTS primary_currency");
         db.execSQL("DROP TABLE IF EXISTS currency");
+        db.execSQL("DROP TABLE IF EXISTS tags_master");
         Log.d("Database Helper","Dropped tables");
         Log.d("DatabaseHelper","Recreating tables");
     }
     public static void createActions(SQLiteDatabase db) {
+        String CREATE_TAGS_MASTER_TABLE = "CREATE TABLE tags_master (" +
+                "tag_name TEXT PRIMARY KEY," +
+                "tag_type TEXT NOT NULL)";
+        db.execSQL(CREATE_TAGS_MASTER_TABLE);
         String CREATE_PRIMARY_CURRENCY_TABLE = "CREATE TABLE primary_currency (" +
                 "primary_currency_code TEXT PRIMARY KEY)";
         db.execSQL(CREATE_PRIMARY_CURRENCY_TABLE);

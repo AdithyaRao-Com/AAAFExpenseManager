@@ -24,6 +24,7 @@ public class LookupAutoCompleteList extends AppCompatEditText {
     private List<String> promptList = new ArrayList<>();
     private List<String> selectedItems = new ArrayList<>();
     private ArrayAdapter<String> listAdapter;
+    private ListView listView;
 
     public LookupAutoCompleteList(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -46,14 +47,12 @@ public class LookupAutoCompleteList extends AppCompatEditText {
 
         AutoCompleteTextView autoCompleteTextView = dialogView.findViewById(R.id.autoCompleteTextView);
         Button addButton = dialogView.findViewById(R.id.addButton);
-        ListView listView = dialogView.findViewById(R.id.listView);
+        listView = dialogView.findViewById(R.id.listView);
         Button okButton = dialogView.findViewById(R.id.okButton);
 
         autoCompleteTextView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, promptList));
-
         listAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, selectedItems);
         listView.setAdapter(listAdapter);
-
         addButton.setOnClickListener(v -> {
             String input = autoCompleteTextView.getText().toString().trim();
             if (!input.isEmpty() && !selectedItems.contains(input)) {
@@ -82,7 +81,14 @@ public class LookupAutoCompleteList extends AppCompatEditText {
         return this.selectedItems;
     }
     public void setSelectedItems(List<String> selectedItems){
-        this.selectedItems = selectedItems;
-        listAdapter.notifyDataSetChanged();
+        if(selectedItems==null){
+            this.selectedItems = new ArrayList<>();
+        } else {
+            this.selectedItems = selectedItems;
+            setText(TextUtils.join(", ", this.selectedItems));
+        }
+        if(listAdapter!=null) {
+            listAdapter.notifyDataSetChanged();
+        }
     }
 }

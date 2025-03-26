@@ -27,6 +27,7 @@ import com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeViewModel;
 import com.adithya.aaafexpensemanager.settings.currency.CurrencyViewModel;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+import com.adithya.aaafexpensemanager.util.GsonListStringConversion;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -37,8 +38,6 @@ import java.util.stream.Collectors;
 
 
 public class CreateAccountFragment extends Fragment {
-    // TODO- Test Account Tags reusable component
-    // TODO - Convert the data into GSON List of strings and insert into the DB
     private EditText accountNameEditText, accountBalanceEditText;
     private LookupAutoCompleteList accountTagsEditText;
     private FloatingActionButton  createAccountButton;
@@ -79,12 +78,7 @@ public class CreateAccountFragment extends Fragment {
             accountBalanceEditText.setFocusable(isChecked);
             accountBalanceEditText.setFocusableInTouchMode(isChecked);
         });
-        List<String> accountTags = new ArrayList<>();
-        accountTags.add("Test 1");
-        accountTags.add("Test 2");
-        accountTags.add("Test 3");
-        accountTags.add("Test 4");
-        accountTags.add("Test 5");
+        List<String> accountTags = viewModel.getAccountTags();
         accountTagsEditText.setPromptList(accountTags);
         createAccountButton.setOnClickListener(v -> {
             String name = accountNameEditText.getText().toString();
@@ -103,8 +97,8 @@ public class CreateAccountFragment extends Fragment {
                 return;
             }
             String balanceStr = accountBalanceEditText.getText().toString();
-//            validateAccountTags();
-            String tags = accountTagsEditText.getText().toString();
+            List<String> tagsList = accountTagsEditText.getSelectedItems();
+            String tags = GsonListStringConversion.listToJson(tagsList);
             int displayOrder;
             try{
                 displayOrder = Integer.parseInt(displayOrderEditText.getText().toString());
@@ -176,7 +170,10 @@ public class CreateAccountFragment extends Fragment {
             }
             accountNameEditText.setText(originalAccount.accountName);
             accountBalanceEditText.setText(String.valueOf(originalAccount.accountBalance));
-            accountTagsEditText.setText(originalAccount.accountTags);
+//            accountTagsEditText.setText(originalAccount.accountTags);
+            accountTagsEditText.setSelectedItems(
+                    GsonListStringConversion.jsonToList(
+                            originalAccount.accountTags));
             accountTypeSpinner.setText(originalAccount.accountType);
             displayOrderEditText.setText(String.valueOf(originalAccount.displayOrder));
             closeAccountCheckBox.setChecked(originalAccount.closeAccountInd);

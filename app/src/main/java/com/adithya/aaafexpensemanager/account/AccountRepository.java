@@ -11,12 +11,13 @@ import androidx.annotation.NonNull;
 
 import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
 import com.adithya.aaafexpensemanager.util.DatabaseHelper;
+import com.adithya.aaafexpensemanager.util.GsonListStringConversion;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/** @noinspection resource*/
+/** @noinspection resource, CallToPrintStackTrace */
 public class AccountRepository {
 
     private final SQLiteDatabase db;
@@ -64,6 +65,7 @@ public class AccountRepository {
     }
 
     public void createAccount(Account account) {
+        addTagsAccount(account.accountTags);
         ContentValues values = getContentValues(account,true);
         db.insert("accounts", null, values);
     }
@@ -85,6 +87,7 @@ public class AccountRepository {
     }
 
     public void updateAccountOnly(Account account) {
+        addTagsAccount(account.accountTags);
         ContentValues values = getContentValues(account,false);
         int t1 = db.update("accounts", values, "account_name = ?", new String[]{account.accountName}); // Update based on name (or ID if you have one)
         Log.d("AccountRepository", "Rows updated: " + t1);
@@ -145,5 +148,49 @@ public class AccountRepository {
             db.execSQL("UPDATE accounts SET account_balance = 0");
         } catch (SQLiteException ignored) {
         }
+    }
+
+    public void addTagsAccount(String tagString){
+        if(tagString == null || tagString.isBlank()) {
+            return;
+        }
+        List<String>tagsList = GsonListStringConversion.jsonToList(tagString);
+        for(String tag : tagsList){
+            try{
+                ContentValues values = new ContentValues();
+                values.put("tag_name", tag);
+                values.put("tag_type", "Account");
+                db.insertOrThrow("tags_master", null, values);
+            } catch (SQLiteException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void deleteAllAccountTags(){
+        try{
+            db.delete("tags_master", "tag_type = ?", new String[]{"Account"});
+
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        }
+    }
+    public void refreshAccountTags(){
+        deleteAllAccountTags();
+        List<Account> accounts = getAccounts(true);
+        for(Account account : accounts){
+            addTagsAccount(account.accountTags);
+        }
+    }
+    public List<String> getAccountTags() {
+        List<String> accountTags = new ArrayList<>();
+        try(Cursor cursor = db.query("tags_master", null, "tag_type = ?", new String[]{"Account"}, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    String tagName = cursor.getString(cursor.getColumnIndexOrThrow("tag_name"));
+                    accountTags.add(tagName);
+                } while (cursor.moveToNext());
+            }
+        }
+        return accountTags;
     }
 }

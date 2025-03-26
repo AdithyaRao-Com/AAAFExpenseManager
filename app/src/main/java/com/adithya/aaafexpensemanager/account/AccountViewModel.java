@@ -62,4 +62,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     public void setShowClosedAccounts(boolean showClosedAccounts) {
         this.showClosedAccounts = showClosedAccounts;
     }
+    public List<String> getAccountTags() {
+        return accountRepository.getAccountTags();
+    }
 }

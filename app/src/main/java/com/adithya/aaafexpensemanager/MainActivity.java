@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.batchJobs.DailyBackupTasks;
 import com.adithya.aaafexpensemanager.databinding.ActivityMainBinding;
 import com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionRepository;
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             futureTransactionRepository.applyRecurringTransactions();
             RecurringRepository recurringRepository = new RecurringRepository(getApplication());
             recurringRepository.deleteInvalidSchedules();
+            AccountRepository accountRepository = new AccountRepository(getApplication());
+            accountRepository.refreshAccountTags();
         }
         catch (Exception e){
             e.printStackTrace();
