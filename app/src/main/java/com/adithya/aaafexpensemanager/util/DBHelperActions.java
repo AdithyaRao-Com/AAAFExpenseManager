@@ -27,10 +27,28 @@ public class DBHelperActions {
         db.execSQL("DROP TABLE IF EXISTS primary_currency");
         db.execSQL("DROP TABLE IF EXISTS currency");
         db.execSQL("DROP TABLE IF EXISTS tags_master");
+        db.execSQL("DROP TABLE IF EXISTS transaction_filter");
         Log.d("Database Helper","Dropped tables");
         Log.d("DatabaseHelper","Recreating tables");
     }
     public static void createActions(SQLiteDatabase db) {
+        String CREATE_TRANSACTION_FILTER_TABLE = "CREATE TABLE transaction_filter (" +
+                "report_name TEXT PRIMARY KEY," +
+                "report_type TEXT," +
+                "transaction_names TEXT," +
+                "from_transaction_date INTEGER," +
+                "to_transaction_date INTEGER," +
+                "categories TEXT," +
+                "account_names TEXT," +
+                "to_account_names TEXT," +
+                "from_amount REAL," +
+                "to_amount REAL," +
+                "transaction_types TEXT," +
+                "search_text TEXT," +
+                "account_types TEXT," +
+                "period_name TEXT," +
+                "account_tags TEXT)";
+        db.execSQL(CREATE_TRANSACTION_FILTER_TABLE);
         String CREATE_TAGS_MASTER_TABLE = "CREATE TABLE tags_master (" +
                 "tag_name TEXT PRIMARY KEY," +
                 "tag_type TEXT NOT NULL)";

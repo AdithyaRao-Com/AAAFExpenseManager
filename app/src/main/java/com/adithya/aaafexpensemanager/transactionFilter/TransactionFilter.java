@@ -10,6 +10,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TransactionFilter implements Parcelable {
+    // TODO - View Model Transaction Filter - TransactionFilter
+    // TODO - Create a new ListView fragment for Saved Filters (Have search here as well) - TransactionFilter
+    // TODO - Create a new Fragment to Add/Update and Delete saved filters - TransactionFilter
     public ArrayList<String> transactionNames;
     public int fromTransactionDate;
     public int toTransactionDate;
@@ -21,6 +24,10 @@ public class TransactionFilter implements Parcelable {
     public ArrayList<String> transactionTypes;
     public String searchText;
     public ArrayList<String> accountTypes;
+    public ArrayList<String> accountTags;
+    public String reportName;
+    public String periodName;
+    public String reportType;
 
     public TransactionFilter() {
         transactionNames = new ArrayList<>();
@@ -33,6 +40,11 @@ public class TransactionFilter implements Parcelable {
         toAmount = 0;
         transactionTypes = new ArrayList<>();
         accountTypes = new ArrayList<>();
+        searchText = "";
+        reportName = "";
+        periodName = "";
+        accountTags = new ArrayList<>();
+        reportType = "";
     }
 
     @NonNull
@@ -49,6 +61,11 @@ public class TransactionFilter implements Parcelable {
                 ", toAmount=" + toAmount +
                 ", transactionType=" + transactionTypes +
                 ", searchText='" + searchText + '\'' +
+                ", accountType=" + accountTypes +
+                ", reportName='" + reportName + '\'' +
+                ", periodName='" + periodName + '\'' +
+                ", accountTags=" + accountTags +
+                ", reportType='" + reportType + '\'' +
                 '}';
     }
 
@@ -70,6 +87,10 @@ public class TransactionFilter implements Parcelable {
         dest.writeStringList(transactionTypes);
         dest.writeString(searchText);
         dest.writeStringList(accountTypes);
+        dest.writeString(reportName);
+        dest.writeString(periodName);
+        dest.writeStringList(accountTags);
+        dest.writeString(reportType);
     }
 
     public static final Parcelable.Creator<TransactionFilter> CREATOR = new Parcelable.Creator<>() {
@@ -96,6 +117,10 @@ public class TransactionFilter implements Parcelable {
         transactionTypes = in.createStringArrayList();
         searchText=in.readString();
         accountTypes = in.createStringArrayList();
+        reportName = in.readString();
+        periodName = in.readString();
+        accountTags = in.createStringArrayList();
+        reportType = in.readString();
     }
 
     public boolean isEmpty() {
@@ -110,6 +135,10 @@ public class TransactionFilter implements Parcelable {
         if(transactionTypes!=null && !transactionTypes.isEmpty()) return false;
         if(searchText!=null && !searchText.isBlank()) return false;
         if(accountTypes!=null && !accountTypes.isEmpty()) return false;
+        if(reportName!=null && !reportName.isBlank()) return false;
+        if(periodName!=null && !periodName.isBlank()) return false;
+        if(accountTags!=null && !accountTags.isEmpty()) return false;
+        if(reportType!=null && !reportType.isBlank()) return false;
         return true;
     }
 
@@ -124,6 +153,11 @@ public class TransactionFilter implements Parcelable {
         toAmount = 0;
         transactionTypes.clear();
         accountTypes.clear();
+        searchText = "";
+        reportName = "";
+        periodName = "";
+        accountTags.clear();
+        reportType = "";
     }
 
     public LocalDate fromTransactionDateToLocalDate(){

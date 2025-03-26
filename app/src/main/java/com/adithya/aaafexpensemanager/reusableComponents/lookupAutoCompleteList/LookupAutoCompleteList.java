@@ -19,7 +19,7 @@ import com.adithya.aaafexpensemanager.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection FieldMayBeFinal*/
+/** @noinspection FieldMayBeFinal, FieldCanBeLocal */
 public class LookupAutoCompleteList extends AppCompatEditText {
     private List<String> promptList = new ArrayList<>();
     private List<String> selectedItems = new ArrayList<>();
