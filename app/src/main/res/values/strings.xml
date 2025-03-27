@@ -114,4 +114,14 @@
     <string name="import_qif">Import QIF</string>
     <string name="export_qif">Export QIF</string>
     <string name="import_export">Import/Export</string>
+    <string name="create_saved_report">Create Saved Report</string>
+    <string name="account_tags">Account Tags</string>
+    <string name="report_name">Report Name</string>
+    <string name="report_type">Report Type</string>
+    <string name="date_selection_group">Date Selection Group</string>
+    <string name="date_selection_fixed">Fixed Date</string>
+    <string name="date_selection_relative">Relative Date</string>
+    <string name="period_name">Period Name</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
 </resources>

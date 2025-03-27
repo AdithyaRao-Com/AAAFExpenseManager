@@ -18,6 +18,10 @@ public class AppConstants {
                     RECURRING_SCHEDULES_QUARTERLY,
                     RECURRING_SCHEDULES_YEARLY,
                     RECURRING_SCHEDULES_CUSTOM);
+    public static final String REPORT_TYPE_CATEGORY_SUMMARY = "Category Summary";
+    public static final String REPORT_TYPE_BALANCE_FORECAST_SUMMARY = "Balance Forecast Summary";
+    public static final List<String> REPORT_TYPES =List.of(REPORT_TYPE_CATEGORY_SUMMARY,
+            REPORT_TYPE_BALANCE_FORECAST_SUMMARY);
     public static final long DEFAULT_RECURRING_END_INTERVAL = 10L;
     public static final boolean IS_DEV_MODE = true;
     public static final int DATABASE_VERSION = 63;

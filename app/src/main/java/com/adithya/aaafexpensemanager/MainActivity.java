@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 R.id.nav_recurring,
                 R.id.nav_settings,
                 R.id.nav_reports,
-                R.id.nav_import_export_home)
+                R.id.nav_import_export_home,
+                R.id.nav_create_saved_report)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -89,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             }
             else if (item.getItemId() == R.id.nav_import_export_home) {
                 navController.navigate(R.id.nav_import_export_home);
+            }
+            else if (item.getItemId() == R.id.nav_create_saved_report) {
+                navController.navigate(R.id.nav_create_saved_report);
             }
             drawer.close();
             return true;

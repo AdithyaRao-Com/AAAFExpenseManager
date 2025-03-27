@@ -2,6 +2,8 @@ package com.adithya.aaafexpensemanager.reports.categorySummary;
 
 import androidx.annotation.NonNull;
 
+import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -62,8 +64,12 @@ public class CategorySummaryRecord {
     public static LocalDate truncateToYearEnd(LocalDate date){
         return truncateToYear(date).plusYears(1).minusDays(1);
     }
-    public enum TimePeriod{
+    public enum TimePeriod implements LookupEditText.LookupEditTextItem{
         WEEKLY(){
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
             @Override
             @NonNull
             public String toString() {
@@ -79,8 +85,23 @@ public class CategorySummaryRecord {
             public LocalDate truncateToEnd(LocalDate localDate) {
                 return CategorySummaryRecord.truncateToWeekEnd(localDate);
             }
+            @NonNull
+            @Override
+            public LocalDate truncateToStart() {
+                return truncateToStart(LocalDate.now());
+            }
+
+            @NonNull
+            @Override
+            public LocalDate truncateToEnd() {
+                return truncateToEnd(LocalDate.now());
+            }
         },
         MONTHLY(){
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
             @Override
             @NonNull
             public String toString() {
@@ -96,8 +117,23 @@ public class CategorySummaryRecord {
             public LocalDate truncateToEnd(LocalDate localDate) {
                 return CategorySummaryRecord.truncateToMonthEnd(localDate);
             }
+            @NonNull
+            @Override
+            public LocalDate truncateToStart() {
+                return truncateToStart(LocalDate.now());
+            }
+
+            @NonNull
+            @Override
+            public LocalDate truncateToEnd() {
+                return truncateToEnd(LocalDate.now());
+            }
         },
         YEARLY(){
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
             @Override
             @NonNull
             public String toString() {
@@ -114,6 +150,17 @@ public class CategorySummaryRecord {
             public LocalDate truncateToEnd(LocalDate localDate) {
                 return truncateToYearEnd(localDate);
             }
+            @NonNull
+            @Override
+            public LocalDate truncateToStart() {
+                return truncateToStart(LocalDate.now());
+            }
+
+            @NonNull
+            @Override
+            public LocalDate truncateToEnd() {
+                return truncateToEnd(LocalDate.now());
+            }
         };
         @NonNull
         public abstract String toString();
@@ -121,5 +168,9 @@ public class CategorySummaryRecord {
         public abstract LocalDate truncateToStart(LocalDate localDate);
         @NonNull
         public abstract LocalDate truncateToEnd(LocalDate localDate);
+        @NonNull
+        public abstract LocalDate truncateToStart();
+        @NonNull
+        public abstract LocalDate truncateToEnd();
     }
 }
