@@ -5,13 +5,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.adithya.aaafexpensemanager.settings.currency.exception.CurrencyExistsException;
 import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection unused, FieldCanBeLocal , CallToPrintStackTrace */
+/** @noinspection unused, FieldCanBeLocal , CallToPrintStackTrace , BooleanMethodIsAlwaysInverted */
 public class CurrencyRepository {
     private final SQLiteDatabase db;
     private final Application application;
@@ -79,7 +78,7 @@ public class CurrencyRepository {
             Currency primaryCurrency = getCurrencyById(primaryCurrencyName);
             List<Currency> currencies = getAllCurrencies()
                     .stream()
-                    .filter( currency -> {return !(currency.currencyName.equals(primaryCurrencyName));})
+                    .filter( currency -> !(currency.currencyName.equals(primaryCurrencyName)))
                     .toList();
             for(Currency currency:currencies){
                 String selection = "currency_code = ?";
@@ -110,10 +109,11 @@ public class CurrencyRepository {
         }
     }
 
-    public void addCurrency(Currency currency) throws CurrencyExistsException{
+    public void addCurrency(Currency currency) {
+        boolean updateInd = false;
         boolean isRecordExists = checkCurrencyExists(currency.currencyName);
         if(isRecordExists){
-            throw new CurrencyExistsException(currency.currencyName);
+            updateInd = true;
         }
         if(!checkPrimaryCurrencyExists()){
             currency.isPrimary =true;
@@ -123,7 +123,12 @@ public class CurrencyRepository {
         ContentValues values = new ContentValues();
         values.put("currency_code", currency.currencyName);
         values.put("conversion_factor", Math.round(currency.conversionFactor*1000000.0)/1000000.0);
-        long result = db.insert("currency", null, values);
+        if(!updateInd) {
+            long result = db.insert("currency", null, values);
+        }
+        else {
+            updateCurrency(currency);
+        }
     }
 
     public boolean checkCurrencyExists(String currencyName) {
@@ -147,7 +152,7 @@ public class CurrencyRepository {
 
     public void deleteAll(){
         int rowsAffected = db.delete("currency", null, null);
-        rowsAffected = db.delete("primary_currency", null, null);
+        db.delete("primary_currency", null, null);
     }
 
     public List<Currency> filterCurrencies(String searchText) {
@@ -167,8 +172,7 @@ public class CurrencyRepository {
     }
 
     public String getPrimaryCurrency() {
-        try{
-            Cursor cursor = db.query("primary_currency", null, null, null, null, null, null);
+        try(Cursor cursor = db.query("primary_currency", null, null, null, null, null, null)){
             if (cursor.moveToFirst()) {
                 return cursor.getString(cursor.getColumnIndexOrThrow("primary_currency_code"));
             }

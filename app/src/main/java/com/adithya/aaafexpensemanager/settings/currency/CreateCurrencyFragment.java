@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** @noinspection FieldCanBeLocal*/
+/** @noinspection FieldCanBeLocal, DataFlowIssue */
 public class CreateCurrencyFragment extends Fragment {
     private CurrencyViewModel viewModel;
     private EditText currencyNameEditText;
