@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             recurringRepository.deleteInvalidSchedules();
             AccountRepository accountRepository = new AccountRepository(getApplication());
             accountRepository.refreshAccountTags();
+            recurringRepository.keepFutureTransactionsUpToDate();
         }
         catch (Exception e){
             e.printStackTrace();

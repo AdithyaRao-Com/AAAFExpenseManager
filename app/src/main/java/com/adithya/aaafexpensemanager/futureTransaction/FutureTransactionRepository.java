@@ -262,8 +262,18 @@ public class FutureTransactionRepository {
     public boolean insertAllRecurringTransactions
             (RecurringSchedule recurringSchedule,LocalDate referenceDate) {
         try {
+            insertAllRecurringTransactions(recurringSchedule,referenceDate,LocalDate.now().plusYears(3));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public boolean insertAllRecurringTransactions
+            (RecurringSchedule recurringSchedule,LocalDate referenceDate,LocalDate endDate) {
+        try {
             List<FutureTransaction> futureTransactions =
-                    getRecurringTransactionsFromSchedule(recurringSchedule,referenceDate);
+                    getRecurringTransactionsFromSchedule(recurringSchedule,referenceDate,endDate);
             for(FutureTransaction futureTransaction : futureTransactions){
                 addFutureTransaction(futureTransaction);
             }
@@ -276,7 +286,8 @@ public class FutureTransactionRepository {
 
     public List<FutureTransaction> getRecurringTransactionsFromSchedule
             (RecurringSchedule recurringSchedule,
-             LocalDate referenceDate){
+             LocalDate referenceDate,
+             LocalDate endDate){
         List<FutureTransaction> futureTransactions = new ArrayList<>();
         FutureTransaction lastFutureTransaction = getLastTransaction(recurringSchedule);
         FutureTransaction nextFutureTransaction = getNextTransaction(recurringSchedule);
@@ -300,8 +311,8 @@ public class FutureTransactionRepository {
             futureTransactions.add(new FutureTransaction(recurringSchedule,referenceDate));
         }
         LocalDate referenceEndDate;
-        if(referenceDate.plusDays(375).isBefore(recurringSchedule.getRecurringEndDateLocalDate())){
-            referenceEndDate = referenceDate.plusDays(375);
+        if(endDate.isBefore(recurringSchedule.getRecurringEndDateLocalDate())){
+            referenceEndDate = endDate;
         }
         else {
             referenceEndDate = recurringSchedule.getRecurringEndDateLocalDate().plusDays(1);

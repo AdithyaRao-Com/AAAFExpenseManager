@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
-    // TODO: Make sure that the future transactions are present till max date - ForecastReportFragment
     private LookupEditText timePeriodSelection;
     private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
