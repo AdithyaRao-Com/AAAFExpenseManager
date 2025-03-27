@@ -10,7 +10,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TransactionFilter implements Parcelable {
-    // TODO - View Model Transaction Filter - TransactionFilter
     // TODO - Create a new ListView fragment for Saved Filters (Have search here as well) - TransactionFilter
     // TODO - Create a new Fragment to Add/Update and Delete saved filters - TransactionFilter
     public ArrayList<String> transactionNames;

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 /** @noinspection DataFlowIssue, CallToPrintStackTrace */
 public class CreatePrimaryCurrencyFragment extends Fragment {
+    // TODO - Update currency is not implemented properly - CurrencyHomeFragment
     private CurrencyViewModel viewModel;
     @Nullable
     @Override
