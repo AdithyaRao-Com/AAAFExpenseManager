@@ -82,34 +82,19 @@
             app:popUpTo="@id/nav_category"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_settingsFragment_to_exportDatabaseFragment"
-            app:destination="@id/nav_export_database"
-            app:popUpTo="@id/nav_export_database"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_settingsFragment_to_importDatabaseFragment"
-            app:destination="@id/nav_import_database"
-            app:popUpTo="@id/nav_import_database"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_settingsFragment_to_futureTransactionsFragment"
             app:destination="@id/nav_future_transactions"
             app:popUpTo="@id/nav_future_transactions"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_settingsFragment_to_importCSVFragment"
-            app:destination="@id/nav_import_csv"
-            app:popUpTo="@id/nav_import_csv"
-            app:popUpToInclusive="true" />
-        <action
-            android:id="@+id/action_settingsFragment_to_autoBackupFragment"
-            app:destination="@id/nav_autobackup_dir_sel"
-            app:popUpTo="@id/nav_autobackup_dir_sel"
-            app:popUpToInclusive="true" />
-        <action
             android:id="@+id/action_settingsFragment_to_currencyHomeFragment"
             app:destination="@id/nav_currency_home"
             app:popUpTo="@id/nav_currency_home"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_importExportHomeFragment"
+            app:destination="@id/nav_import_export_home"
+            app:popUpTo="@id/nav_import_export_home"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -126,6 +111,32 @@
             android:id="@+id/action_accountTypeFragment_to_createAccountTypeFragment"
             app:destination="@id/nav_create_account_type"
             app:popUpTo="@id/nav_create_account_type"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_import_export_home"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportHome.ImportExportHomeFragment"
+        android:label="Import/Export"
+        tools:layout="@layout/fragment_setting_import_export_home">
+        <action
+            android:id="@+id/action_settingsFragment_to_exportDatabaseFragment"
+            app:destination="@id/nav_export_database"
+            app:popUpTo="@id/nav_export_database"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_importDatabaseFragment"
+            app:destination="@id/nav_import_database"
+            app:popUpTo="@id/nav_import_database"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_importCSVFragment"
+            app:destination="@id/nav_import_csv"
+            app:popUpTo="@id/nav_import_csv"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingsFragment_to_autoBackupFragment"
+            app:destination="@id/nav_autobackup_dir_sel"
+            app:popUpTo="@id/nav_autobackup_dir_sel"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment

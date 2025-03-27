@@ -111,4 +111,7 @@
     <string name="do_not_show_in_accounts_dropdown">Do not show in accounts dropdown</string>
     <string name="show_hide_closed_accounts">Show/Hide Closed Accounts</string>
     <string name="filter_parameters">Filter Parameters</string>
+    <string name="import_qif">Import QIF</string>
+    <string name="export_qif">Export QIF</string>
+    <string name="import_export">Import/Export</string>
 </resources>

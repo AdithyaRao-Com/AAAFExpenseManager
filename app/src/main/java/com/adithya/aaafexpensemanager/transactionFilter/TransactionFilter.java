@@ -163,8 +163,7 @@ public class TransactionFilter implements Parcelable {
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(String.valueOf(fromTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
-        catch (Exception e){
+        } catch (Exception e){
             localDate = LocalDate.now();
         }
         return localDate;
@@ -173,8 +172,7 @@ public class TransactionFilter implements Parcelable {
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(String.valueOf(toTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
-        catch (Exception e){
+        } catch (Exception e){
             localDate = LocalDate.now();
         }
         return localDate;
