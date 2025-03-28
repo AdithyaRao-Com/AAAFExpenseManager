@@ -88,6 +88,9 @@ public class FutureTransactionRepository {
     }
 
     public boolean addFutureTransaction(FutureTransaction futureTransaction) {
+        if(isDuplicateFutureTransactionExists(futureTransaction)){
+            return false;
+        }
         ContentValues values = ContentValuesFromObject(futureTransaction, INSERTS);
         try{
             db.insertOrThrow("recurring_transactions", null, values);
@@ -96,6 +99,14 @@ public class FutureTransactionRepository {
         catch (Exception e){
             e.printStackTrace();
             return false;
+        }
+    }
+    // TODO - Test this method. This is untested
+    private boolean isDuplicateFutureTransactionExists(FutureTransaction futureTransaction) {
+        try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions WHERE recurring_schedule_uuid = ? AND transaction_date = ?",
+                new String[]{futureTransaction.recurringScheduleUUID.toString(),
+                        String.valueOf(futureTransaction.transactionDate)})) {
+            return cursor.getCount() > 0;
         }
     }
 
