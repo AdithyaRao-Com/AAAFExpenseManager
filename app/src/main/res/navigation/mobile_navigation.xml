@@ -324,5 +324,21 @@
         android:name="com.adithya.aaafexpensemanager.transactionFilter.CreateTransactionFilterFragment"
         android:label="Create Saved Report"
         tools:layout="@layout/fragment_create_transacton_filter">
+        <action
+            android:id="@+id/action_createTransactionFilterFragment_to_transactionFilterListFragment"
+            app:destination="@id/nav_transaction_filter_list"
+            app:popUpTo="@id/nav_transaction_filter_list"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_transaction_filter_list"
+        android:name="com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterListFragment"
+        android:label="Transaction Filter List"
+        tools:layout="@layout/fragment_list_transaction_filter">
+        <action
+            android:id="@+id/action_transactionFilterListFragment_to_createTransactionFilterFragment"
+            app:destination="@id/nav_create_saved_report"
+            app:popUpTo="@id/nav_create_saved_report"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

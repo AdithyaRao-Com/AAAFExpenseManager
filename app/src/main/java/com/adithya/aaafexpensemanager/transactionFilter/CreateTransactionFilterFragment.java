@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
@@ -40,6 +41,7 @@ import java.util.List;
 /** @noinspection DataFlowIssue, FieldCanBeLocal */
 public class CreateTransactionFilterFragment extends Fragment {
     private Context context;
+    private TransactionFilterViewModel transactionFilterViewModel;
     private RecentTransactionViewModel recentTransactionViewModel;
     private AccountViewModel accountViewModel;
     private AccountTypeViewModel accountTypeViewModel;
@@ -70,6 +72,7 @@ public class CreateTransactionFilterFragment extends Fragment {
         accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
         accountTypeViewModel = new ViewModelProvider(this).get(AccountTypeViewModel.class);
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        transactionFilterViewModel = new ViewModelProvider(this).get(TransactionFilterViewModel.class);
         View view = inflater.inflate(R.layout.fragment_create_transacton_filter, container, false);
         transactionNameTextView = view.findViewById(R.id.transactionNameTextView);
         categoriesTextView = view.findViewById(R.id.categoriesTextView);
@@ -185,7 +188,49 @@ public class CreateTransactionFilterFragment extends Fragment {
 
     private void setupCreateTransactionFilterFab() {
         createTransactionFilterFab.setOnClickListener(v -> {
-            // TODO - Call Api for creating the filter
+            try {
+                if (reportNameEditText.getText().toString().isBlank()) {
+                    String errorMessage = "Report name cannot be empty";
+                    reportNameEditText.setError(errorMessage);
+                    throw new RuntimeException(errorMessage);
+                }
+                transactionFilter.reportName = reportNameEditText.getText().toString();
+                if (reportTypeTextView.getText().toString().isBlank()) {
+                    String errorMessage = "Report type cannot be empty";
+                    reportTypeTextView.setError(errorMessage);
+                    throw new RuntimeException(errorMessage);
+                }
+                transactionFilter.reportType = reportTypeTextView.getText().toString();
+                if(dateSelectionTypeRadioGroup.getCheckedRadioButtonId() == dateSelectionTypeRelative.getId()){
+                    if(periodNameLookup.getText().toString().isBlank()) {
+                        String errorMessage = "Period name cannot be empty";
+                        periodNameLookup.setError(errorMessage);
+                        throw new RuntimeException(errorMessage);
+                    }
+                    transactionFilter.periodName = periodNameLookup.getText().toString();
+                    transactionFilter.fromTransactionDate = 0;
+                    transactionFilter.toTransactionDate = 0;
+                } else if (dateSelectionTypeRadioGroup.getCheckedRadioButtonId() == dateSelectionTypeFixed.getId()) {
+                    if(dateFromEditText.getText().toString().isBlank()){
+                        String errorMessage = "From date cannot be empty";
+                        dateFromEditText.setError(errorMessage);
+                        throw new RuntimeException(errorMessage);
+                    }
+                    if(dateToEditText.getText().toString().isBlank()){
+                        String errorMessage = "To date cannot be empty";
+                        dateToEditText.setError(errorMessage);
+                        throw new RuntimeException(errorMessage);
+                    }
+                    transactionFilter.setFromTransactionDate(LocalDate.parse(dateFromEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    transactionFilter.setToTransactionDate(LocalDate.parse(dateToEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                    transactionFilter.periodName = "";
+                }
+                transactionFilterViewModel.addTransactionFilter(transactionFilter);
+                Navigation.findNavController(requireView()).navigate(R.id.action_createTransactionFilterFragment_to_transactionFilterListFragment);
+            }
+            catch (RuntimeException e){
+                Log.e("CreateTransactionFilterFragment", "setupCreateTransactionFilterFab - error", e);
+            }
         });
     }
     /** @noinspection deprecation*/
@@ -224,7 +269,7 @@ public class CreateTransactionFilterFragment extends Fragment {
         });
     }
     private void initializeFields() {
-        transactionNameTextView.setItems(transactionFilter.transactionNames);
+        transactionNameTextView.setSelectedItems(transactionFilter.transactionNames);
         categoriesTextView.setSelectedItems(transactionFilter.categories);
         accountsTextView.setSelectedItems(transactionFilter.accountNames);
         accountTypeTextView.setSelectedItems(transactionFilter.accountTypes);
