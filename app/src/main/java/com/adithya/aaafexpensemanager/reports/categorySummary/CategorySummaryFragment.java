@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textview.MaterialTextView;
@@ -39,7 +40,7 @@ public class CategorySummaryFragment extends Fragment {
     private MaterialTextView timePeriodTextView;
     private MaterialButton nextTimePeriodButton;
     private MaterialTextView totalValueTextView;
-    private CategorySummaryFilterDialog filterDialog;
+    private TransactionFilterDialog filterDialog;
     CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LocalDate selectedLocalDate;
     private RecyclerView reportsRecyclerView;
@@ -170,10 +171,11 @@ public class CategorySummaryFragment extends Fragment {
                     if(transactionFilter==null){
                         transactionFilter = new TransactionFilter();
                     }
-                    new CategorySummaryFilterDialog(requireContext(),
+                    new TransactionFilterDialog(requireContext(),
                             requireActivity(),
                             transactionFilter,
-                            v-> getReportDataFromRepository())
+                            v-> getReportDataFromRepository(),
+                            false)
                             .showDialog();
                     return true;
                 }

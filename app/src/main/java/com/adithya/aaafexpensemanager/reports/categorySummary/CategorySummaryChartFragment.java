@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -39,12 +40,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/** @noinspection deprecation*/
 public class CategorySummaryChartFragment extends Fragment {
     private LookupEditText timePeriodSelection;
     private MaterialButton previousTimePeriodButton;
     private MaterialTextView timePeriodTextView;
     private MaterialButton nextTimePeriodButton;
-    private CategorySummaryFilterDialog filterDialog;
+    private TransactionFilterDialog filterDialog;
     CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LocalDate selectedLocalDate;
     private CategorySummaryRepository categorySummaryRepository;
@@ -190,10 +192,11 @@ public class CategorySummaryChartFragment extends Fragment {
                     if(transactionFilter==null){
                         transactionFilter = new TransactionFilter();
                     }
-                    new CategorySummaryFilterDialog(requireContext(),
+                    new TransactionFilterDialog(requireContext(),
                             requireActivity(),
                             transactionFilter,
-                            v->{getReportDataFromRepository();})
+                            v-> getReportDataFromRepository(),
+                            false)
                             .showDialog();
                     return true;
                 }

@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace, UnusedReturnValue */
 public class FutureTransactionRepository {
+    // TODO - Future Transactions has a bug. I think the reason for this the future transactions insertions are causing duplicates
     private final SQLiteDatabase db;
     private static final String INSERTS = "Insert";
     private static final String UPDATES = "Update";
@@ -130,7 +131,7 @@ public class FutureTransactionRepository {
 
     public List<FutureTransaction> getAllFutureTransactions(TransactionFilter transactionFilters, int pageNumber){
         List<FutureTransaction> futureTransactions = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,recurringSchedule,"");
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,recurringSchedule,"",this.application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         if(recurringSchedule!=null){
             queryString = queryString.replace("<<recurring_schedule_uuid>>",recurringSchedule.recurringScheduleUUID.toString());

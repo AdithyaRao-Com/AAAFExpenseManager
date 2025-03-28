@@ -15,6 +15,7 @@ import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.reports.forecastSummary.ForecastConstants.ForecastTimePeriod;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,10 +43,11 @@ public class ForecastReportFragment extends Fragment {
     }
 
     private void setupFilterButton() {
-        filterButton.setOnClickListener(v -> new ForecastReportFilterDialog(requireContext(),
+        filterButton.setOnClickListener(v -> new TransactionFilterDialog(requireContext(),
                 requireActivity(),
                 transactionFilter,
-                filter-> loadReportData())
+                filter-> loadReportData(),
+                false)
                 .showDialog());
     }
 

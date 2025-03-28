@@ -32,6 +32,7 @@ import java.util.UUID;
 /** @noinspection CallToPrintStackTrace, SameParameterValue */
 public class TransactionRepository {
     private final SQLiteDatabase db;
+    private final Application application;
     private final AccountRepository accountRepository;
     private final RecentTransactionRepository recentTransactionRepository;
     private static final String INSERTS = "Insert";
@@ -45,11 +46,12 @@ public class TransactionRepository {
         db = dbHelper.getWritableDatabase();
         accountRepository = new AccountRepository(application);
         recentTransactionRepository =  new RecentTransactionRepository(application);
+        this.application = application;
     }
 
     public List<Transaction> getAllTransactions(TransactionFilter transactionFilters, int pageNumber) {
         List<Transaction> transactions = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
@@ -332,7 +334,7 @@ public class TransactionRepository {
     }
 
     public void deleteAllFilteredTransactions(TransactionFilter transactionFilters) {
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");

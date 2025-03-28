@@ -50,7 +50,7 @@ public class RecurringRepository {
     public List<RecurringSchedule> getAllRecurringSchedules(TransactionFilter transactionFilters, int pageNumber) {
         List<RecurringSchedule> recurringSchedules = new ArrayList<>();
         disableTransactionDateFilters(transactionFilters);
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
@@ -76,7 +76,6 @@ public class RecurringRepository {
         }
         return recurringSchedules;
     }
-
     private void disableTransactionDateFilters(TransactionFilter transactionFilters) {
         transactionFilters.fromTransactionDate = 0;
         transactionFilters.toTransactionDate = 0;

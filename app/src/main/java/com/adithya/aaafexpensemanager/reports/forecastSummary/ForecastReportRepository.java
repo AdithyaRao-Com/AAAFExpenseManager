@@ -19,6 +19,7 @@ import java.util.Objects;
 public class ForecastReportRepository {
     /** @noinspection FieldCanBeLocal*/
     private final SQLiteDatabase db;
+    private final Application application;
     private final String DATA_QUERY_STRING = "SELECT SplitTransfers.*,ROUND(running_sum,2) signed_amount_sum\n" +
             "  FROM\n" +
             "(SELECT SplitTransfers.*,\n" +
@@ -38,10 +39,11 @@ public class ForecastReportRepository {
         //noinspection resource
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getReadableDatabase();
+        this.application = application;
     }
     public List<ForecastReportRecord> getForecastReportData(TransactionFilter transactionFilters) {
         List<ForecastReportRecord> forecastReportRecords = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterFutureQuery(transactionFilters);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterFutureQuery(transactionFilters,this.application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");

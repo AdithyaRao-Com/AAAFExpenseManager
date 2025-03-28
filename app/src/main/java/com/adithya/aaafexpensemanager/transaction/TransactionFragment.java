@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,7 +102,7 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
                 }
             }
         });
-        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this).showDialog());
+        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this,true).showDialog());
         return view;
     }
     @Override

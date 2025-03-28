@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class TransactionFilter implements Parcelable {
     // TODO - Create a new ListView fragment for Saved Filters (Have search here as well) - TransactionFilter
@@ -182,5 +184,18 @@ public class TransactionFilter implements Parcelable {
     }
     public void setToTransactionDate(LocalDate toTransactionDate) {
         this.toTransactionDate = Integer.parseInt(toTransactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    }
+
+    public void addAccountNames(List<String> taggedAccounts) {
+        if(accountNames ==null) accountNames = new ArrayList<>();
+        HashMap<String,String> deDupedAccounts = new HashMap<>();
+        for(String accountName : taggedAccounts){
+            deDupedAccounts.put(accountName,accountName);
+        }
+        for(String accountName : accountNames){
+            deDupedAccounts.put(accountName,accountName);
+        }
+        accountNames.clear();
+        accountNames.addAll(deDupedAccounts.keySet());
     }
 }

@@ -1,30 +1,48 @@
 package com.adithya.aaafexpensemanager.transactionFilter;
 
+import android.app.Application;
+
 import androidx.annotation.NonNull;
 
+import com.adithya.aaafexpensemanager.account.AccountRepository;
 import com.adithya.aaafexpensemanager.recurring.RecurringSchedule;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public final class TransactionFilterUtils {
-    public static HashMap<String,Object> generateTransactionFilterQuery(TransactionFilter transactionFilter){
-        return generateTransactionFilterQuery(transactionFilter,null,"");
+    public static void addTaggedAccountsToFilter(TransactionFilter transactionFilters, Application application) {
+        AccountRepository accountRepository = new AccountRepository(application);
+        try {
+            if (!transactionFilters.accountTags.isEmpty()) {
+                List<String> taggedAccounts = accountRepository.getTaggedAccountNames(transactionFilters.accountTags);
+                transactionFilters.addAccountNames(taggedAccounts);
+            }
+        }
+        catch (Exception ignored){
+        }
     }
-    public static HashMap<String,Object> generateTransactionFilterFutureQuery(TransactionFilter transactionFilter){
+    public static HashMap<String,Object> generateTransactionFilterQuery(TransactionFilter transactionFilter,Application application){
+        return generateTransactionFilterQuery(transactionFilter,null,"",application);
+    }
+    public static HashMap<String,Object> generateTransactionFilterFutureQuery(TransactionFilter transactionFilter,Application application){
         return generateTransactionFilterQuery(
                 transactionFilter,
                 null,
-                "Future");
+                "Future",
+                application);
     }
     public static HashMap<String,Object> generateTransactionFilterQuery(TransactionFilter transactionFilter,
                                                                         RecurringSchedule recurringSchedule,
-                                                                        String queryGenerationType){
+                                                                        String queryGenerationType,
+                                                                        Application application){
         HashMap<String,Object> opHashMap = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
         ArrayList<String> opArgsList = new ArrayList<>();
+        addTaggedAccountsToFilter(transactionFilter,application);
         queryBuilder.append(" 1=1 ");
         String ACCOUNT_NAME_QUERY = " AND account_name IN (<<account_name>>) ";
         if(transactionFilter.accountNames !=null && !transactionFilter.accountNames.isEmpty()){
@@ -121,14 +139,14 @@ public final class TransactionFilterUtils {
         }
     }
 
-    private static void buildValuesToQueryInClause(StringBuilder tempAccountName, ArrayList<String> argsList, ArrayList<String> opArgsList) {
+    public static void buildValuesToQueryInClause(StringBuilder generateQueryString, ArrayList<String> argsList, ArrayList<String> opArgsList) {
         boolean flag1 = true;
         for(String arg : argsList){
             if(flag1){
-                tempAccountName.append("?");
+                generateQueryString.append("?");
                 flag1 = false;
             } else {
-                tempAccountName.append(",").append("?");
+                generateQueryString.append(",").append("?");
             }
             opArgsList.add(arg);
         }
