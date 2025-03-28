@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace, UnusedReturnValue */
 public class FutureTransactionRepository {
-    // TODO - Future Transactions has a bug. I think the reason for this the future transactions insertions are causing duplicates
+    // TODO - Add condition on Future insertion uniqueness based on Schedule Id and Date
     private final SQLiteDatabase db;
     private static final String INSERTS = "Insert";
     private static final String UPDATES = "Update";
@@ -48,6 +48,20 @@ public class FutureTransactionRepository {
         int transactionDateInt;
         LocalDate transactionDate = LocalDate.now();
         try (Cursor cursor = db.rawQuery("SELECT MIN(transaction_date) transaction_date FROM recurring_transactions WHERE recurring_schedule_uuid = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()})) {
+            if (cursor.moveToFirst()) {
+                transactionDateInt = cursor.getInt(0);
+                transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
+            }
+        }
+        catch (Exception e){
+            transactionDate = TRANSACTION_DATE_DUMMY;
+        }
+        return new FutureTransaction(recurringSchedule,transactionDate);
+    }
+    public FutureTransaction getLastAvailableTransaction(RecurringSchedule recurringSchedule) {
+        int transactionDateInt;
+        LocalDate transactionDate = LocalDate.now();
+        try (Cursor cursor = db.rawQuery("SELECT MAX(transaction_date) transaction_date FROM recurring_transactions WHERE recurring_schedule_uuid = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()})) {
             if (cursor.moveToFirst()) {
                 transactionDateInt = cursor.getInt(0);
                 transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
@@ -291,7 +305,7 @@ public class FutureTransactionRepository {
              LocalDate endDate){
         List<FutureTransaction> futureTransactions = new ArrayList<>();
         FutureTransaction lastFutureTransaction = getLastTransaction(recurringSchedule);
-        FutureTransaction nextFutureTransaction = getNextTransaction(recurringSchedule);
+        FutureTransaction lastAvailableFutureTransaction = getLastAvailableTransaction(recurringSchedule);
         LocalDate lastTransactionInsertedDate= transactionRepository.getLastRecurringTransactionInserted(recurringSchedule);
         boolean isTodayInsert = transactionRepository.checkScheduleInsertedForToday(recurringSchedule,LocalDate.now());
         if(lastFutureTransaction.getTransactionLocalDate().isEqual(TRANSACTION_DATE_DUMMY)) {
@@ -321,7 +335,7 @@ public class FutureTransactionRepository {
         List<FutureTransaction> futureTransactions1 = referenceDate.datesUntil(referenceEndDate,
                 getPeriodFromSchedule(recurringSchedule))
                 .map(date1 -> new FutureTransaction(recurringSchedule,date1))
-                .filter(e->e.getTransactionLocalDate().isAfter(nextFutureTransaction.getTransactionLocalDate()))
+                .filter(e->e.getTransactionLocalDate().isAfter(lastAvailableFutureTransaction.getTransactionLocalDate()))
                 .filter(e->e.getTransactionLocalDate().isAfter(lastTransactionInsertedDate))
                 .filter(e->e.getTransactionLocalDate().isAfter(recurringSchedule.getRecurringStartDateLocalDate()))
                 .filter(e->e.getTransactionLocalDate().isBefore(recurringSchedule.getRecurringEndDateLocalDate())
