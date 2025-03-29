@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 /** @noinspection CallToPrintStackTrace, UnusedReturnValue */
 public class FutureTransactionRepository {
-    // TODO - Add condition on Future insertion uniqueness based on Schedule Id and Date
     private final SQLiteDatabase db;
     private static final String INSERTS = "Insert";
     private static final String UPDATES = "Update";
@@ -101,7 +100,6 @@ public class FutureTransactionRepository {
             return false;
         }
     }
-    // TODO - Test this method. This is untested
     private boolean isDuplicateFutureTransactionExists(FutureTransaction futureTransaction) {
         try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions WHERE recurring_schedule_uuid = ? AND transaction_date = ?",
                 new String[]{futureTransaction.recurringScheduleUUID.toString(),
