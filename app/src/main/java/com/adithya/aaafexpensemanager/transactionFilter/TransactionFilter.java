@@ -23,8 +23,6 @@ public class TransactionFilter implements Parcelable {
             return new TransactionFilter[size];
         }
     };
-    // TODO - Create a new ListView fragment for Saved Filters (Have search here as well) - TransactionFilter
-    // TODO - Create a new Fragment to Add/Update and Delete saved filters - TransactionFilter
     public ArrayList<String> transactionNames;
     public int fromTransactionDate;
     public int toTransactionDate;

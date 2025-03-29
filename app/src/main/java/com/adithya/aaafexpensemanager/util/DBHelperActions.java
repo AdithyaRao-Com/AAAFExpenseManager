@@ -4,6 +4,28 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 public class DBHelperActions {
+    public static final String SPLIT_TRANSFERS="SplitTransfers";
+    public static final String ACCOUNTS_ALL_VIEW="accounts_all_view";
+    public static final String RECURRING_SCHEDULE_NEXT_DATE="RecurringScheduleNextDate";
+    public static final String CURRENCY_ALL_DETAILS="currency_all_details";
+    public static final String RECURRING_TRANSACTIONS_VIEW = "recurring_transactions_view";
+    public static final String TRANSACTIONS_VIEW = "transactions_view";
+    public static final String FUTURE_SPLIT_TRANSFERS = "FutureSplitTransfers";
+    public static final String SPLIT_ALL_TRANSFERS = "SplitAllTransfers";
+    public static final String TRANSACTIONS = "transactions";
+    public static final String ACCOUNTS = "accounts";
+    public static final String CATEGORIES = "categories";
+    public static final String RECENT_TRANSACTIONS = "recent_transactions";
+    public static final String ACCOUNT_TYPES = "account_types";
+    public static final String RECURRING_SCHEDULES = "recurring_schedules";
+    public static final String RECURRING_TRANSACTIONS = "recurring_transactions";
+    public static final String SETTINGS_PAIRS = "setting_pairs";
+    public static final String BATCH_RUN_LOG = "batch_run_log";
+    public static final String BATCH_RUN_DETAIL_LOG = "batch_run_detail_log";
+    public static final String PRIMARY_CURRENCY = "primary_currency";
+    public static final String CURRENCY = "currency";
+    public static final String TAGS_MASTER = "tags_master";
+    public static final String TRANSACTION_FILTER = "transaction_filter";
     public static void dropActions(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS SplitTransfers");
         db.execSQL("DROP VIEW IF EXISTS accounts_all_view");

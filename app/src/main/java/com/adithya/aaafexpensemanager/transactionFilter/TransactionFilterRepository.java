@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
 
+import com.adithya.aaafexpensemanager.util.DBHelperActions;
 import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 import com.adithya.aaafexpensemanager.util.GsonListStringConversion;
 
@@ -73,7 +74,7 @@ public class TransactionFilterRepository {
         boolean updateInd = false;
         ContentValues values = getContentValues(transactionFilter);
         try {
-            db.insertOrThrow("transaction_filters", null, values);
+            db.insertOrThrow(DBHelperActions.TRANSACTION_FILTER, null, values);
         } catch (SQLiteConstraintException e) {
             updateInd = true;
         } catch (Exception e) {
@@ -81,7 +82,7 @@ public class TransactionFilterRepository {
         }
         if (updateInd) {
             try {
-                db.update("transaction_filters", values, "report_name = ?", new String[]{transactionFilter.reportName});
+                db.update(DBHelperActions.TRANSACTION_FILTER, values, "report_name = ?", new String[]{transactionFilter.reportName});
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,7 +91,7 @@ public class TransactionFilterRepository {
 
     public void deleteTransactionFilter(TransactionFilter transactionFilter) {
         try {
-            db.delete("transaction_filters", "report_name = ?", new String[]{transactionFilter.reportName});
+            db.delete(DBHelperActions.TRANSACTION_FILTER, "report_name = ?", new String[]{transactionFilter.reportName});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -98,7 +99,7 @@ public class TransactionFilterRepository {
 
     public List<TransactionFilter> getAllTransactionFilters() {
         List<TransactionFilter> transactionFilters = new ArrayList<>();
-        try (Cursor cursor = db.query("transaction_filters", null, null, null, null, null, null)) {
+        try (Cursor cursor = db.query(DBHelperActions.TRANSACTION_FILTER, null, null, null, null, null, null)) {
             if (cursor.moveToFirst()) {
                 do {
                     TransactionFilter transactionFilter = getTransactionFilterFromCursor(cursor);

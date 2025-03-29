@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 R.id.nav_settings,
                 R.id.nav_reports,
                 R.id.nav_import_export_home,
-                R.id.nav_create_saved_report)
+                R.id.nav_transaction_filter_list)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -85,6 +85,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 navController.navigate(R.id.nav_import_export_home);
             } else if (item.getItemId() == R.id.nav_create_saved_report) {
                 navController.navigate(R.id.nav_create_saved_report);
+            } else if (item.getItemId() == R.id.nav_transaction_filter_list) {
+                navController.navigate(R.id.nav_transaction_filter_list);
             }
             drawer.close();
             return true;
@@ -104,7 +106,9 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 fabDestination = R.id.nav_create_recurring;
             } else if (destination.getId() == R.id.nav_currency) {
                 fabDestination = R.id.nav_create_currency;
-            } else {
+            } else if (destination.getId() == R.id.nav_transaction_filter_list) {
+                fabDestination = R.id.nav_create_saved_report;
+            }else {
                 fabDestination = 0;
             }
             if (fabDestination != 0) {
