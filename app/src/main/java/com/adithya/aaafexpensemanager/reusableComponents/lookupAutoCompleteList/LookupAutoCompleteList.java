@@ -19,7 +19,9 @@ import com.adithya.aaafexpensemanager.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection FieldMayBeFinal, FieldCanBeLocal */
+/**
+ * @noinspection FieldMayBeFinal, FieldCanBeLocal
+ */
 public class LookupAutoCompleteList extends AppCompatEditText {
     private List<String> promptList = new ArrayList<>();
     private List<String> selectedItems = new ArrayList<>();
@@ -77,17 +79,19 @@ public class LookupAutoCompleteList extends AppCompatEditText {
 
         dialog.show();
     }
-    public List<String> getSelectedItems(){
+
+    public List<String> getSelectedItems() {
         return this.selectedItems;
     }
-    public void setSelectedItems(List<String> selectedItems){
-        if(selectedItems==null){
+
+    public void setSelectedItems(List<String> selectedItems) {
+        if (selectedItems == null) {
             this.selectedItems = new ArrayList<>();
         } else {
             this.selectedItems = selectedItems;
             setText(TextUtils.join(", ", this.selectedItems));
         }
-        if(listAdapter!=null) {
+        if (listAdapter != null) {
             listAdapter.notifyDataSetChanged();
         }
     }

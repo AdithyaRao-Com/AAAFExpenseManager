@@ -18,7 +18,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/** @noinspection resource, CallToPrintStackTrace */
+/**
+ * @noinspection resource, CallToPrintStackTrace
+ */
 public class AccountRepository {
 
     private final SQLiteDatabase db;
@@ -31,6 +33,22 @@ public class AccountRepository {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
         this.application = application;
+    }
+
+    @NonNull
+    private static ContentValues getContentValues(Account account, boolean isNew) {
+        ContentValues values = new ContentValues();
+        values.put("account_type", account.accountType);
+        values.put("account_tags", account.accountTags);
+        values.put("display_order", account.displayOrder);
+        values.put("currency_code", account.currencyCode);
+        values.put("close_account_ind", account.closeAccountInd ? 1 : 0);
+        values.put("do_not_show_in_dropdown", account.doNotShowInDropdownInd ? 1 : 0);
+        if (isNew) {
+            values.put("account_name", account.accountName);
+            values.put("account_balance", Math.round(account.accountBalance * 100.0) / 100.0);
+        }
+        return values;
     }
 
     public List<Account> getAccounts() {
@@ -74,22 +92,6 @@ public class AccountRepository {
         addTagsAccount(account.accountTags);
         ContentValues values = getContentValues(account, true);
         db.insert("accounts", null, values);
-    }
-
-    @NonNull
-    private static ContentValues getContentValues(Account account, boolean isNew) {
-        ContentValues values = new ContentValues();
-        values.put("account_type", account.accountType);
-        values.put("account_tags", account.accountTags);
-        values.put("display_order", account.displayOrder);
-        values.put("currency_code", account.currencyCode);
-        values.put("close_account_ind", account.closeAccountInd ? 1 : 0);
-        values.put("do_not_show_in_dropdown", account.doNotShowInDropdownInd ? 1 : 0);
-        if (isNew) {
-            values.put("account_name", account.accountName);
-            values.put("account_balance", Math.round(account.accountBalance * 100.0) / 100.0);
-        }
-        return values;
     }
 
     public void updateAccountOnly(Account account) {

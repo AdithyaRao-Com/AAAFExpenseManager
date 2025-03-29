@@ -12,7 +12,9 @@ import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import java.util.List;
 import java.util.UUID;
 
-/** @noinspection UnusedReturnValue*/
+/**
+ * @noinspection UnusedReturnValue
+ */
 public class FutureTransactionViewModel extends AndroidViewModel {
     private final FutureTransactionRepository repository;
     private final MutableLiveData<List<FutureTransaction>> futureTransactions = new MutableLiveData<>();
@@ -54,7 +56,7 @@ public class FutureTransactionViewModel extends AndroidViewModel {
         futureTransactions.setValue(repository.getAllFutureTransactions(transactionFilter, pageNumber));
     }
 
-    public FutureTransaction getFutureTransaction(UUID transactionUUID){
+    public FutureTransaction getFutureTransaction(UUID transactionUUID) {
         return repository.getFutureTransaction(transactionUUID);
     }
 

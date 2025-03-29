@@ -1,4 +1,5 @@
 package com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.text.Editable;
@@ -24,10 +25,6 @@ public class MultiSelectLookupEditText extends TextInputEditText implements View
     private OnItemsSelectedListener onItemsSelectedListener;
     private List<String> items;
     private List<String> selectedItems = new ArrayList<>();
-
-    public interface OnItemsSelectedListener {
-        void onItemsSelected(List<String> selectedItems);
-    }
 
     public MultiSelectLookupEditText(Context context) {
         super(context);
@@ -58,10 +55,7 @@ public class MultiSelectLookupEditText extends TextInputEditText implements View
     public void setItems(List<String> items) {
         this.items = items;
     }
-    public void setSelectedItems(List<String> selectedItems) {
-        this.selectedItems = selectedItems;
-        setSelectedText();
-    }
+
     public void setItemObjects(List<Object> items) {
         this.items = new ArrayList<>();
         for (Object item : items) {
@@ -141,7 +135,16 @@ public class MultiSelectLookupEditText extends TextInputEditText implements View
         setText(selectedText.toString());
     }
 
-    public List<String> getSelectedItems(){
+    public List<String> getSelectedItems() {
         return this.selectedItems;
+    }
+
+    public void setSelectedItems(List<String> selectedItems) {
+        this.selectedItems = selectedItems;
+        setSelectedText();
+    }
+
+    public interface OnItemsSelectedListener {
+        void onItemsSelected(List<String> selectedItems);
     }
 }

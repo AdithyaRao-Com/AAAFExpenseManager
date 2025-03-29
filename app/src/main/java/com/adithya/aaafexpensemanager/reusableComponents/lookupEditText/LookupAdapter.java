@@ -17,17 +17,15 @@ import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEd
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection unchecked*/
+/**
+ * @noinspection unchecked
+ */
 public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder> implements Filterable {
 
     private final List<LookupEditTextItem> originalItems;
-    private List<LookupEditTextItem> filteredItems;
     private final OnItemClickListener onItemClickListener;
     private final AlertDialog alertDialog;
-
-    public interface OnItemClickListener {
-        void onItemClick(LookupEditTextItem item);
-    }
+    private List<LookupEditTextItem> filteredItems;
 
     public LookupAdapter(List<LookupEditText.LookupEditTextItem> items, OnItemClickListener listener, AlertDialog alertDialog) {
         this.originalItems = items;
@@ -88,6 +86,10 @@ public class LookupAdapter extends RecyclerView.Adapter<LookupAdapter.ViewHolder
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(LookupEditTextItem item);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/actionShowHideClosedAccountsMenuItem"
-        android:title="@string/show_hide_closed_accounts"
+    <item
+        android:id="@+id/actionShowHideClosedAccountsMenuItem"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        android:title="@string/show_hide_closed_accounts"
+        app:showAsAction="never" />
 </menu>

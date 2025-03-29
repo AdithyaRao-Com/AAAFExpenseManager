@@ -13,6 +13,17 @@ import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
 public class FutureTransaction implements Parcelable {
+    public static final Parcelable.Creator<FutureTransaction> CREATOR = new Parcelable.Creator<FutureTransaction>() {
+        @Override
+        public FutureTransaction createFromParcel(Parcel in) {
+            return new FutureTransaction(in);
+        }
+
+        @Override
+        public FutureTransaction[] newArray(int size) {
+            return new FutureTransaction[size];
+        }
+    };
     public UUID transactionUUID;
     public UUID recurringScheduleUUID;
     public String transactionName;
@@ -31,28 +42,28 @@ public class FutureTransaction implements Parcelable {
     public String primaryCurrencyCode;
 
     public FutureTransaction(UUID recurringScheduleUUID, String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, String transferInd) {
-        this(UUID.randomUUID(),recurringScheduleUUID, transactionName,
+        this(UUID.randomUUID(), recurringScheduleUUID, transactionName,
                 Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))),
                 transactionType, category, notes, amount, accountName, toAccountName,
-                System.currentTimeMillis(), System.currentTimeMillis(),transferInd,
-                "",1.0,"");
+                System.currentTimeMillis(), System.currentTimeMillis(), transferInd,
+                "", 1.0, "");
     }
 
     public FutureTransaction(UUID transactionUUID, UUID recurringScheduleUUID,
                              String transactionName, int transactionDate, String transactionType,
                              String category, String notes, double amount, String accountName,
                              String toAccountName, long createDateTime, long lastUpdateDateTime,
-                             String transferInd,String currencyCode, double conversionFactor,
+                             String transferInd, String currencyCode, double conversionFactor,
                              String primaryCurrencyCode) {
         this.transactionUUID = transactionUUID;
         this.recurringScheduleUUID = recurringScheduleUUID;
         this.transactionName = transactionName;
-        if(transactionDate==0){
+        if (transactionDate == 0) {
             transactionDate = Integer.parseInt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         }
         this.transactionDate = transactionDate;
         this.transactionType = transactionType;
-        this.transferInd     = transferInd;
+        this.transferInd = transferInd;
         this.category = category;
         this.notes = notes;
         this.amount = amount;
@@ -71,7 +82,7 @@ public class FutureTransaction implements Parcelable {
         this.transactionName = recurringSchedule.transactionName;
         this.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         this.transactionType = recurringSchedule.transactionType;
-        this.transferInd     = recurringSchedule.transferInd;
+        this.transferInd = recurringSchedule.transferInd;
         this.category = recurringSchedule.category;
         this.notes = recurringSchedule.notes;
         this.amount = recurringSchedule.amount;
@@ -83,33 +94,6 @@ public class FutureTransaction implements Parcelable {
         this.conversionFactor = recurringSchedule.conversionFactor;
         this.primaryCurrencyCode = recurringSchedule.primaryCurrencyCode;
     }
-    public LocalDate getTransactionLocalDate() {
-        try {
-            return LocalDate.parse(String.valueOf(transactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    public void setTransactionLocalDate(LocalDate transactionDate) {
-        this.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-    }
-
-    public String getFormattedTransactionDate() {
-        LocalDate localDate = getTransactionLocalDate();
-        return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "";
-    }
-
-    public String getFormattedTransactionDateYYYY_MM_DD() {
-        LocalDate localDate = getTransactionLocalDate();
-        return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
-    }
-
-    public int getFormattedTransactionDate_YYYYMMDD() {
-        LocalDate localDate = getTransactionLocalDate();
-        return localDate != null ? Integer.parseInt(localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))) : 0;
-    }
-
 
     // Parcelable implementation
     protected FutureTransaction(Parcel in) {
@@ -130,6 +114,34 @@ public class FutureTransaction implements Parcelable {
         this.currencyCode = in.readString();
         this.conversionFactor = in.readDouble();
         this.primaryCurrencyCode = in.readString();
+    }
+
+    public LocalDate getTransactionLocalDate() {
+        try {
+            return LocalDate.parse(String.valueOf(transactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void setTransactionLocalDate(LocalDate transactionDate) {
+        this.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+    }
+
+    public String getFormattedTransactionDate() {
+        LocalDate localDate = getTransactionLocalDate();
+        return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")) : "";
+    }
+
+    public String getFormattedTransactionDateYYYY_MM_DD() {
+        LocalDate localDate = getTransactionLocalDate();
+        return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
+    }
+
+    public int getFormattedTransactionDate_YYYYMMDD() {
+        LocalDate localDate = getTransactionLocalDate();
+        return localDate != null ? Integer.parseInt(localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))) : 0;
     }
 
     @Override
@@ -157,24 +169,12 @@ public class FutureTransaction implements Parcelable {
         dest.writeString(primaryCurrencyCode);
     }
 
-    public static final Parcelable.Creator<FutureTransaction> CREATOR = new Parcelable.Creator<FutureTransaction>() {
-        @Override
-        public FutureTransaction createFromParcel(Parcel in) {
-            return new FutureTransaction(in);
-        }
-
-        @Override
-        public FutureTransaction[] newArray(int size) {
-            return new FutureTransaction[size];
-        }
-    };
-
-    public String getDateE_MMMM_dd_yyyy(){
+    public String getDateE_MMMM_dd_yyyy() {
         LocalDate localDate = getTransactionLocalDate();
         return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("E dd MMM yyyy")) : "";
     }
 
-    public Transaction getTransaction(){
+    public Transaction getTransaction() {
         return new Transaction(this.transactionUUID,
                 this.transactionName,
                 this.transactionDate,
@@ -192,10 +192,12 @@ public class FutureTransaction implements Parcelable {
                 this.conversionFactor,
                 this.primaryCurrencyCode);
     }
+
     public String amountToIndianFormat() {
-        return CurrencyFormatter.formatIndianStyle(this.amount,"INR");
+        return CurrencyFormatter.formatIndianStyle(this.amount, "INR");
     }
-    public String amountToStandardFormat(){
-        return CurrencyFormatter.formatStandardStyle(this.amount,"INR");
+
+    public String amountToStandardFormat() {
+        return CurrencyFormatter.formatStandardStyle(this.amount, "INR");
     }
 }

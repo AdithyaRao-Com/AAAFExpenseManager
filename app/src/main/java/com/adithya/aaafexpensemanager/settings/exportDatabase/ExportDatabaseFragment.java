@@ -30,7 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class ExportDatabaseFragment extends Fragment {
 
     private Button selectFileButton;

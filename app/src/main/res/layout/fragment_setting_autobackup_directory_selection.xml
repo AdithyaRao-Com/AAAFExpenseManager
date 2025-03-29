@@ -3,16 +3,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
+
     <CheckBox
+        android:id="@+id/autoBackup_enabled"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/autoBackup_enabled"
-        android:text="@string/auto_backup_enabled"/>
+        android:text="@string/auto_backup_enabled" />
+
     <Button
         android:id="@+id/selectDirectoryButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/select_directory" />
+
     <TextView
         android:id="@+id/selectedDirectoryTextView"
         android:layout_width="wrap_content"

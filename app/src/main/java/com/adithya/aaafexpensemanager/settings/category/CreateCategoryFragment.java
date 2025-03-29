@@ -31,7 +31,9 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class CreateCategoryFragment extends Fragment {
     private CategoryViewModel viewModel;
     private EditText categoryNameEditText;
@@ -43,7 +45,10 @@ public class CreateCategoryFragment extends Fragment {
     private MenuItem deleteMenuItem;
     private MenuItem showTransactionsMenuItem;
     private boolean isEditing = false;
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -69,12 +74,12 @@ public class CreateCategoryFragment extends Fragment {
                 isEditing = true;
                 categoryNameEditText.setText(originalCategory.categoryName);
                 parentCategoryTextView.setText(originalCategory.parentCategory);
-                setEditTextEnabled(categoryNameEditText,true);
+                setEditTextEnabled(categoryNameEditText, true);
             } else {
-                setEditTextEnabled(categoryNameEditText,true);
+                setEditTextEnabled(categoryNameEditText, true);
             }
         } else {
-            setEditTextEnabled(categoryNameEditText,true);
+            setEditTextEnabled(categoryNameEditText, true);
         }
         createCategoryButton.setOnClickListener(v -> {
             try {
@@ -93,8 +98,7 @@ public class CreateCategoryFragment extends Fragment {
                     viewModel.addCategory(newCategory);
                 }
                 Navigation.findNavController(requireView()).navigate(R.id.nav_category);
-            }
-            catch (CategoryExistsException e) {
+            } catch (CategoryExistsException e) {
                 //noinspection DataFlowIssue
                 Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_SHORT).show();
             }
@@ -102,12 +106,15 @@ public class CreateCategoryFragment extends Fragment {
         return view;
     }
 
-    /** @noinspection SameParameterValue*/
+    /**
+     * @noinspection SameParameterValue
+     */
     private void setEditTextEnabled(EditText editTextField, boolean enabledFlag) {
         editTextField.setEnabled(enabledFlag);
         editTextField.setFocusable(enabledFlag);
         editTextField.setFocusableInTouchMode(enabledFlag);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -120,31 +127,33 @@ public class CreateCategoryFragment extends Fragment {
                 showTransactionsMenuItem = menu.findItem(R.id.action_show_category_transactions);
                 setOptions(isEditing);
             }
+
             /** @noinspection DataFlowIssue*/
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_delete_category){
+                if (menuItem.getItemId() == R.id.action_delete_category) {
                     new ConfirmationDialog(getContext(),
                             "Delete Category",
                             "Are you sure you want to delete this category? \n" +
                                     "Impacted Transactions will be marked as uncategorized.",
-                            ()-> {
+                            () -> {
                                 viewModel.deleteCategory(originalCategory);
-                                Navigation.findNavController(getView()).navigate(R.id.nav_category);},
-                            ()->{},
+                                Navigation.findNavController(getView()).navigate(R.id.nav_category);
+                            },
+                            () -> {
+                            },
                             "Delete",
                             "Cancel"
                     );
                     return true;
-                }
-                else if(menuItem.getItemId()==R.id.action_show_category_transactions){
+                } else if (menuItem.getItemId() == R.id.action_show_category_transactions) {
                     Bundle args = new Bundle();
                     TransactionFilter categoryFilter = new TransactionFilter();
                     ArrayList<String> categoryNames = new ArrayList<>();
                     categoryNames.add(originalCategory.categoryName);
                     categoryFilter.categories = categoryNames;
-                    args.putParcelable("transaction_filter",categoryFilter);
-                    Navigation.findNavController(getView()).navigate(R.id.nav_transaction,args);
+                    args.putParcelable("transaction_filter", categoryFilter);
+                    Navigation.findNavController(getView()).navigate(R.id.nav_transaction, args);
                     return true;
                 }
                 return false;
@@ -156,7 +165,7 @@ public class CreateCategoryFragment extends Fragment {
         try {
             deleteMenuItem.setVisible(isEditing);
             showTransactionsMenuItem.setVisible(isEditing);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

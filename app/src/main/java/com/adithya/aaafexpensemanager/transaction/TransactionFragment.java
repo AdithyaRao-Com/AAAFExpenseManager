@@ -25,16 +25,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class TransactionFragment extends Fragment implements TransactionFilterDialog.OnFilterAppliedListener {
+    public TransactionFilter transactionFilter;
+    public int currentPage = 1;
     private TransactionViewModel viewModel;
     private RecyclerView transactionsRecyclerView;
     private Button filterButton;
     private TransactionsAdapter adapter;
-    public TransactionFilter transactionFilter;
-    public int currentPage = 1;
     private boolean isLoading = false;
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_transaction, container, false);
@@ -60,25 +65,27 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
                 this,
                 viewModel);
         transactionsRecyclerView.setAdapter(adapter);
-        updateRecyclerView(viewModel.getTransactions(transactionFilter,currentPage).getValue());
+        updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchText = s.toString();
                 if (searchText.isEmpty()) {
                     transactionFilter.searchText = "";
-                    currentPage=1;
-                    viewModel.getTransactions(transactionFilter,currentPage).getValue();
+                    currentPage = 1;
+                    viewModel.getTransactions(transactionFilter, currentPage).getValue();
                 } else {
                     transactionFilter.searchText = searchText;
-                    currentPage=1;
-                    updateRecyclerView(viewModel.getTransactions(transactionFilter,currentPage).getValue());
+                    currentPage = 1;
+                    updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
                 }
                 checkSetToggleFilter();
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -96,34 +103,35 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
                     if (!isLoading && (firstVisibleItemPosition + visibleItemCount >= totalItemCount) && totalItemCount > 0) {
                         isLoading = true;
                         currentPage++;
-                        updateRecyclerView(viewModel.getTransactions(transactionFilter,currentPage).getValue());
+                        updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
                         isLoading = false;
                     }
                 }
             }
         });
-        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this,true).showDialog());
+        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this, true).showDialog());
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        currentPage=1;
-        updateRecyclerView(viewModel.getTransactions(transactionFilter,currentPage).getValue());
+        currentPage = 1;
+        updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateRecyclerView(List<Transaction> transactions) {
         if (adapter == null) {
-            adapter = new TransactionsAdapter(transactions,this,viewModel);
+            adapter = new TransactionsAdapter(transactions, this, viewModel);
             transactionsRecyclerView.setAdapter(adapter);
-        }
-        else if(currentPage==1){
+        } else if (currentPage == 1) {
             adapter.setTransactions(transactions);
-        }else {
+        } else {
             adapter.addTransactions(transactions);
         }
     }
+
     @Override
     public void onFilterApplied(TransactionFilter filter) {
         this.transactionFilter = filter;
@@ -137,15 +145,15 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
         updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
         checkSetToggleFilter();
     }
-    private void checkSetToggleFilter(){
-        if(filterButton==null){
+
+    private void checkSetToggleFilter() {
+        if (filterButton == null) {
             //noinspection DataFlowIssue
             filterButton = getView().findViewById(R.id.button);
         }
-        if(transactionFilter!=null && !transactionFilter.isEmpty()){
+        if (transactionFilter != null && !transactionFilter.isEmpty()) {
             filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.filter_enabled)));
-        }
-        else{
+        } else {
             filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.filter_disabled)));
         }
     }

@@ -9,6 +9,7 @@ import androidx.documentfile.provider.DocumentFile;
 
 public class UriUtils {
     private static final String TAG = "UriUtils";
+
     /**
      * Adds a file name to a directory URI.
      *
@@ -43,12 +44,12 @@ public class UriUtils {
      * Adds a file name to a directory URI, checking if the uri is a file or a directory.
      * if it is a file, the filename will be appended to the directory the file is in.
      *
-     * @param fileUri The URI of the file or directory.
-     * @param fileName     The name of the file to add.
+     * @param fileUri  The URI of the file or directory.
+     * @param fileName The name of the file to add.
      * @return A new URI representing the file within the directory.
      * @throws IllegalArgumentException if fileUri is null or if fileName is invalid.
      */
-    public static Uri addFileNameToUriSmart(Uri fileUri, String fileName){
+    public static Uri addFileNameToUriSmart(Uri fileUri, String fileName) {
         if (fileUri == null) {
             throw new IllegalArgumentException("File URI cannot be null.");
         }
@@ -96,6 +97,7 @@ public class UriUtils {
             return null; // Not a tree URI
         }
     }
+
     public static DocumentFile getValidDirectory(Context context, Uri uriDirectory) {
         Uri documentUri = UriUtils.treeUriToDocumentUri(uriDirectory);
         if (documentUri == null) {

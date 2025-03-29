@@ -28,9 +28,10 @@ public class DBHelperActions {
         db.execSQL("DROP TABLE IF EXISTS currency");
         db.execSQL("DROP TABLE IF EXISTS tags_master");
         db.execSQL("DROP TABLE IF EXISTS transaction_filter");
-        Log.d("Database Helper","Dropped tables");
-        Log.d("DatabaseHelper","Recreating tables");
+        Log.d("Database Helper", "Dropped tables");
+        Log.d("DatabaseHelper", "Recreating tables");
     }
+
     public static void createActions(SQLiteDatabase db) {
         String CREATE_TRANSACTION_FILTER_TABLE = "CREATE TABLE transaction_filter (" +
                 "report_name TEXT PRIMARY KEY," +
@@ -119,7 +120,7 @@ public class DBHelperActions {
                 "notes TEXT, " +
                 "transaction_type TEXT, " +
                 "amount REAL, " +
-                "account_name TEXT, "+
+                "account_name TEXT, " +
                 "to_account_name TEXT, " +
                 "create_date INTEGER, " +
                 "last_update_date INTEGER," +
@@ -157,14 +158,15 @@ public class DBHelperActions {
                 "( " +
                 "batch_run_detail_uuid TEXT PRIMARY KEY, " +
                 "batch_run_uuid TEXT, " +
-                "tag            TEXT, "+
+                "tag            TEXT, " +
                 "log_text       TEXT, " +
                 "log_date       INTEGER )";
         db.execSQL(BATCH_RUN_DETAIL_LOG);
         createFutureSplitTransfersView(db);
         createSplitAllTransfersView(db);
     }
-    private static void currencyAllDetails(SQLiteDatabase db){
+
+    private static void currencyAllDetails(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS currency_all_details AS " +
                 "SELECT " +
                 "c1.currency_code," +
@@ -175,6 +177,7 @@ public class DBHelperActions {
                 "LEFT JOIN primary_currency pc1 " +
                 "ON (1=1)");
     }
+
     private static void recurringScheduleNextDate(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS RecurringScheduleNextDate AS " +  // Use IF NOT EXISTS for upgrades
                 "SELECT " +
@@ -188,7 +191,7 @@ public class DBHelperActions {
                 "t1.notes, " +
                 "t1.transaction_type, " +
                 "t1.amount, " +
-                "t1.account_name, "+
+                "t1.account_name, " +
                 "t1.to_account_name, " +
                 "t1.create_date, " +
                 "t1.last_update_date," +
@@ -205,7 +208,7 @@ public class DBHelperActions {
                 "LEFT JOIN currency_all_details curr1 " +
                 "ON ac1.currency_code = curr1.currency_code " +
                 "WHERE 1=1 " +
-                "GROUP BY "+
+                "GROUP BY " +
                 "t1.recurring_schedule_uuid , " +
                 "t1.transaction_name, " +
                 "t1.recurring_schedule, " +
@@ -216,7 +219,7 @@ public class DBHelperActions {
                 "t1.notes, " +
                 "t1.transaction_type, " +
                 "t1.amount, " +
-                "t1.account_name, "+
+                "t1.account_name, " +
                 "t1.to_account_name, " +
                 "t1.create_date, " +
                 "t1.last_update_date," +
@@ -225,6 +228,7 @@ public class DBHelperActions {
                 "curr1.conversion_factor, " +
                 "curr1.primary_currency_code ");
     }
+
     private static void createSplitTransfersView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS SplitTransfers AS " +
                 "SELECT " +
@@ -299,6 +303,7 @@ public class DBHelperActions {
                 "ON ac1.currency_code = curr1.currency_code " +
                 "WHERE transaction_type = 'Transfer' ");
     }
+
     private static void createFutureSplitTransfersView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS FutureSplitTransfers AS " +
                 "SELECT " +
@@ -373,6 +378,7 @@ public class DBHelperActions {
                 "ON ac1.currency_code = curr1.currency_code " +
                 "WHERE transaction_type = 'Transfer' ");
     }
+
     private static void createSplitAllTransfersView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS SplitAllTransfers AS " +
                 "SELECT t1.*,CASE WHEN t1.transaction_type='Income' THEN t1.amount\n" +
@@ -385,12 +391,13 @@ public class DBHelperActions {
                 "\t\t\tEND signed_amount\n" +
                 "  FROM FutureSplitTransfers t1");
     }
+
     private static void createAccountsAllView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS accounts_all_view AS \n" +
                 "select ac1.*,\n" +
-                "  curr1.currency_code, "+
-                "  curr1.conversion_factor, "+
-                "  curr1.primary_currency_code "+
+                "  curr1.currency_code, " +
+                "  curr1.conversion_factor, " +
+                "  curr1.primary_currency_code " +
                 "  from accounts ac1\n" +
                 "  left join account_types at1\n" +
                 "         on ac1.account_type = at1.account_type\n" +
@@ -401,6 +408,7 @@ public class DBHelperActions {
                 " ac1.display_order ASC, " +
                 " ac1.account_name ASC");
     }
+
     private static void createRecurringTransactionsView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS recurring_transactions_view AS " +
                 "SELECT " +
@@ -426,6 +434,7 @@ public class DBHelperActions {
                 " LEFT JOIN currency_all_details curr1 " +
                 " ON ac1.currency_code = curr1.currency_code");
     }
+
     private static void createTransactionsAllView(SQLiteDatabase db) {
         db.execSQL("CREATE VIEW IF NOT EXISTS transactions_view AS " +
                 "SELECT " +

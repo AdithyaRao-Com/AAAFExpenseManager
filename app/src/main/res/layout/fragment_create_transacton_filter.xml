@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/report_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="@string/report_name">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/reportNameEditText"
                     android:layout_width="match_parent"
@@ -24,11 +28,12 @@
                     android:inputType="textCapWords"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/report_type"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="@string/report_type">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/reportTypeLookup"
@@ -36,34 +41,39 @@
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/date_selection_group"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="@string/date_selection_group">
+
                 <RadioGroup
                     android:id="@+id/dateSelectionTypeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+
                     <RadioButton
                         android:id="@+id/dateSelectionTypeFixed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/date_selection_fixed"/>
+                        android:text="@string/date_selection_fixed" />
+
                     <RadioButton
                         android:id="@+id/dateSelectionTypeRelative"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/date_selection_relative"/>
+                        android:text="@string/date_selection_relative" />
                 </RadioGroup>
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/periodNameLookupWrapper"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/period_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="@string/period_name">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/periodNameLookup"
@@ -71,20 +81,23 @@
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <LinearLayout
                 android:id="@+id/dateFromToWrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dateFromWrapper"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
-                    android:hint="@string/from_date"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_weight="1"
+                    android:hint="@string/from_date">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/dateFromEditText"
                         android:layout_width="match_parent"
@@ -94,14 +107,16 @@
                         android:inputType="none"
                         tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/dateToWrapper"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="5dp"
                     android:layout_height="wrap_content"
-                    android:hint="@string/to_date"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:hint="@string/to_date">
+
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/dateToEditText"
                         android:layout_width="match_parent"
@@ -112,21 +127,24 @@
                         tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/transaction_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="@string/transaction_name">
+
                 <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/transactionNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/categories">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
@@ -135,10 +153,11 @@
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/accounts">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
@@ -147,10 +166,11 @@
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_types">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
@@ -159,10 +179,11 @@
                     android:layout_height="wrap_content"
                     tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_tags">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
@@ -173,6 +194,7 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/createTransactionFilterFab"
         android:layout_width="wrap_content"

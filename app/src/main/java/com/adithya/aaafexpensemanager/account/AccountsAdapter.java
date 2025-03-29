@@ -17,31 +17,33 @@ import com.adithya.aaafexpensemanager.R;
 import java.util.ArrayList;
 import java.util.List;
 
-/** */
+/**
+ *
+ */
 public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public interface NavigationListener{
-        void changeNavigation(int id, Bundle args);
-    }
-    /** @noinspection FieldCanBeLocal, unused */
-    private final Context context;
-    private final List<Object> items;
     private static final int TYPE_ACCOUNT_TYPE = 0;
     private static final int TYPE_ACCOUNT = 1;
+    /**
+     * @noinspection FieldCanBeLocal, unused
+     */
+    private final Context context;
+    private final List<Object> items;
     private final NavigationListener navigationListener;
-
     public AccountsAdapter(List<Account> accounts,
                            Context context,
                            NavigationListener navigationListener
-                           ) {
+    ) {
         this.items = new ArrayList<>();
         this.context = context;
         this.navigationListener = navigationListener;
         addSeparators(accounts);
     }
+
     @Override
     public int getItemViewType(int position) {
         return items.get(position) instanceof String ? TYPE_ACCOUNT_TYPE : TYPE_ACCOUNT;
     }
+
     private void addSeparators(List<Account> accounts) {
         String tempAccountType = null;
         for (Account account : accounts) {
@@ -67,8 +69,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == TYPE_ACCOUNT_TYPE) {
             View view = inflater.inflate(R.layout.list_account_type_separator, parent, false);
             return new AccountTypeViewHolder(view);
-        }
-        else{
+        } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_account, parent, false); // Use custom layout
             return new AccountViewHolder(view);
         }
@@ -78,11 +79,11 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
-        if (holder instanceof AccountsAdapter.AccountTypeViewHolder){
+        if (holder instanceof AccountsAdapter.AccountTypeViewHolder) {
             AccountTypeViewHolder accountTypeViewHolder = (AccountTypeViewHolder) holder;
             String accountType = (String) item;
             accountTypeViewHolder.accountTypeTextView.setText(accountType);
-        }else if(holder instanceof AccountViewHolder) {
+        } else if (holder instanceof AccountViewHolder) {
             AccountViewHolder accountViewHolder = (AccountViewHolder) holder;
             Account account = (Account) item;
             if (account != null) {
@@ -97,7 +98,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 accountViewHolder.itemView.setOnClickListener(v -> {
                     Bundle args = new Bundle();
-                    args.putParcelable("account",account);
+                    args.putParcelable("account", account);
                     navigationListener.changeNavigation(R.id.nav_create_account, args);
                 });
             }
@@ -108,10 +109,16 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemCount() {
         return items.size();
     }
+
+    public interface NavigationListener {
+        void changeNavigation(int id, Bundle args);
+    }
+
     public static class AccountViewHolder extends RecyclerView.ViewHolder {
         TextView accountTypeTextView;
         TextView accountBalanceTextView;
         TextView accountNameTextView;
+
         public AccountViewHolder(@NonNull View itemView) {
             super(itemView);
             accountNameTextView = itemView.findViewById(R.id.accountNameTextView);
@@ -119,8 +126,10 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             accountBalanceTextView = itemView.findViewById(R.id.accountBalanceTextView);
         }
     }
+
     public static class AccountTypeViewHolder extends RecyclerView.ViewHolder {
         TextView accountTypeTextView;
+
         public AccountTypeViewHolder(@NonNull View itemView) {
             super(itemView);
             accountTypeTextView = itemView.findViewById(R.id.list_account_type_separator_text);

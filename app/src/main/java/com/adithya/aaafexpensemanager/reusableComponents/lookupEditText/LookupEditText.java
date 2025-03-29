@@ -20,17 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LookupEditText extends TextInputEditText implements View.OnClickListener {
-    public interface LookupEditTextItem{
-        String toEditTextLookupString();
-    }
     private Context context;
     private OnItemClickListener onItemClickListener;
     private List<LookupEditTextItem> items;
-
-    public interface OnItemClickListener {
-        void onItemClick(LookupEditTextItem selectedItem,int position);
-    }
-
     public LookupEditText(Context context) {
         super(context);
         init(context);
@@ -59,27 +51,31 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
 
     public void setItemStrings(List<String> items) {
         this.items = new ArrayList<>();
-        for(String item : items){
+        for (String item : items) {
             this.items.add(new DefaultLookupEditTextItem(item));
         }
     }
+
     public void setItems(List<LookupEditTextItem> items) {
         this.items = new ArrayList<>();
         this.items.addAll(items);
     }
+
     public void setItemObjects(List<Object> items) {
         this.items = new ArrayList<>();
-        for(Object item : items){
+        for (Object item : items) {
             this.items.add(new DefaultLookupEditTextItem(item));
         }
     }
+
     @Override
     public void setError(CharSequence error) {
         if (error != null) {
-             Snackbar.make(this, error, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(this, error, Snackbar.LENGTH_SHORT).show();
         }
         super.setError(error);
     }
+
     @Override
     public void onClick(View v) {
         showLookupDialog();
@@ -95,7 +91,7 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
         RecyclerView itemsRecyclerView = dialogView.findViewById(R.id.items_recyclerview);
         itemsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        LookupAdapter adapter = new LookupAdapter(items, this::onItemSelected,alertDialog);
+        LookupAdapter adapter = new LookupAdapter(items, this::onItemSelected, alertDialog);
         itemsRecyclerView.setAdapter(adapter);
 
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -120,20 +116,33 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
         setText(item.toEditTextLookupString());
         if (onItemClickListener != null) {
             int position = items.indexOf(item);
-            onItemClickListener.onItemClick(item,position);
+            onItemClickListener.onItemClick(item, position);
         }
     }
-    public static class DefaultLookupEditTextItem implements LookupEditTextItem{
+
+    public interface LookupEditTextItem {
+        String toEditTextLookupString();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(LookupEditTextItem selectedItem, int position);
+    }
+
+    public static class DefaultLookupEditTextItem implements LookupEditTextItem {
         private Object lookupEditTextItem;
-        public DefaultLookupEditTextItem(){
+
+        public DefaultLookupEditTextItem() {
             super();
         }
-        public DefaultLookupEditTextItem(Object object){
+
+        public DefaultLookupEditTextItem(Object object) {
             this.lookupEditTextItem = object;
         }
-        public DefaultLookupEditTextItem(String object){
+
+        public DefaultLookupEditTextItem(String object) {
             this.lookupEditTextItem = object;
         }
+
         @Override
         public String toEditTextLookupString() {
             return this.lookupEditTextItem.toString();

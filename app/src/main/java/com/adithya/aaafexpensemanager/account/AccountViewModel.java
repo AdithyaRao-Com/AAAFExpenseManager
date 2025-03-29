@@ -24,6 +24,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
         transactionRepository = new TransactionRepository(application);
         loadAccountNames();
     }
+
     public Account getAccountByName(String accountName) {
         return accountRepository.getAccountByName(accountName);
     }
@@ -32,6 +33,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
         accountRepository.updateAccount(account);
         loadAccountNames();
     }
+
     public void deleteAccount(String accountName) {
         accountRepository.deleteAccount(accountName);
         loadAccountNames();
@@ -46,7 +48,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     }
 
     public void filterAccounts(String searchText) {
-        List<Account> filteredAccounts = accountRepository.filterAccounts(searchText,this.showClosedAccounts); // From repository
+        List<Account> filteredAccounts = accountRepository.filterAccounts(searchText, this.showClosedAccounts); // From repository
         accounts.setValue(filteredAccounts);
     }
 
@@ -54,6 +56,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
         List<Account> accounts = accountRepository.getAccounts(this.showClosedAccounts);
         this.accounts.setValue(accounts);
     }
+
     public void addTransaction(Transaction transaction) {
         transactionRepository.addTransaction(transaction);
         loadAccountNames();
@@ -62,6 +65,7 @@ public class AccountViewModel extends AndroidViewModel { // Extend AndroidViewMo
     public void setShowClosedAccounts(boolean showClosedAccounts) {
         this.showClosedAccounts = showClosedAccounts;
     }
+
     public List<String> getAccountTags() {
         return accountRepository.getAccountTags();
     }

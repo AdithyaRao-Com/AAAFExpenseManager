@@ -1,4 +1,5 @@
 package com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText;
+
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +19,9 @@ import java.util.List;
 public class MultiSelectLookupAdapter extends RecyclerView.Adapter<MultiSelectLookupAdapter.ViewHolder> implements Filterable {
 
     private final List<String> originalItems;
-    private List<String> filteredItems;
     private final List<String> selectedItems;
     private final OnItemCheckedChangeListener onItemCheckedChangeListener;
-
-    public interface OnItemCheckedChangeListener {
-        void onItemCheckedChange(String item, boolean isChecked);
-    }
+    private List<String> filteredItems;
 
     public MultiSelectLookupAdapter(List<String> items, List<String> selectedItems, OnItemCheckedChangeListener listener) {
         this.originalItems = items;
@@ -84,6 +81,10 @@ public class MultiSelectLookupAdapter extends RecyclerView.Adapter<MultiSelectLo
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public interface OnItemCheckedChangeListener {
+        void onItemCheckedChange(String item, boolean isChecked);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

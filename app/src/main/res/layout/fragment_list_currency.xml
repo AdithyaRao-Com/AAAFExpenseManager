@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <EditText
         android:id="@+id/searchCurrencyEditText"
         android:layout_width="match_parent"
@@ -12,6 +13,7 @@
         android:hint="@string/search"
         android:inputType="text"
         tools:ignore="VisualLintTextFieldSize" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/currenciesRecyclerView"
         android:layout_width="match_parent"

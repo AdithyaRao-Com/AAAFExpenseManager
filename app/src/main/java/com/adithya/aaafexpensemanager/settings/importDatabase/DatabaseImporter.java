@@ -12,12 +12,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-/** @noinspection SameParameterValue*/
+/**
+ * @noinspection SameParameterValue
+ */
 public class DatabaseImporter {
 
     private static final String TAG = "DatabaseImporter";
 
-    /** @noinspection ResultOfMethodCallIgnored*/
+    /**
+     * @noinspection ResultOfMethodCallIgnored
+     */
     public boolean importDatabase(Context context, Uri zipUri, File databaseFile) {
         try {
             File tempZipFile = new File(context.getCacheDir(), "temp_import.zip");
@@ -41,7 +45,9 @@ public class DatabaseImporter {
         }
     }
 
-    /** @noinspection resource*/
+    /**
+     * @noinspection resource
+     */
     private void unzipDatabase(File zipFile, File databaseFile, String password) throws ZipException {
         ZipFile zip = new ZipFile(zipFile, password.toCharArray());
         zip.extractFile(databaseFile.getName(), databaseFile.getParent());

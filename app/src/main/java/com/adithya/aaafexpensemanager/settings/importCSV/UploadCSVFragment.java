@@ -30,9 +30,6 @@ public class UploadCSVFragment extends Fragment {
     private TextView fileSelectedTextView;
     private Button uploadButton;
     private Uri selectedFileUri;
-    private Context context;
-    private ViewGroup viewGroup;
-
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> pickFileLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -51,6 +48,8 @@ public class UploadCSVFragment extends Fragment {
                 }
             }
     );
+    private Context context;
+    private ViewGroup viewGroup;
 
     @Nullable
     @Override
@@ -80,11 +79,10 @@ public class UploadCSVFragment extends Fragment {
     }
 
     private void processCsvFile(Uri fileUri) {
-        if(CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)){
+        if (CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)) {
             ImportCSVParser.parseTransactions(this.context, fileUri);
-            Snackbar.make(viewGroup.getRootView(),"Upload Successful", Snackbar.LENGTH_LONG).show();
-        }
-        else{
+            Snackbar.make(viewGroup.getRootView(), "Upload Successful", Snackbar.LENGTH_LONG).show();
+        } else {
             Toast.makeText(this.context, "File is not a CSV", Toast.LENGTH_SHORT).show();
             ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
                 @Override
@@ -100,8 +98,7 @@ public class UploadCSVFragment extends Fragment {
             });
             try {
                 convertor.convertExcelToCsv(fileUri);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
                 Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
             }

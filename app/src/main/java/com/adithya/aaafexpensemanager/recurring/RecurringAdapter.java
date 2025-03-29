@@ -29,6 +29,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final DateTimeFormatter dateFormatter;
     private final RecurringViewModel viewModel;
     private final RecurringFragment recurringFragment;
+
     public RecurringAdapter(List<RecurringSchedule> recurringSchedules,
                             RecurringFragment recurringFragment,
                             RecurringViewModel viewModel) {
@@ -60,9 +61,11 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemCount() {
         return items.size();
     }
+
     public void addRecurringSchedules(List<RecurringSchedule> recurringSchedules) {
         addSeparators(recurringSchedules);
     }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -75,6 +78,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             return new RecurringViewHolder(view);
         }
     }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
@@ -90,7 +94,10 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
     }
-    /** @noinspection deprecation, unused */
+
+    /**
+     * @noinspection deprecation, unused
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpRecurringViewHolder(@NonNull RecurringAdapter.RecurringViewHolder holder, int position, RecurringSchedule recurringSchedule) {
         holder.transactionNameTextView.setText(recurringSchedule.transactionName);
@@ -127,7 +134,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (originalRecurringSchedule != null) {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("recurringSchedule", recurringSchedule);
-                bundle.putBoolean("isEditing",true);
+                bundle.putBoolean("isEditing", true);
                 NavHostFragment.findNavController(this.recurringFragment)
                         .navigate(R.id.action_recurringFragment_to_createRecurringFragment, bundle);
             } else {
@@ -136,6 +143,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         });
     }
+
     public static class RecurringViewHolder extends RecyclerView.ViewHolder {
         TextView transactionNameTextView;
         TextView amountTextView;
@@ -143,6 +151,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         LinearLayout transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
+
         public RecurringViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionNameTextView = itemView.findViewById(R.id.transactionNameTextView);
@@ -153,8 +162,10 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             categoryNameTextView = itemView.findViewById(R.id.categoryNameTextView);
         }
     }
+
     public static class DateViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
+
         public DateViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.list_date_separator_text); // Replace with your date TextView ID

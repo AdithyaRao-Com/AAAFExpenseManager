@@ -46,7 +46,8 @@ public class CategoryFragment extends Fragment {
         EditText searchEditText = view.findViewById(R.id.searchCategoryEditText);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -54,10 +55,12 @@ public class CategoryFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         return view;
     }
+
     private class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {
         private List<Category> categories;
 
@@ -84,7 +87,7 @@ public class CategoryFragment extends Fragment {
             holder.itemView.setOnClickListener(v -> {
                 selectedCategory = category;
                 Bundle args = new Bundle();
-                args.putParcelable("category",selectedCategory);
+                args.putParcelable("category", selectedCategory);
                 Navigation.findNavController(requireView()).navigate(R.id.action_categoryFragment_to_createCategoryFragment, args);
             });
         }

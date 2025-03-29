@@ -26,28 +26,31 @@ public class RecurringViewModel extends AndroidViewModel {
         return repository.addRecurringSchedule(transaction);
     }
 
-    public LiveData<List<RecurringSchedule>> getRecurringSchedules(TransactionFilter transactionFilter,int pageNumber) {
+    public LiveData<List<RecurringSchedule>> getRecurringSchedules(TransactionFilter transactionFilter, int pageNumber) {
         this.transactionFilter = transactionFilter;
         loadTransactions(pageNumber);
         return recurringSchedules;
     }
 
     private void loadTransactions(int pageNumber) {
-        if(transactionFilter==null){
-            transactionFilter =  new TransactionFilter();
+        if (transactionFilter == null) {
+            transactionFilter = new TransactionFilter();
         }
         List<RecurringSchedule> recurringScheduleList =
-                repository.getAllRecurringSchedules(transactionFilter,pageNumber);
+                repository.getAllRecurringSchedules(transactionFilter, pageNumber);
         recurringSchedules.setValue(recurringScheduleList);
         Log.d("RecurringViewModel", "Recurring schedules loaded. Size: " + (recurringScheduleList == null ? 0 : recurringScheduleList.size()));
     }
+
     public void updateRecurringSchedule(RecurringSchedule recurringSchedule) {
         repository.updateRecurringSchedule(recurringSchedule);
         Log.d("RecurringViewModel", "Recurring schedule updated. Reloading data.");
     }
+
     public RecurringSchedule getRecurringScheduleById(UUID recurringScheduleUUID) {
         return repository.getRecurringScheduleById(recurringScheduleUUID);
     }
+
     public void deleteRecurringSchedule(RecurringSchedule recurringSchedule) {
         repository.deleteRecurringSchedule(recurringSchedule);
     }

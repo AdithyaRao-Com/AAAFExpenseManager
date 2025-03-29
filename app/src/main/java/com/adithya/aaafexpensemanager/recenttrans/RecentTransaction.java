@@ -6,6 +6,17 @@ import android.os.Parcelable;
 import com.adithya.aaafexpensemanager.transaction.Transaction;
 
 public class RecentTransaction implements Parcelable {
+    public static final Creator<RecentTransaction> CREATOR = new Creator<>() {
+        @Override
+        public RecentTransaction createFromParcel(Parcel in) {
+            return new RecentTransaction(in);
+        }
+
+        @Override
+        public RecentTransaction[] newArray(int size) {
+            return new RecentTransaction[size];
+        }
+    };
     public String transactionName;
     public String transactionType;
     public String category;
@@ -15,6 +26,7 @@ public class RecentTransaction implements Parcelable {
     public String toAccountName;
     public long createDateTime;
     public long lastUpdateDateTime;
+
     public RecentTransaction(String transactionName, String transactionType, String category, String notes, double amount, String accountName, String toAccountName) {
         this.transactionName = transactionName;
         this.transactionType = transactionType;
@@ -50,6 +62,7 @@ public class RecentTransaction implements Parcelable {
         this.createDateTime = System.currentTimeMillis();
         this.lastUpdateDateTime = System.currentTimeMillis();
     }
+
     // Parcelable implementation
     protected RecentTransaction(Parcel in) {
         this.transactionName = in.readString();
@@ -80,16 +93,4 @@ public class RecentTransaction implements Parcelable {
         dest.writeLong(createDateTime);
         dest.writeLong(lastUpdateDateTime);
     }
-
-    public static final Creator<RecentTransaction> CREATOR = new Creator<>() {
-        @Override
-        public RecentTransaction createFromParcel(Parcel in) {
-            return new RecentTransaction(in);
-        }
-
-        @Override
-        public RecentTransaction[] newArray(int size) {
-            return new RecentTransaction[size];
-        }
-    };
 }

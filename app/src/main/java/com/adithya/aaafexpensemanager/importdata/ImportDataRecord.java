@@ -61,14 +61,14 @@ public class ImportDataRecord {
         try {
             return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
         } catch (DateTimeParseException e) {
-            try{
+            try {
                 return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            }
-            catch (Exception e1){
+            } catch (Exception e1) {
                 return LocalDate.now().minusDays(365);
             }
         }
     }
+
     public double getAmount() {
         try {
             return Double.parseDouble(this.amount);
@@ -80,19 +80,19 @@ public class ImportDataRecord {
     public double getAbsAmount() {
         return Math.abs(getAmount());
     }
+
     public String getTransactionType() {
-        if(this.type.equals("Transfer")){
-            if(this.getAmount()<= 0.0){
+        if (this.type.equals("Transfer")) {
+            if (this.getAmount() <= 0.0) {
                 return "Expense";
-            }
-            else{
+            } else {
                 return "Income";
             }
-        }
-        else{
+        } else {
             return this.type;
         }
     }
+
     public Transaction toTransaction() {
         return new Transaction(this.title,
                 getTransactionDate(),
@@ -101,14 +101,14 @@ public class ImportDataRecord {
                 this.notes,
                 getAbsAmount(),
                 this.account,
-                "","","");
+                "", "", "");
     }
 
-    public Category toCategory(){
-        return new Category(this.category,this.categoryGroupName);
+    public Category toCategory() {
+        return new Category(this.category, this.categoryGroupName);
     }
 
-    public Account toAccount(String defaultCurrency){
+    public Account toAccount(String defaultCurrency) {
         return new Account(this.account,
                 "Cash",
                 0.0,

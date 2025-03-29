@@ -38,7 +38,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/** @noinspection DataFlowIssue, FieldCanBeLocal */
+/**
+ * @noinspection DataFlowIssue, FieldCanBeLocal
+ */
 public class CreateTransactionFilterFragment extends Fragment {
     private Context context;
     private TransactionFilterViewModel transactionFilterViewModel;
@@ -141,15 +143,13 @@ public class CreateTransactionFilterFragment extends Fragment {
     private void setupPeriodNameLookup() {
         Log.d("CreateTransactionFilterFragment", "setupPeriodNameLookup - running");
         String item = transactionFilter.reportType;
-        if(item.equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)){
+        if (item.equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)) {
             List<LookupEditText.LookupEditTextItem> periodNames = List.of(CategorySummaryRecord.TimePeriod.values());
             periodNameLookup.setItems(periodNames);
-        }
-        else if(item.equals(AppConstants.REPORT_TYPE_BALANCE_FORECAST_SUMMARY)){
+        } else if (item.equals(AppConstants.REPORT_TYPE_BALANCE_FORECAST_SUMMARY)) {
             List<LookupEditText.LookupEditTextItem> periodNames = List.of(ForecastConstants.ForecastTimePeriod.values());
             periodNameLookup.setItems(periodNames);
-        }
-        else{
+        } else {
             periodNameLookup.setItems(new ArrayList<>());
         }
     }
@@ -159,12 +159,11 @@ public class CreateTransactionFilterFragment extends Fragment {
     }
 
     private void setDateSelectionRadioGroup() {
-        if(!transactionFilter.periodName.isBlank()){
+        if (!transactionFilter.periodName.isBlank()) {
             dateSelectionTypeRelative.setChecked(true);
             dateFromToWrapper.setVisibility(View.GONE);
             periodNameLookupWrapper.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             dateSelectionTypeFixed.setChecked(true);
             dateFromToWrapper.setVisibility(View.VISIBLE);
             periodNameLookupWrapper.setVisibility(View.GONE);
@@ -174,7 +173,7 @@ public class CreateTransactionFilterFragment extends Fragment {
                 dateFromToWrapper.setVisibility(View.VISIBLE);
                 periodNameLookupWrapper.setVisibility(View.GONE);
                 periodNameLookup.setText("");
-                transactionFilter.periodName="";
+                transactionFilter.periodName = "";
             } else if (checkedId == dateSelectionTypeRelative.getId()) {
                 dateFromToWrapper.setVisibility(View.GONE);
                 periodNameLookupWrapper.setVisibility(View.VISIBLE);
@@ -201,8 +200,8 @@ public class CreateTransactionFilterFragment extends Fragment {
                     throw new RuntimeException(errorMessage);
                 }
                 transactionFilter.reportType = reportTypeTextView.getText().toString();
-                if(dateSelectionTypeRadioGroup.getCheckedRadioButtonId() == dateSelectionTypeRelative.getId()){
-                    if(periodNameLookup.getText().toString().isBlank()) {
+                if (dateSelectionTypeRadioGroup.getCheckedRadioButtonId() == dateSelectionTypeRelative.getId()) {
+                    if (periodNameLookup.getText().toString().isBlank()) {
                         String errorMessage = "Period name cannot be empty";
                         periodNameLookup.setError(errorMessage);
                         throw new RuntimeException(errorMessage);
@@ -211,12 +210,12 @@ public class CreateTransactionFilterFragment extends Fragment {
                     transactionFilter.fromTransactionDate = 0;
                     transactionFilter.toTransactionDate = 0;
                 } else if (dateSelectionTypeRadioGroup.getCheckedRadioButtonId() == dateSelectionTypeFixed.getId()) {
-                    if(dateFromEditText.getText().toString().isBlank()){
+                    if (dateFromEditText.getText().toString().isBlank()) {
                         String errorMessage = "From date cannot be empty";
                         dateFromEditText.setError(errorMessage);
                         throw new RuntimeException(errorMessage);
                     }
-                    if(dateToEditText.getText().toString().isBlank()){
+                    if (dateToEditText.getText().toString().isBlank()) {
                         String errorMessage = "To date cannot be empty";
                         dateToEditText.setError(errorMessage);
                         throw new RuntimeException(errorMessage);
@@ -227,37 +226,37 @@ public class CreateTransactionFilterFragment extends Fragment {
                 }
                 transactionFilterViewModel.addTransactionFilter(transactionFilter);
                 Navigation.findNavController(requireView()).navigate(R.id.action_createTransactionFilterFragment_to_transactionFilterListFragment);
-            }
-            catch (RuntimeException e){
+            } catch (RuntimeException e) {
                 Log.e("CreateTransactionFilterFragment", "setupCreateTransactionFilterFab - error", e);
             }
         });
     }
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     private void setupArguments() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             transactionFilter = bundle.getParcelable("transactionFilter");
             initializeFields();
-        }
-        else{
+        } else {
             transactionFilter = new TransactionFilter();
         }
     }
+
     private void setupReportTypeTextView() {
         reportTypeTextView.setItemStrings(new ArrayList<>(AppConstants.REPORT_TYPES));
-        reportTypeTextView.setOnItemClickListener((item,position)
+        reportTypeTextView.setOnItemClickListener((item, position)
                 -> {
             transactionFilter.reportType = item.toEditTextLookupString();
-            if(item.toEditTextLookupString().equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)){
+            if (item.toEditTextLookupString().equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)) {
                 List<LookupEditText.LookupEditTextItem> periodNames = List.of(CategorySummaryRecord.TimePeriod.values());
                 periodNameLookup.setItems(periodNames);
-            }
-            else if(item.toEditTextLookupString().equals(AppConstants.REPORT_TYPE_BALANCE_FORECAST_SUMMARY)){
+            } else if (item.toEditTextLookupString().equals(AppConstants.REPORT_TYPE_BALANCE_FORECAST_SUMMARY)) {
                 List<LookupEditText.LookupEditTextItem> periodNames = List.of(ForecastConstants.ForecastTimePeriod.values());
                 periodNameLookup.setItems(periodNames);
-            }
-            else{
+            } else {
                 periodNameLookup.setItems(new ArrayList<>());
             }
             transactionFilter.fromTransactionDate = 0;
@@ -268,6 +267,7 @@ public class CreateTransactionFilterFragment extends Fragment {
             periodNameLookup.setText("");
         });
     }
+
     private void initializeFields() {
         transactionNameTextView.setSelectedItems(transactionFilter.transactionNames);
         categoriesTextView.setSelectedItems(transactionFilter.categories);

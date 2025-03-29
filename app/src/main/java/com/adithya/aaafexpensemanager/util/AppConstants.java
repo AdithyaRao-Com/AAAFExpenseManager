@@ -5,12 +5,12 @@ import java.util.List;
 
 public class AppConstants {
     public static final int BATCH_SIZE = 1000;
-    public  static final String RECURRING_SCHEDULES_DAILY = "Daily";
-    public  static final String RECURRING_SCHEDULES_WEEKLY = "Weekly";
-    public  static final String RECURRING_SCHEDULES_MONTHLY = "Monthly";
-    public  static final String RECURRING_SCHEDULES_QUARTERLY = "Quarterly";
-    public  static final String RECURRING_SCHEDULES_YEARLY = "Yearly";
-    public  static final String RECURRING_SCHEDULES_CUSTOM= "Custom";
+    public static final String RECURRING_SCHEDULES_DAILY = "Daily";
+    public static final String RECURRING_SCHEDULES_WEEKLY = "Weekly";
+    public static final String RECURRING_SCHEDULES_MONTHLY = "Monthly";
+    public static final String RECURRING_SCHEDULES_QUARTERLY = "Quarterly";
+    public static final String RECURRING_SCHEDULES_YEARLY = "Yearly";
+    public static final String RECURRING_SCHEDULES_CUSTOM = "Custom";
     public static final List<String> RECURRING_SCHEDULES =
             List.of(RECURRING_SCHEDULES_DAILY,
                     RECURRING_SCHEDULES_WEEKLY,
@@ -20,12 +20,12 @@ public class AppConstants {
                     RECURRING_SCHEDULES_CUSTOM);
     public static final String REPORT_TYPE_CATEGORY_SUMMARY = "Category Summary";
     public static final String REPORT_TYPE_BALANCE_FORECAST_SUMMARY = "Balance Forecast Summary";
-    public static final List<String> REPORT_TYPES =List.of(REPORT_TYPE_CATEGORY_SUMMARY,
+    public static final List<String> REPORT_TYPES = List.of(REPORT_TYPE_CATEGORY_SUMMARY,
             REPORT_TYPE_BALANCE_FORECAST_SUMMARY);
     public static final long DEFAULT_RECURRING_END_INTERVAL = 10L;
     public static final boolean IS_DEV_MODE = true;
     public static final int DATABASE_VERSION = 63;
-    public static final LocalDate TRANSACTION_DATE_DUMMY = LocalDate.of(2000, 1,1);
+    public static final LocalDate TRANSACTION_DATE_DUMMY = LocalDate.of(2000, 1, 1);
     public static final int COPY_LIMIT = 10;
     public static final String DATABASE_NAME = "AAAF_Personal_Expense_33.db";
 }

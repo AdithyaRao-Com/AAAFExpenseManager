@@ -35,7 +35,7 @@ public class AccountTypeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_list_account_type, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_account_type, container, false);
         RecyclerView accountTypesRecyclerView = view.findViewById(R.id.accountTypesRecyclerView);
         accountTypesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         accountTypeViewModel = new ViewModelProvider(requireActivity()).get(AccountTypeViewModel.class);
@@ -62,8 +62,60 @@ public class AccountTypeFragment extends Fragment {
         });
         return view;
     }
-    private class AccountTypesAdapter extends RecyclerView.Adapter<AccountTypesAdapter.AccountTypeViewHolder>{
+
+    /**
+     * @noinspection DataFlowIssue
+     */
+    private void showAccountTypeOptionsDialog(AccountType accountType) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(accountType.accountType);
+        String[] options = {"Edit Details", "Delete Account Type", "Show Transactions"};
+        builder.setItems(options, (dialog, which) -> {
+            if (which == 0) {
+                selectedAccountType = accountType;
+                Bundle args = new Bundle();
+                args.putParcelable("accountType", selectedAccountType);
+                Navigation.findNavController(requireView()).navigate(R.id.action_accountTypeFragment_to_createAccountTypeFragment, args);
+            } else if (which == 1) {
+                showDeleteConfirmationDialog(accountType);
+            } else if (which == 2) {
+                Bundle args = new Bundle();
+                TransactionFilter accountFilter = new TransactionFilter();
+                ArrayList<String> accountTypes = new ArrayList<>();
+                accountTypes.add(accountType.accountType);
+                accountFilter.accountTypes = accountTypes;
+                args.putParcelable("transaction_filter", accountFilter);
+                Navigation.findNavController(this.getView()).navigate(R.id.nav_transaction, args);
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * @noinspection DataFlowIssue
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    private void showDeleteConfirmationDialog(AccountType accountType) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Delete Category");
+        builder.setMessage("Are you sure you want to delete this account type?");
+
+        builder.setPositiveButton("Delete", (dialog, which) -> {
+            accountTypeViewModel.deleteAccountType(accountType.accountType);
+            Toast.makeText(getContext(), "Account Type deleted", Toast.LENGTH_SHORT).show();
+            adapter.setAccountTypes(accountTypeViewModel.getAccountTypes());
+            adapter.notifyDataSetChanged();
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> {
+            // Do nothing (close the dialog)
+        });
+        builder.show();
+    }
+
+    private class AccountTypesAdapter extends RecyclerView.Adapter<AccountTypesAdapter.AccountTypeViewHolder> {
         private List<AccountType> accountTypes;
+
         public AccountTypesAdapter(List<AccountType> accountTypes) {
             this.accountTypes = accountTypes;
         }
@@ -98,56 +150,13 @@ public class AccountTypeFragment extends Fragment {
         public class AccountTypeViewHolder extends RecyclerView.ViewHolder {
             private final android.widget.TextView accountTypeTextView;
             private final android.widget.TextView accountTypeDisplayOrderTextView;
+
             public AccountTypeViewHolder(@NonNull View itemView) {
                 super(itemView);
                 accountTypeTextView = itemView.findViewById(R.id.accountTypeNameTextView);
-                accountTypeDisplayOrderTextView = itemView.findViewById(R.id.accountTypeDisplayOrder);            }
+                accountTypeDisplayOrderTextView = itemView.findViewById(R.id.accountTypeDisplayOrder);
+            }
         }
-    }
-    /** @noinspection DataFlowIssue*/
-    private void showAccountTypeOptionsDialog(AccountType accountType) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(accountType.accountType);
-        String[] options = {"Edit Details", "Delete Account Type", "Show Transactions"};
-        builder.setItems(options, (dialog, which) -> {
-            if (which == 0) {
-                selectedAccountType = accountType;
-                Bundle args = new Bundle();
-                args.putParcelable("accountType",selectedAccountType);
-                Navigation.findNavController(requireView()).navigate(R.id.action_accountTypeFragment_to_createAccountTypeFragment, args);
-            } else if (which == 1) {
-                showDeleteConfirmationDialog(accountType);
-            }
-            else if (which == 2){
-                Bundle args = new Bundle();
-                TransactionFilter accountFilter = new TransactionFilter();
-                ArrayList<String> accountTypes = new ArrayList<>();
-                accountTypes.add(accountType.accountType);
-                accountFilter.accountTypes = accountTypes;
-                args.putParcelable("transaction_filter",accountFilter);
-                Navigation.findNavController(this.getView()).navigate(R.id.nav_transaction, args);
-            }
-        });
-        builder.show();
-    }
-    /** @noinspection DataFlowIssue*/
-    @SuppressLint("NotifyDataSetChanged")
-    private void showDeleteConfirmationDialog(AccountType accountType) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Delete Category");
-        builder.setMessage("Are you sure you want to delete this account type?");
-
-        builder.setPositiveButton("Delete", (dialog, which) -> {
-            accountTypeViewModel.deleteAccountType(accountType.accountType);
-            Toast.makeText(getContext(), "Account Type deleted", Toast.LENGTH_SHORT).show();
-            adapter.setAccountTypes(accountTypeViewModel.getAccountTypes());
-            adapter.notifyDataSetChanged();
-        });
-
-        builder.setNegativeButton("Cancel", (dialog, which) -> {
-            // Do nothing (close the dialog)
-        });
-        builder.show();
     }
 }
 

@@ -12,7 +12,8 @@ import java.io.File;
 public class SettingsRepository {
     private final SQLiteDatabase db;
     private final File databaseFile;
-    public SettingsRepository(Application application){
+
+    public SettingsRepository(Application application) {
         //noinspection resource
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         this.databaseFile = dbHelper.getDatabaseFile();
@@ -23,7 +24,7 @@ public class SettingsRepository {
         return databaseFile;
     }
 
-    public String getSetting(String settingName){
+    public String getSetting(String settingName) {
         String query = "SELECT setting_value FROM setting_pairs WHERE setting_name = ?";
         String[] args = {settingName};
         try (Cursor cursor = db.rawQuery(query, args)) {
@@ -33,24 +34,23 @@ public class SettingsRepository {
         }
         return null;
     }
-    public boolean setSetting(String settingName, String settingValue){
+
+    public boolean setSetting(String settingName, String settingValue) {
         String[] deleteArgs = {settingName};
         boolean status = false;
-        try{
+        try {
             db.beginTransaction();
             db.delete("setting_pairs", "setting_name = ?", deleteArgs);
             ContentValues values = new ContentValues();
             values.put("setting_name", settingName);
             values.put("setting_value", settingValue);
-            db.insert("setting_pairs",null,values);
+            db.insert("setting_pairs", null, values);
             db.setTransactionSuccessful();
-            status=true;
-        }
-        catch (Exception e){
+            status = true;
+        } catch (Exception e) {
             //noinspection CallToPrintStackTrace
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             db.endTransaction();
         }
         return status;

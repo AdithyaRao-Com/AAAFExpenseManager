@@ -15,14 +15,10 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Optional;
 
-/** @noinspection ExtractMethodRecommender*/
+/**
+ * @noinspection ExtractMethodRecommender
+ */
 public class EditTextDialog {
-    public interface PositiveListener {
-        void onPositive(String inputText);
-    }
-    public interface NegativeListener {
-        void onNegative(String inputText);
-    }
     private final Context context;
     private final View customLayout;
     private final TextInputEditText materialEditText;
@@ -31,19 +27,18 @@ public class EditTextDialog {
     private final String title;
     private final String positiveButtonText;
     private final String negativeButtonText;
-
     @SuppressLint("InflateParams")
     public EditTextDialog(@NonNull
-                   Context context,
+                          Context context,
                           @NonNull
-                   String title,
+                          String title,
                           @NonNull
-                   String positiveButtonText,
+                          String positiveButtonText,
                           String negativeButtonText,
                           @NonNull
-                   PositiveListener positiveListener,
+                          PositiveListener positiveListener,
                           NegativeListener negativeListener,
-                          String inputHint){
+                          String inputHint) {
         this.context = context;
         this.title = title;
         this.positiveListener = positiveListener;
@@ -53,7 +48,7 @@ public class EditTextDialog {
         this.customLayout = LayoutInflater.from(context).inflate(R.layout.reuse_dialog_edit_text, null);
         this.materialEditText = customLayout.findViewById(R.id.materialEditText);
         TextInputLayout textInputLayout = customLayout.findViewById(R.id.textInputLayout);
-        if(inputHint !=null && !inputHint.isBlank()){
+        if (inputHint != null && !inputHint.isBlank()) {
             textInputLayout.setHint(inputHint);
         }
         AlertDialog.Builder builder = getAlertBuilder();
@@ -61,9 +56,9 @@ public class EditTextDialog {
         dialog.show();
     }
     public EditTextDialog(Context context,
-                   String title,
-                   PositiveListener positiveListener,
-                   NegativeListener negativeListener){
+                          String title,
+                          PositiveListener positiveListener,
+                          NegativeListener negativeListener) {
         this(context,
                 title,
                 context.getString(R.string.ok),
@@ -71,14 +66,14 @@ public class EditTextDialog {
                 positiveListener,
                 negativeListener,
                 null
-                );
+        );
     }
 
     public EditTextDialog(Context context,
                           String title,
                           PositiveListener positiveListener,
                           NegativeListener negativeListener,
-                          String inputHint){
+                          String inputHint) {
         this(context,
                 title,
                 context.getString(R.string.ok),
@@ -94,7 +89,7 @@ public class EditTextDialog {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
         builder.setTitle(title);
         builder.setView(this.customLayout);
-        if(positiveListener!=null){
+        if (positiveListener != null) {
             builder.setPositiveButton(positiveButtonText, (dialog, which) -> {
                 String inputText = Optional.ofNullable(materialEditText.getText())
                         .orElse(Editable.Factory.getInstance().newEditable(""))
@@ -102,7 +97,7 @@ public class EditTextDialog {
                 positiveListener.onPositive(inputText);
             });
         }
-        if(negativeListener!=null) {
+        if (negativeListener != null) {
             builder.setNegativeButton(negativeButtonText, (dialog, which) -> {
                 String inputText = Optional.ofNullable(materialEditText.getText())
                         .orElse(Editable.Factory.getInstance().newEditable(""))
@@ -111,5 +106,13 @@ public class EditTextDialog {
             });
         }
         return builder;
+    }
+
+    public interface PositiveListener {
+        void onPositive(String inputText);
+    }
+
+    public interface NegativeListener {
+        void onNegative(String inputText);
     }
 }

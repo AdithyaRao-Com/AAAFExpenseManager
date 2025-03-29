@@ -12,6 +12,7 @@ import java.util.List;
 public class TransactionFilterViewModel extends AndroidViewModel {
     private final TransactionFilterRepository repository;
     private final LiveData<List<TransactionFilter>> transactionFilters = new MutableLiveData<>();
+
     public TransactionFilterViewModel(@NonNull Application application) {
         super(application);
         this.repository = new TransactionFilterRepository(application);
@@ -31,6 +32,7 @@ public class TransactionFilterViewModel extends AndroidViewModel {
         repository.addTransactionFilter(transactionFilter);
         loadTransactionFilters();
     }
+
     public void deleteTransactionFilter(TransactionFilter transactionFilter) {
         repository.deleteTransactionFilter(transactionFilter);
         loadTransactionFilters();

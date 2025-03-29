@@ -20,16 +20,19 @@ import com.adithya.aaafexpensemanager.recurring.RecurringRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-/** @noinspection CallToPrintStackTrace*/
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class MainActivity extends AppCompatActivity implements MenuHost {
     private AppBarConfiguration mAppBarConfiguration;
     private FloatingActionButton fab;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         DailyBackupTasks.scheduleDailySave(getApplicationContext());
-        try{
+        try {
             FutureTransactionRepository futureTransactionRepository = new FutureTransactionRepository(getApplication());
             futureTransactionRepository.applyRecurringTransactions();
             RecurringRepository recurringRepository = new RecurringRepository(getApplication());
@@ -37,8 +40,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             AccountRepository accountRepository = new AccountRepository(getApplication());
             accountRepository.refreshAccountTags();
             recurringRepository.keepFutureTransactionsUpToDate();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         com.adithya.aaafexpensemanager.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -61,37 +63,27 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         navigationView.setNavigationItemSelectedListener(item -> {
-            if(item.getItemId() == R.id.nav_account){
+            if (item.getItemId() == R.id.nav_account) {
                 navController.navigate(R.id.nav_account);
-            }
-            else if(item.getItemId() == R.id.nav_transaction){
+            } else if (item.getItemId() == R.id.nav_transaction) {
                 navController.navigate(R.id.nav_transaction);
-            }
-            else if (item.getItemId() == R.id.nav_recurring) {
+            } else if (item.getItemId() == R.id.nav_recurring) {
                 navController.navigate(R.id.nav_recurring);
-            }
-            else if (item.getItemId() == R.id.nav_settings) {
+            } else if (item.getItemId() == R.id.nav_settings) {
                 navController.navigate(R.id.nav_settings);
-            }
-            else if (item.getItemId() == R.id.nav_export_database) {
+            } else if (item.getItemId() == R.id.nav_export_database) {
                 navController.navigate(R.id.nav_export_database);
-            }
-            else if (item.getItemId() == R.id.nav_import_database) {
+            } else if (item.getItemId() == R.id.nav_import_database) {
                 navController.navigate(R.id.nav_import_database);
-            }
-            else if (item.getItemId() == R.id.nav_future_transactions) {
+            } else if (item.getItemId() == R.id.nav_future_transactions) {
                 navController.navigate(R.id.nav_future_transactions);
-            }
-            else if (item.getItemId() == R.id.nav_reports) {
+            } else if (item.getItemId() == R.id.nav_reports) {
                 navController.navigate(R.id.nav_reports);
-            }
-            else if (item.getItemId() == R.id.nav_currency) {
+            } else if (item.getItemId() == R.id.nav_currency) {
                 navController.navigate(R.id.nav_currency);
-            }
-            else if (item.getItemId() == R.id.nav_import_export_home) {
+            } else if (item.getItemId() == R.id.nav_import_export_home) {
                 navController.navigate(R.id.nav_import_export_home);
-            }
-            else if (item.getItemId() == R.id.nav_create_saved_report) {
+            } else if (item.getItemId() == R.id.nav_create_saved_report) {
                 navController.navigate(R.id.nav_create_saved_report);
             }
             drawer.close();
@@ -100,36 +92,30 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             Log.d("Navigation", "Destination changed: " + destination.getLabel());
             final int fabDestination;
-            if(destination.getId() == R.id.nav_account){
+            if (destination.getId() == R.id.nav_account) {
                 fabDestination = R.id.nav_create_account;
-            }
-            else if(destination.getId() == R.id.nav_transaction){
+            } else if (destination.getId() == R.id.nav_transaction) {
                 fabDestination = R.id.nav_create_transaction;
-            }
-            else if(destination.getId() == R.id.nav_category){
+            } else if (destination.getId() == R.id.nav_category) {
                 fabDestination = R.id.nav_create_category;
-            }
-            else if(destination.getId() == R.id.nav_account_type){
+            } else if (destination.getId() == R.id.nav_account_type) {
                 fabDestination = R.id.nav_create_account_type;
-            }
-            else if(destination.getId() == R.id.nav_recurring){
+            } else if (destination.getId() == R.id.nav_recurring) {
                 fabDestination = R.id.nav_create_recurring;
-            }
-            else if(destination.getId() == R.id.nav_currency){
+            } else if (destination.getId() == R.id.nav_currency) {
                 fabDestination = R.id.nav_create_currency;
-            }
-            else{
+            } else {
                 fabDestination = 0;
             }
-            if(fabDestination!=0){
+            if (fabDestination != 0) {
                 fab.show();
                 fab.setOnClickListener(view -> navController.navigate(fabDestination));
-            }
-            else{
+            } else {
                 fab.hide();
             }
         });
     }
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);

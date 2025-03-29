@@ -38,22 +38,24 @@ import java.util.stream.Collectors;
 
 
 public class CreateAccountFragment extends Fragment {
+    CheckBox updateBalanceCheckBox;
     private EditText accountNameEditText, accountBalanceEditText;
     private LookupAutoCompleteList accountTagsEditText;
-    private FloatingActionButton  createAccountButton;
+    private FloatingActionButton createAccountButton;
     private LookupEditText accountTypeSpinner;
     private EditText displayOrderEditText;
     private LookupEditText currencyCodeEditText;
     private CheckBox closeAccountCheckBox;
     private CheckBox doNotShowInDropdownCheckBox;
-    CheckBox updateBalanceCheckBox;
     private AccountViewModel viewModel;
     private boolean isEditing = false;
     private Account originalAccount;
     private MenuItem deleteMenuItem;
     private MenuItem showTransactionsMenuItem;
 
-    /** @noinspection DataFlowIssue*/
+    /**
+     * @noinspection DataFlowIssue
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,12 +89,11 @@ public class CreateAccountFragment extends Fragment {
                 return;
             }
             String type;
-            try{
+            try {
                 //noinspection DataFlowIssue
                 type = accountTypeSpinner.getText().toString();
-                if(type.isBlank()) throw new Exception();
-            }
-            catch (Exception e){
+                if (type.isBlank()) throw new Exception();
+            } catch (Exception e) {
                 accountTypeSpinner.setError("Select a valid account type from the list");
                 return;
             }
@@ -100,15 +101,14 @@ public class CreateAccountFragment extends Fragment {
             List<String> tagsList = accountTagsEditText.getSelectedItems();
             String tags = GsonListStringConversion.listToJson(tagsList);
             int displayOrder;
-            try{
+            try {
                 displayOrder = Integer.parseInt(displayOrderEditText.getText().toString());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 displayOrderEditText.setError("Invalid display order");
                 return;
             }
             String currencyCode = currencyCodeEditText.getText().toString();
-            if(currencyCode.isBlank()){
+            if (currencyCode.isBlank()) {
                 currencyCode = currencyViewModel.getPrimaryCurrency();
             }
             double balance;
@@ -120,14 +120,14 @@ public class CreateAccountFragment extends Fragment {
             }
             boolean closeAccountInd = closeAccountCheckBox.isChecked();
             boolean doNotShowInDropdownInd = doNotShowInDropdownCheckBox.isChecked();
-            Account account = new Account(name, type, balance, tags,displayOrder,currencyCode,closeAccountInd,doNotShowInDropdownInd);
+            Account account = new Account(name, type, balance, tags, displayOrder, currencyCode, closeAccountInd, doNotShowInDropdownInd);
             if (isEditing) {
                 originalAccount = viewModel.getAccountByName(originalAccount.accountName);
                 double difference = balance - originalAccount.accountBalance;
 
-                if (difference!= 0 && updateBalanceCheckBox.isChecked()) {
+                if (difference != 0 && updateBalanceCheckBox.isChecked()) {
                     // Add transaction
-                    String transactionType = (difference > 0)? "Income": "Expense";
+                    String transactionType = (difference > 0) ? "Income" : "Expense";
                     Transaction transaction = new Transaction(
                             "Balance Adjustment",
                             LocalDate.now(),
@@ -160,12 +160,15 @@ public class CreateAccountFragment extends Fragment {
         });
         return view;
     }
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     private void getArgumentsAndSetFields(Bundle args) {
         if (args != null && args.containsKey("account")) {
             isEditing = true;
             originalAccount = args.getParcelable("account");
-            if(originalAccount==null){
+            if (originalAccount == null) {
                 throw new RuntimeException("Original Account cannot be null");
             }
             accountNameEditText.setText(originalAccount.accountName);
@@ -181,13 +184,14 @@ public class CreateAccountFragment extends Fragment {
             currencyCodeEditText.setText(originalAccount.currencyCode);
             accountBalanceEditText.setEnabled(false);
         } else {
-            isEditing=false;
+            isEditing = false;
             accountBalanceEditText.setText("0");
             accountBalanceEditText.setEnabled(false);
             updateBalanceCheckBox.setVisibility(View.GONE);
         }
         setOptions(isEditing);
     }
+
     private void findViewByIdSetup(View view) {
         updateBalanceCheckBox = view.findViewById(R.id.updateBalanceCheckBox);
         accountNameEditText = view.findViewById(R.id.accountNameEditText);
@@ -201,7 +205,7 @@ public class CreateAccountFragment extends Fragment {
         doNotShowInDropdownCheckBox = view.findViewById(R.id.doNotShowInDropdownCheckBox);
     }
 
-@Override
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MenuHost menuHost = requireActivity();
@@ -213,32 +217,33 @@ public class CreateAccountFragment extends Fragment {
                 showTransactionsMenuItem = menu.findItem(R.id.action_show_account_transactions);
                 setOptions(isEditing);
             }
+
             /** @noinspection DataFlowIssue*/
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_delete_account){
+                if (menuItem.getItemId() == R.id.action_delete_account) {
                     new ConfirmationDialog(getContext(),
                             "Delete Account",
                             "Are you sure you want to delete this account?",
-                            ()-> {
-                                    viewModel.deleteAccount(originalAccount.accountName);
-                                    Snackbar.make(view, "Account deleted successfully", Snackbar.LENGTH_SHORT).show();
-                                    Navigation.findNavController(getView()).navigate(R.id.nav_account);
-                                },
-                            ()->{},
+                            () -> {
+                                viewModel.deleteAccount(originalAccount.accountName);
+                                Snackbar.make(view, "Account deleted successfully", Snackbar.LENGTH_SHORT).show();
+                                Navigation.findNavController(getView()).navigate(R.id.nav_account);
+                            },
+                            () -> {
+                            },
                             "Delete",
                             "Cancel"
-                            );
+                    );
                     return true;
-                }
-                else if(menuItem.getItemId()==R.id.action_show_account_transactions){
+                } else if (menuItem.getItemId() == R.id.action_show_account_transactions) {
                     Bundle args = new Bundle();
                     TransactionFilter accountFilter = new TransactionFilter();
                     ArrayList<String> accountNames = new ArrayList<>();
                     accountNames.add(originalAccount.accountName);
                     accountFilter.accountNames = accountNames;
-                    args.putParcelable("transaction_filter",accountFilter);
-                    Navigation.findNavController(getView()).navigate(R.id.nav_transaction,args);
+                    args.putParcelable("transaction_filter", accountFilter);
+                    Navigation.findNavController(getView()).navigate(R.id.nav_transaction, args);
                     return true;
                 }
                 return false;
@@ -250,7 +255,7 @@ public class CreateAccountFragment extends Fragment {
         try {
             deleteMenuItem.setVisible(isEditing);
             showTransactionsMenuItem.setVisible(isEditing);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

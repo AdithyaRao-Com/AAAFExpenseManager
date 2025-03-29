@@ -13,11 +13,13 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
     <style name="Theme.AAAFExpenseManager.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="Theme.AAAFExpenseManager.AppBarOverlay"
-        parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
+    <style name="Theme.AAAFExpenseManager.AppBarOverlay" parent="ThemeOverlay.AppCompat.DayNight.ActionBar" />
+
     <style name="Theme.AAAFExpenseManager.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 </resources>

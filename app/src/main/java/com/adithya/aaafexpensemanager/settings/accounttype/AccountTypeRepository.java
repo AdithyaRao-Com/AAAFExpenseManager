@@ -11,17 +11,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountTypeRepository {
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase db;
+    private final DatabaseHelper dbHelper;
+    private final SQLiteDatabase db;
+
     public AccountTypeRepository(Application application) {
         dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
     }
-    public AccountType getAccountTypesFromCursor(Cursor cursor){
+
+    public AccountType getAccountTypesFromCursor(Cursor cursor) {
         String accountType = cursor.getString(cursor.getColumnIndexOrThrow("account_type"));
         int accountTypeDisplayOrder = cursor.getInt(cursor.getColumnIndexOrThrow("account_type_display_order"));
         return new AccountType(accountType, accountTypeDisplayOrder);
     }
+
     public List<AccountType> getAccountTypes() {
         List<AccountType> accountTypes = new ArrayList<>();
         Cursor cursor = db.query("account_types", null, null, null, null, null, "account_type_display_order ASC");
@@ -35,6 +38,7 @@ public class AccountTypeRepository {
         }
         return accountTypes;
     }
+
     public List<AccountType> filterAccountTypes(String searchText) {
         List<AccountType> filteredAccounts = new ArrayList<>();
         String selection = "account_type LIKE ?";
@@ -50,6 +54,7 @@ public class AccountTypeRepository {
         }
         return filteredAccounts;
     }
+
     public void createAccountType(AccountType accountType) {
         if (getAccountTypeFromName(accountType.accountType) == null) {
             ContentValues values = new ContentValues();
@@ -58,6 +63,7 @@ public class AccountTypeRepository {
             db.insert("account_types", null, values);
         }
     }
+
     public void updateAccountType(AccountType accountType) {
         ContentValues values = new ContentValues();
         values.put("account_type_display_order", accountType.accountTypeDisplayOrder);
@@ -76,6 +82,7 @@ public class AccountTypeRepository {
         createAccountType(new AccountType("Other Assets", 999));
         createAccountType(new AccountType("Other Liabilities", 999));
     }
+
     public AccountType getAccountTypeFromName(String accountTypeName) {
         Cursor cursor = db.query("account_types", null, "account_type = ?", new String[]{accountTypeName}, null, null, null);
         AccountType accountType = null;

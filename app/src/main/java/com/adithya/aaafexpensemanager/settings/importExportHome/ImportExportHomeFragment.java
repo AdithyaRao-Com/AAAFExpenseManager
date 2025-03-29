@@ -13,7 +13,9 @@ import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanager.R;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class ImportExportHomeFragment extends Fragment {
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
@@ -22,6 +24,7 @@ public class ImportExportHomeFragment extends Fragment {
     private TextView importQIFTextView;
     private TextView exportQIFTextView;
     private TextView autoBackupTextView;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/** @noinspection CallToPrintStackTrace*/
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class ImportCSVParser {
     public static void parseTransactions(Context context,
                                          Uri fileUri) {
@@ -40,21 +42,20 @@ public class ImportCSVParser {
         categoryRepository.deleteAll();
         transactionRepository.deleteAll();
         recentTransactionRepository.deleteAll();
-        if(!currencyRepository.checkPrimaryCurrencyExists()){
-            try{
-                currencyRepository.addCurrency(new Currency("INR",1.0d));
+        if (!currencyRepository.checkPrimaryCurrencyExists()) {
+            try {
+                currencyRepository.addCurrency(new Currency("INR", 1.0d));
                 currencyRepository.setPrimaryCurrency("INR");
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         String defaultCurrency = currencyRepository.getPrimaryCurrency();
         transactionRepository.recordCount = 0;
         //noinspection deprecation
-        try(InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
-            InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-            CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)){
+        try (InputStream inputStream = context.getContentResolver().openInputStream(fileUri);
+             InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+             CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)) {
             List<CSVRecord> records = csvParser.getRecords();
             records.stream()
                     .map(ImportDataRecord::new)

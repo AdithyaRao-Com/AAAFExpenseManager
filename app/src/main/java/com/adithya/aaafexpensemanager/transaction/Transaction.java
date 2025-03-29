@@ -10,8 +10,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
-/** @noinspection CallToPrintStackTrace, unused */
+/**
+ * @noinspection CallToPrintStackTrace, unused
+ */
 public class Transaction implements Parcelable {
+    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<>() {
+        @Override
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
+        }
+
+        @Override
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
     public UUID transactionUUID;
     public String transactionName;
     public int transactionDate;
@@ -29,12 +42,12 @@ public class Transaction implements Parcelable {
     public double conversionFactor;
     public String primaryCurrencyCode;
 
-    public Transaction(String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName,String transferInd, String recurringScheduleUUID) {
+    public Transaction(String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, String transferInd, String recurringScheduleUUID) {
         this.transactionUUID = UUID.randomUUID();
         this.transactionName = transactionName;
         this.transactionDate = Integer.parseInt(transactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         this.transactionType = transactionType;
-        this.transferInd     = transferInd;
+        this.transferInd = transferInd;
         this.category = category;
         this.notes = notes;
         this.amount = amount;
@@ -48,13 +61,13 @@ public class Transaction implements Parcelable {
     public Transaction(UUID transactionUUID, String transactionName, int transactionDate,
                        String transactionType, String category, String notes, double amount,
                        String accountName, String toAccountName, long createDateTime,
-                       long lastUpdateDateTime,String transferInd,String recurringScheduleUUID,
+                       long lastUpdateDateTime, String transferInd, String recurringScheduleUUID,
                        String currencyCode, double conversionFactor, String primaryCurrencyCode) {
         this.transactionUUID = transactionUUID;
         this.transactionName = transactionName;
         this.transactionDate = transactionDate;
         this.transactionType = transactionType;
-        this.transferInd     = transferInd;
+        this.transferInd = transferInd;
         this.category = category;
         this.notes = notes;
         this.amount = amount;
@@ -73,7 +86,7 @@ public class Transaction implements Parcelable {
         this.transactionName = transaction.transactionName;
         this.transactionDate = Integer.parseInt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         this.transactionType = transaction.transactionType;
-        this.transferInd     = transaction.transferInd;
+        this.transferInd = transaction.transferInd;
         this.category = transaction.category;
         this.notes = transaction.notes;
         this.amount = transaction.amount;
@@ -87,11 +100,31 @@ public class Transaction implements Parcelable {
         this.primaryCurrencyCode = transaction.primaryCurrencyCode;
     }
 
-    public double getSignedAmount(){
-        if(transactionType.equals("Income")){
+    // Parcelable implementation
+    protected Transaction(Parcel in) {
+        String uuidStr = in.readString();
+        this.transactionUUID = uuidStr != null ? UUID.fromString(uuidStr) : null;
+        this.transactionName = in.readString();
+        this.transactionDate = in.readInt();
+        this.transactionType = in.readString();
+        this.transferInd = in.readString();
+        this.category = in.readString();
+        this.notes = in.readString();
+        this.amount = in.readDouble();
+        this.accountName = in.readString();
+        this.toAccountName = in.readString();
+        this.createDateTime = in.readLong();
+        this.lastUpdateDateTime = in.readLong();
+        this.recurringScheduleUUID = in.readString();
+        this.currencyCode = in.readString();
+        this.conversionFactor = in.readDouble();
+        this.primaryCurrencyCode = in.readString();
+    }
+
+    public double getSignedAmount() {
+        if (transactionType.equals("Income")) {
             return amount;
-        }
-        else {
+        } else {
             return -1 * amount;
         }
     }
@@ -113,28 +146,6 @@ public class Transaction implements Parcelable {
     public String getFormattedTransactionDateYYYY_MM_DD() {
         LocalDate localDate = getTransactionLocalDate();
         return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
-    }
-
-
-    // Parcelable implementation
-    protected Transaction(Parcel in) {
-        String uuidStr = in.readString();
-        this.transactionUUID = uuidStr != null ? UUID.fromString(uuidStr) : null;
-        this.transactionName = in.readString();
-        this.transactionDate = in.readInt();
-        this.transactionType = in.readString();
-        this.transferInd = in.readString();
-        this.category = in.readString();
-        this.notes = in.readString();
-        this.amount = in.readDouble();
-        this.accountName = in.readString();
-        this.toAccountName = in.readString();
-        this.createDateTime = in.readLong();
-        this.lastUpdateDateTime = in.readLong();
-        this.recurringScheduleUUID = in.readString();
-        this.currencyCode = in.readString();
-        this.conversionFactor = in.readDouble();
-        this.primaryCurrencyCode = in.readString();
     }
 
     @Override
@@ -162,27 +173,16 @@ public class Transaction implements Parcelable {
         dest.writeString(primaryCurrencyCode);
     }
 
-    public static final Parcelable.Creator<Transaction> CREATOR = new Parcelable.Creator<>() {
-        @Override
-        public Transaction createFromParcel(Parcel in) {
-            return new Transaction(in);
-        }
-
-        @Override
-        public Transaction[] newArray(int size) {
-            return new Transaction[size];
-        }
-    };
-
-    public String getDateE_MMMM_dd_yyyy(){
+    public String getDateE_MMMM_dd_yyyy() {
         LocalDate localDate = getTransactionLocalDate();
         return localDate != null ? localDate.format(DateTimeFormatter.ofPattern("E dd MMM yyyy")) : "";
     }
 
     public String amountToIndianFormat() {
-        return CurrencyFormatter.formatIndianStyle(this.amount,"INR");
+        return CurrencyFormatter.formatIndianStyle(this.amount, "INR");
     }
-    public String amountToStandardFormat(){
-        return CurrencyFormatter.formatStandardStyle(this.amount,"INR");
+
+    public String amountToStandardFormat() {
+        return CurrencyFormatter.formatStandardStyle(this.amount, "INR");
     }
 }

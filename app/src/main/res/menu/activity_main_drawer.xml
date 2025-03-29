@@ -14,15 +14,15 @@
             android:title="@string/recurring_schedule" />
         <item
             android:id="@+id/nav_reports"
-            android:title="@string/reports"/>
+            android:title="@string/reports" />
         <item
             android:id="@+id/nav_import_export_home"
-            android:title="@string/import_export"/>
+            android:title="@string/import_export" />
         <item
             android:id="@+id/nav_settings"
-            android:title="@string/menu_settings"/>
+            android:title="@string/menu_settings" />
         <item
             android:id="@+id/nav_create_saved_report"
-            android:title="@string/create_saved_report"/>
+            android:title="@string/create_saved_report" />
     </group>
 </menu>

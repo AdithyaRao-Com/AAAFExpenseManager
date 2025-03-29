@@ -24,33 +24,39 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_DATE = 0;
     private static final int TYPE_TRANSACTION = 1;
     private final List<Object> items;
     private final DateTimeFormatter dateFormatter;
-    private ActionMode actionMode;
     private final FutureTransactionViewModel viewModel;
     private final FutureTransactionFragment transactionFragment;
     private final List<FutureTransaction> selectedTransactions = new ArrayList<>();
+    private ActionMode actionMode;
+
     public FutureTransactionsAdapter(List<FutureTransaction> transactions,
-                               FutureTransactionFragment transactionFragment,
-                               FutureTransactionViewModel viewModel) {
+                                     FutureTransactionFragment transactionFragment,
+                                     FutureTransactionViewModel viewModel) {
         this.items = new ArrayList<>();
         this.dateFormatter = DateTimeFormatter.ofPattern("E dd MMM yyyy");
         this.transactionFragment = transactionFragment;
         this.viewModel = viewModel;
         addSeparators(transactions);
     }
+
     @Override
     public int getItemViewType(int position) {
         return items.get(position) instanceof LocalDate ? TYPE_DATE : TYPE_TRANSACTION;
     }
+
     public void setTransactions(List<FutureTransaction> transactions) {
         items.clear();
         addTransactions(transactions);
     }
+
     @SuppressLint("NotifyDataSetChanged")
     public void addTransactions(List<FutureTransaction> transactions) {
         addSeparators(transactions);
@@ -69,6 +75,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             return new TransactionViewHolder(view);
         }
     }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
@@ -85,7 +92,9 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    /** @noinspection deprecation*/
+    /**
+     * @noinspection deprecation
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, FutureTransaction futureTransaction) {
         holder.transactionNameTextView.setText(futureTransaction.transactionName);
@@ -150,7 +159,9 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    /** @noinspection deprecation*/
+    /**
+     * @noinspection deprecation
+     */
     private void toggleSelection(TransactionViewHolder holder, int position) {
         FutureTransaction transaction = (FutureTransaction) items.get(position);
         if (selectedTransactions.contains(transaction)) {
@@ -168,13 +179,15 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    /** @noinspection DataFlowIssue*/
+    /**
+     * @noinspection DataFlowIssue
+     */
     private void selectAll(List<Object> items) {
         RecyclerView recyclerView = transactionFragment.getView().findViewById(R.id.transactionsRecyclerView);
         selectedTransactions.clear();
         int itemPosition = 0;
-        for (Object listObject:items) {
-            if(listObject instanceof FutureTransaction){
+        for (Object listObject : items) {
+            if (listObject instanceof FutureTransaction) {
                 FutureTransaction transaction = (FutureTransaction) listObject;
                 selectedTransactions.add(transaction);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
@@ -191,10 +204,12 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             actionMode.setTitle(String.valueOf(selectedTransactions.size()));
         }
     }
+
     private void deSelectAll() {
         selectedTransactions.clear();
         actionMode.finish();
     }
+
     private void deleteSelectedTransactions() {
         if (!selectedTransactions.isEmpty()) {
             for (FutureTransaction transaction : selectedTransactions) {
@@ -203,12 +218,13 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
             Toast.makeText(this.transactionFragment.getContext(), selectedTransactions.size() + " transactions deleted", Toast.LENGTH_SHORT).show();
             selectedTransactions.clear();
-            this.transactionFragment.currentPage=1;
+            this.transactionFragment.currentPage = 1;
             viewModel.getFutureTransactions(this.transactionFragment.transactionFilter,
                             this.transactionFragment.currentPage)
                     .observe(this.transactionFragment.getViewLifecycleOwner(), this.transactionFragment::updateRecyclerView);
         }
     }
+
     private void startActionMode() {
         //noinspection DataFlowIssue
         actionMode = this.transactionFragment.getActivity().startActionMode(new ActionMode.Callback() {
@@ -231,11 +247,9 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                     deleteSelectedTransactions();
                     mode.finish();
                     return true;
-                }
-                else if(item.getItemId() == R.id.action_select_all){
+                } else if (item.getItemId() == R.id.action_select_all) {
                     selectAll(items);
-                }
-                else if(item.getItemId() == R.id.action_deselect_all){
+                } else if (item.getItemId() == R.id.action_deselect_all) {
                     deSelectAll();
                 }
                 return false;
@@ -250,10 +264,12 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             }
         });
     }
+
     @Override
     public int getItemCount() {
         return items.size();
     }
+
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionNameTextView;
         TextView transactionDateTextView;
@@ -262,6 +278,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         LinearLayout transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
+
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionNameTextView = itemView.findViewById(R.id.transactionNameTextView);
@@ -273,8 +290,10 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             categoryNameTextView = itemView.findViewById(R.id.categoryNameTextView);
         }
     }
+
     public static class DateViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
+
         public DateViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.list_date_separator_text); // Replace with your date TextView ID

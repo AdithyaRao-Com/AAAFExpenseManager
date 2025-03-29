@@ -53,8 +53,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-/** @noinspection DataFlowIssue*/
+/**
+ * @noinspection DataFlowIssue
+ */
 public class CreateRecurringFragment extends Fragment {
+    private final Map<Integer, String> transactionTypeIntKey =
+            Map.of(0, "Expense",
+                    1, "Income",
+                    2, "Transfer");
+    private final Map<String, Integer> transactionStringKey =
+            Map.of("Expense", 0,
+                    "Income", 1,
+                    "Transfer", 2);
     private RecurringViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private LookupEditText recurringScheduleAutoCompleteTextView;
@@ -83,18 +93,13 @@ public class CreateRecurringFragment extends Fragment {
     private MaterialButton transactionTypeButton;
     private int transactionTypePosition = 0;
     private TextView transactionTypeTextView;
-    /** @noinspection FieldCanBeLocal, unused */
+    /**
+     * @noinspection FieldCanBeLocal, unused
+     */
     private boolean isEditing;
     private MenuItem deleteMenuItem;
     private MenuItem showFutureTxnMenuItem;
-    private final Map<Integer, String> transactionTypeIntKey =
-            Map.of(0,"Expense",
-                    1,"Income",
-                    2,"Transfer");
-    private final Map<String,Integer> transactionStringKey =
-            Map.of("Expense",0,
-                    "Income",1,
-                    "Transfer",2);
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_recurring, container, false);
@@ -116,6 +121,7 @@ public class CreateRecurringFragment extends Fragment {
         setupRecurringScheduleAutoComplete();
         return view;
     }
+
     private void findViewByIdCreateRecurring(View view) {
         transactionTypeTextView = view.findViewById(R.id.transactionTypeTextView);
         transactionNameTextView = view.findViewById(R.id.transactionNameTextView);
@@ -135,6 +141,7 @@ public class CreateRecurringFragment extends Fragment {
         accountCurrencyTextView = view.findViewById(R.id.accountCurrencyTextView);
         toAccountCurrencyTextView = view.findViewById(R.id.toAccountCurrencyTextView);
     }
+
     private void parseArgumentsAndSetFields() {
         if (getArguments() != null && getArguments().containsKey("recurringSchedule")) {
             //noinspection deprecation
@@ -143,10 +150,10 @@ public class CreateRecurringFragment extends Fragment {
             if (originalRecurringSchedule != null) {
                 if (getArguments().containsKey("isEditing"))
                     isEditing = getArguments().getBoolean("isEditing");
-                else{
+                else {
                     isEditing = true;
                 }
-                if(!isEditing){
+                if (!isEditing) {
                     originalRecurringSchedule.recurringScheduleUUID = null;
                 }
                 setRecurringScheduleFields(originalRecurringSchedule);
@@ -182,10 +189,10 @@ public class CreateRecurringFragment extends Fragment {
         amountEditText.setText(String.valueOf(recurringSchedule.amount));
         accountNameAutoComplete.setText(recurringSchedule.accountName);
         toAccountNameAutoComplete.setText(recurringSchedule.toAccountName);
-        if(recurringSchedule.accountName!=null && !recurringSchedule.accountName.isEmpty()){
+        if (recurringSchedule.accountName != null && !recurringSchedule.accountName.isEmpty()) {
             accountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.accountName).currencyCode);
         }
-        if(recurringSchedule.toAccountName!=null && !recurringSchedule.toAccountName.isEmpty()){
+        if (recurringSchedule.toAccountName != null && !recurringSchedule.toAccountName.isEmpty()) {
             toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(recurringSchedule.toAccountName).currencyCode);
         }
     }
@@ -196,6 +203,7 @@ public class CreateRecurringFragment extends Fragment {
         recurringEndDate = recurringStartDate.plusYears(AppConstants.DEFAULT_RECURRING_END_INTERVAL);
         recurringEndDateEditText.setText(recurringEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
     }
+
     private void setupCreateTransactionButton() {
         createTransactionButton.setOnClickListener(v -> {
             try {
@@ -295,20 +303,20 @@ public class CreateRecurringFragment extends Fragment {
                     setRecurringScheduleFields(new RecurringSchedule());
                 }
                 NavHostFragment.findNavController(this).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
-            }
-            catch (InterCurrencyTransferNotSupported e){
+            } catch (InterCurrencyTransferNotSupported e) {
                 new AlertDialog.Builder(getContext())
                         .setTitle("Error")
                         .setMessage(e.getMessage())
                         .setCancelable(false)
                         .setPositiveButton("OK",
-                                (dialog, which) ->NavHostFragment.findNavController(this)
+                                (dialog, which) -> NavHostFragment.findNavController(this)
                                         .navigate(R.id.action_createRecurringFragment_to_recurringFragment))
                         .create()
                         .show();
             }
         });
     }
+
     private void setupTransactionTypeButton() {
         transactionTypeButton.setOnClickListener(v -> {
             transactionTypePosition = (transactionTypePosition + 1) % 3;
@@ -334,6 +342,7 @@ public class CreateRecurringFragment extends Fragment {
             datePickerDialog.show();
         });
     }
+
     private void setupRecurringEndDateField() {
         recurringEndDateEditText.setOnClickListener(v -> {
             final Calendar c = Calendar.getInstance();
@@ -345,18 +354,18 @@ public class CreateRecurringFragment extends Fragment {
                         recurringEndDate = LocalDate.of(year1, monthOfYear + 1, dayOfMonth);
                         recurringEndDateEditText.setText(recurringEndDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     }, year, month, day);
-            try{
+            try {
                 LocalDate startDate = LocalDate.parse(recurringStartDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 Instant currentInstant = startDate.atStartOfDay().toInstant(ZoneOffset.UTC);
                 datePickerDialog.getDatePicker().setMinDate(currentInstant.toEpochMilli());
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 Instant currentInstant = LocalDate.now().atStartOfDay().toInstant(ZoneOffset.UTC);
                 datePickerDialog.getDatePicker().setMinDate(currentInstant.toEpochMilli());
             }
             datePickerDialog.show();
         });
     }
+
     private void setupAccountNameAndToAccountNameAutocomplete() {
         accountViewModel.getAccounts().observe(getViewLifecycleOwner(), accountNames -> {
             this.accountNames = accountNames.stream().map(account -> account.accountName).collect(Collectors.toList());
@@ -366,6 +375,7 @@ public class CreateRecurringFragment extends Fragment {
             toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
         });
     }
+
     private void setupCategoryTypeAutocomplete() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             // Efficiently extract category names:
@@ -378,17 +388,18 @@ public class CreateRecurringFragment extends Fragment {
             }
         });
     }
+
     private void setupRecurringScheduleAutoComplete() {
         List<String> recurringSchedules = AppConstants.RECURRING_SCHEDULES;
         recurringScheduleAutoCompleteTextView.setItemStrings(recurringSchedules);
         if (originalRecurringSchedule != null) { // Editing existing transaction
             recurringScheduleAutoCompleteTextView.setText(originalRecurringSchedule.recurringScheduleName);
         }
-        recurringScheduleAutoCompleteTextView.setOnItemClickListener((selectedRecurringSchedule,int1)-> enableDisableRepeatDaysWrapper(selectedRecurringSchedule.toEditTextLookupString()));
+        recurringScheduleAutoCompleteTextView.setOnItemClickListener((selectedRecurringSchedule, int1) -> enableDisableRepeatDaysWrapper(selectedRecurringSchedule.toEditTextLookupString()));
     }
 
     private void enableDisableRepeatDaysWrapper(String selectedRecurringSchedule) {
-        if(selectedRecurringSchedule.equals("Custom"))
+        if (selectedRecurringSchedule.equals("Custom"))
             repeatDaysWrapper.setVisibility(View.VISIBLE);
         else repeatDaysWrapper.setVisibility(View.GONE);
     }
@@ -399,6 +410,7 @@ public class CreateRecurringFragment extends Fragment {
             linearLayoutDisableable.setVisibility(View.VISIBLE);
         else linearLayoutDisableable.setVisibility(View.GONE);
     }
+
     private void updateRecurringButton() {
         switch (transactionTypePosition) {
             case 0: // Expense
@@ -429,10 +441,11 @@ public class CreateRecurringFragment extends Fragment {
                 }
         );
     }
+
     private void setupTransactionNameAutoComplete() {
         recentTransactionViewModel.getRecentTransactions().observe(getViewLifecycleOwner(), recentTransactions -> {
             List<String> recentTransactionNames = recentTransactions.stream()
-                    .map(t->t.transactionName)
+                    .map(t -> t.transactionName)
                     .collect(Collectors.toList());
             if (autoCompleteAdapterRecentTrans == null) {
                 autoCompleteAdapterRecentTrans = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, recentTransactionNames);
@@ -445,6 +458,7 @@ public class CreateRecurringFragment extends Fragment {
             }
         });
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -457,28 +471,29 @@ public class CreateRecurringFragment extends Fragment {
                 showFutureTxnMenuItem = menu.findItem(R.id.action_show_future_transactions);
                 setOptions(isEditing);
             }
+
             /** @noinspection DataFlowIssue*/
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_delete_recurring_schedule){
+                if (menuItem.getItemId() == R.id.action_delete_recurring_schedule) {
                     new ConfirmationDialog(getContext(),
                             "Delete Transaction",
                             "Are you sure you want to delete this Transaction?",
-                            ()-> {
+                            () -> {
                                 viewModel.deleteRecurringSchedule(originalRecurringSchedule);
-                                originalRecurringSchedule=null;
+                                originalRecurringSchedule = null;
                                 NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
                             },
-                            ()->{},
+                            () -> {
+                            },
                             "Delete",
                             "Cancel"
                     );
                     return true;
-                }
-                else if(menuItem.getItemId()==R.id.action_show_future_transactions){
+                } else if (menuItem.getItemId() == R.id.action_show_future_transactions) {
                     Bundle args = new Bundle();
-                    args.putParcelable("recurringSchedule",originalRecurringSchedule);
-                    Navigation.findNavController(getView()).navigate(R.id.action_createRecurringFragment_to_recurringTransactionFragment,args);
+                    args.putParcelable("recurringSchedule", originalRecurringSchedule);
+                    Navigation.findNavController(getView()).navigate(R.id.action_createRecurringFragment_to_recurringTransactionFragment, args);
                     return true;
                 }
                 return false;
@@ -490,7 +505,7 @@ public class CreateRecurringFragment extends Fragment {
         try {
             deleteMenuItem.setVisible(isEditing);
             showFutureTxnMenuItem.setVisible(isEditing);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

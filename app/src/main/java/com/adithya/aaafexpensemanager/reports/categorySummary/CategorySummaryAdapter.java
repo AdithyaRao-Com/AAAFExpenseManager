@@ -13,9 +13,12 @@ import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 
 import java.util.List;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummaryAdapter.ViewHolder> {
     private List<CategorySummaryRecord> records;
+
     public CategorySummaryAdapter(List<CategorySummaryRecord> categorySummaryRecords) {
         this.records = categorySummaryRecords;
     }
@@ -32,11 +35,10 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
     public void onBindViewHolder(@NonNull CategorySummaryAdapter.ViewHolder holder, int position) {
         CategorySummaryRecord record = this.records.get(position);
         holder.categoryNameTextView.setText(record.category);
-        holder.amountTextView.setText(CurrencyFormatter.formatIndianStyle(record.amount,"INR"));
-        if(record.amount < 0){
+        holder.amountTextView.setText(CurrencyFormatter.formatIndianStyle(record.amount, "INR"));
+        if (record.amount < 0) {
             holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
-        }
-        else{
+        } else {
             holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_green_dark));
         }
 //        holder.pctTextView.setText(record.pct+"%");
@@ -57,6 +59,7 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
         TextView categoryNameTextView;
         TextView amountTextView;
         TextView pctTextView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             categoryNameTextView = itemView.findViewById(R.id.categoryNameTextView);

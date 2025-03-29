@@ -43,16 +43,21 @@ public class CurrencyFragment extends Fragment {
         EditText searchEditText = view.findViewById(R.id.searchCurrencyEditText);
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 viewModel.filterCurrencies(s.toString());
             }
+
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
         return view;
     }
+
     private class CurrenciesAdapter extends RecyclerView.Adapter<CurrenciesAdapter.CurrencyViewHolder> {
         private List<Currency> currencies;
 
@@ -79,7 +84,7 @@ public class CurrencyFragment extends Fragment {
             holder.itemView.setOnClickListener(v -> {
                 selectedCurrency = currency;
                 Bundle args = new Bundle();
-                args.putParcelable("currency",selectedCurrency);
+                args.putParcelable("currency", selectedCurrency);
                 Navigation.findNavController(requireView()).navigate(R.id.action_currencyFragment_to_createCurrencyFragment, args);
             });
         }

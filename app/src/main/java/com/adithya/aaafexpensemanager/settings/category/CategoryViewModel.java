@@ -30,7 +30,7 @@ public class CategoryViewModel extends AndroidViewModel {
         loadCategories();
     }
 
-    public void updateCategory(Category category) throws CategoryExistsException{
+    public void updateCategory(Category category) throws CategoryExistsException {
         repository.updateCategory(category);
         loadCategories(); // Reload after updating
     }
@@ -44,12 +44,13 @@ public class CategoryViewModel extends AndroidViewModel {
         List<Category> categoryList = repository.getAllCategories();
         ((MutableLiveData<List<Category>>) categories).setValue(categoryList); // Cast and set value
     }
+
     public void filterCategories(String searchText) {
         List<Category> filteredCategories = repository.filterCategories(searchText); // From repository
         ((MutableLiveData<List<Category>>) categories).setValue(filteredCategories);
     }
 
-    public List<String> getDistinctParentCategories(){
+    public List<String> getDistinctParentCategories() {
         return repository.getDistinctParentCategories();
     }
 }

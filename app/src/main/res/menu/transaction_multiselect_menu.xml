@@ -4,7 +4,7 @@
         android:id="@+id/action_copy_txn"
         android:icon="@drawable/baseline_content_copy_24"
         android:title="@string/copy_txn"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_delete"
         android:icon="@android:drawable/ic_menu_delete"

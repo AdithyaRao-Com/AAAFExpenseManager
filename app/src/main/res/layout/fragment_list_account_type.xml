@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <EditText
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
@@ -10,6 +11,7 @@
         android:autofillHints=""
         android:hint="@string/search"
         android:inputType="text" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/accountTypesRecyclerView"
         android:layout_width="match_parent"

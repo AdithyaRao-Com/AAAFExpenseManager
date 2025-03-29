@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,110 +16,115 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_name">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/accountNameEditText"
+                    style="@style/LargeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    style="@style/LargeText"/>
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_type">
 
                 <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/accountTypeSpinner"
+                    style="@style/LargeText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/LargeText"/>
+                    android:layout_height="wrap_content" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/updateBalanceCheckBox"
+                style="@style/LargeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/update_balance"
-                style="@style/LargeText"/>
+                android:text="@string/update_balance" />
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_balance">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/accountBalanceEditText"
+                    style="@style/LargeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="numberDecimal|numberSigned"
                     android:focusable="false"
-                    style="@style/LargeText"/>
+                    android:inputType="numberDecimal|numberSigned" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/display_order">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/displayOrder"
+                    style="@style/LargeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="number"
-                    style="@style/LargeText"/>
+                    android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/currency_code">
+
                 <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/currencyCodeEditText"
+                    style="@style/LargeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    style="@style/LargeText"/>
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:hint="@string/account_tags_hash_separated">
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/accountTagsEditText"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:inputType="text"-->
-<!--                    style="@style/LargeText"/>-->
+                <!--                <com.google.android.material.textfield.TextInputEditText-->
+                <!--                    android:id="@+id/accountTagsEditText"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:inputType="text"-->
+                <!--                    style="@style/LargeText"/>-->
                 <com.adithya.aaafexpensemanager.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList
                     android:id="@+id/accountTagsEditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/doNotShowInDropdownCheckBox"
+                style="@style/LargeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/do_not_show_in_accounts_dropdown"
-                style="@style/LargeText"/>
+                android:text="@string/do_not_show_in_accounts_dropdown" />
+
             <com.google.android.material.checkbox.MaterialCheckBox
                 android:id="@+id/closeAccountCheckBox"
+                style="@style/LargeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/closed_account"
-                style="@style/LargeText"/>
+                android:text="@string/closed_account" />
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

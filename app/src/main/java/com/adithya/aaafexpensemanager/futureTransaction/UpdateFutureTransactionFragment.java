@@ -50,8 +50,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-/** @noinspection CallToPrintStackTrace*/
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class UpdateFutureTransactionFragment extends Fragment {
+    private final Map<Integer, String> transactionTypeIntKey =
+            Map.of(0, "Expense",
+                    1, "Income",
+                    2, "Transfer");
+    private final Map<String, Integer> transactionStringKey =
+            Map.of("Expense", 0,
+                    "Income", 1,
+                    "Transfer", 2);
     private FutureTransactionViewModel viewModel;
     private AutoCompleteTextView transactionNameTextView;
     private EditText transactionDateEditText;
@@ -75,17 +85,10 @@ public class UpdateFutureTransactionFragment extends Fragment {
     private TextView transactionTypeTextView;
     private MaterialButton accountCurrencyTextView;
     private MaterialButton toAccountCurrencyTextView;
-    private final Map<Integer, String> transactionTypeIntKey =
-            Map.of(0,"Expense",
-                    1,"Income",
-                    2,"Transfer");
-    private final Map<String,Integer> transactionStringKey =
-            Map.of("Expense",0,
-                    "Income",1,
-                    "Transfer",2);
     private MenuItem deleteMenuItem;
     private MenuItem applyTransactionNow;
     private boolean isEditing;
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create_transaction, container, false);
@@ -109,7 +112,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
     private void setupTransactionNameAutoComplete() {
         recentTransactionViewModel.getRecentTransactions().observe(getViewLifecycleOwner(), recentTransactions -> {
             List<String> recentTransactionNames = recentTransactions.stream()
-                    .map(t->t.transactionName)
+                    .map(t -> t.transactionName)
                     .collect(Collectors.toList());
             if (autoCompleteAdapterRecentTrans == null) {
                 autoCompleteAdapterRecentTrans = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, recentTransactionNames);
@@ -122,7 +125,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
             }
 
             transactionNameTextView.setOnItemClickListener((parent, view1, position, id) -> {
-                if(originalTransaction!=null){
+                if (originalTransaction != null) {
                     return;
                 }
                 String selectedRecentTransString = parent.getItemAtPosition(position).toString();
@@ -134,7 +137,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 accountNameAutoComplete.setText(selectedRecentTrans.accountName);
                 accountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedRecentTrans.accountName).currencyCode);
                 toAccountNameAutoComplete.setText(selectedRecentTrans.toAccountName);
-                if(selectedRecentTrans.toAccountName!=null && !selectedRecentTrans.toAccountName.isEmpty()) {
+                if (selectedRecentTrans.toAccountName != null && !selectedRecentTrans.toAccountName.isEmpty()) {
                     toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedRecentTrans.toAccountName).currencyCode);
                 }
                 //noinspection DataFlowIssue
@@ -149,9 +152,8 @@ public class UpdateFutureTransactionFragment extends Fragment {
             String transactionName;
             try {
                 transactionName = transactionNameTextView.getText().toString();
-                if(transactionName.isBlank()) throw new Exception();
-            }
-            catch (Exception e){
+                if (transactionName.isBlank()) throw new Exception();
+            } catch (Exception e) {
                 e.printStackTrace();
                 transactionNameTextView.setError("Please enter not empty transaction name");
                 return;
@@ -159,20 +161,18 @@ public class UpdateFutureTransactionFragment extends Fragment {
             String transactionType;
             try {
                 transactionType = transactionTypeIntKey.get(transactionTypePosition);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(requireContext(), "Please select a transaction type", Toast.LENGTH_SHORT).show();
                 return;
             }
             String category;
-            try{
+            try {
                 //noinspection DataFlowIssue
                 category = categoryAutoCompleteTextView.getText().toString();
-                if(category.isBlank()) throw new Exception();
-                if(!categoryNames.contains(category)) throw new Exception();
-            }
-            catch (Exception e){
+                if (category.isBlank()) throw new Exception();
+                if (!categoryNames.contains(category)) throw new Exception();
+            } catch (Exception e) {
                 e.printStackTrace();
                 categoryAutoCompleteTextView.setError("Select a valid category from the list");
                 return;
@@ -188,41 +188,37 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 return;
             }
             String selectedAccountName;
-            try{
+            try {
                 //noinspection DataFlowIssue
                 selectedAccountName = accountNameAutoComplete.getText().toString();
-                if(selectedAccountName.isBlank()) throw new Exception();
-                if(!accountNames.contains(selectedAccountName)) throw new Exception();
-            }
-            catch (Exception e){
+                if (selectedAccountName.isBlank()) throw new Exception();
+                if (!accountNames.contains(selectedAccountName)) throw new Exception();
+            } catch (Exception e) {
                 e.printStackTrace();
                 accountNameAutoComplete.setError("Select a valid account from the list");
                 return;
             }
             String toAccountName;
-            try{
+            try {
                 try {
                     //noinspection DataFlowIssue
                     toAccountName = toAccountNameAutoComplete.getText().toString();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     toAccountName = "";
                 }
-                if("Transfer".equals(transactionType)
+                if ("Transfer".equals(transactionType)
                         && (toAccountName.isBlank()
-                            || !accountNames.contains(toAccountName)))
+                        || !accountNames.contains(toAccountName)))
                     throw new Exception();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 toAccountNameAutoComplete.setError("Select a valid to account from the list");
                 return;
             }
             LocalDate transactionDate;
-            try{
+            try {
                 transactionDate = LocalDate.parse(transactionDateEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 transactionDateEditText.setError("Select a valid date");
                 return;
@@ -241,8 +237,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
                     Toast.makeText(requireContext(), "Transaction updated", Toast.LENGTH_SHORT).show();
                 }
                 NavHostFragment.findNavController(this).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment);
-            }
-            catch (InterCurrencyTransferNotSupported e){
+            } catch (InterCurrencyTransferNotSupported e) {
                 new AlertDialog.Builder(getContext())
                         .setTitle("Error")
                         .setMessage(e.getMessage())
@@ -277,7 +272,10 @@ public class UpdateFutureTransactionFragment extends Fragment {
             datePickerDialog.show();
         });
     }
-    /** @noinspection DataFlowIssue*/
+
+    /**
+     * @noinspection DataFlowIssue
+     */
     private void parseArgumentsAndSetFields() {
         isEditing = false;
         if (getArguments() != null && getArguments().containsKey("futureTransaction")) {
@@ -293,7 +291,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 accountNameAutoComplete.setText(originalTransaction.accountName);
                 toAccountNameAutoComplete.setText(originalTransaction.toAccountName);
                 accountCurrencyTextView.setText(accountViewModel.getAccountByName(originalTransaction.accountName).currencyCode);
-                if(originalTransaction.toAccountName!=null && !originalTransaction.toAccountName.isEmpty()) {
+                if (originalTransaction.toAccountName != null && !originalTransaction.toAccountName.isEmpty()) {
                     toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(originalTransaction.toAccountName).currencyCode);
                 }
                 //noinspection DataFlowIssue
@@ -318,6 +316,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
             toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> toAccountCurrencyTextView.setText(accountViewModel.getAccountByName(selectedItem.toEditTextLookupString()).currencyCode));
         });
     }
+
     private void setupCategoryTypeAutocomplete() {
         categoryViewModel.getCategories().observe(getViewLifecycleOwner(), categories -> {
             // Efficiently extract category names:
@@ -351,6 +350,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
         linearLayoutDisableable = view.findViewById(R.id.linearLayoutDisableable);
         createTransactionButton = view.findViewById(R.id.createTransactionFab);
     }
+
     private void setCurrentDate() {
         transactionDate = LocalDate.now();
         transactionDateEditText.setText(transactionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
@@ -366,6 +366,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
             linearLayoutDisableable.setVisibility(View.GONE);
         }
     }
+
     private void updateTransactionButton() {
         switch (transactionTypePosition) {
             case 0: // Expense
@@ -396,6 +397,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 }
         );
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -408,34 +410,36 @@ public class UpdateFutureTransactionFragment extends Fragment {
                 applyTransactionNow = menu.findItem(R.id.action_apply_transaction_now);
                 setOptions(isEditing);
             }
+
             /** @noinspection DataFlowIssue*/
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_delete_transaction){
+                if (menuItem.getItemId() == R.id.action_delete_transaction) {
                     new ConfirmationDialog(getContext(),
                             "Delete Transaction",
                             "Are you sure you want to delete this Transaction?",
-                            ()-> {
+                            () -> {
                                 viewModel.deleteFutureTransaction(originalTransaction);
-                                originalTransaction=null;
+                                originalTransaction = null;
                                 NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment);
                             },
-                            ()->{},
+                            () -> {
+                            },
                             "Delete",
                             "Cancel"
                     );
                     return true;
-                }
-                else if (menuItem.getItemId()==R.id.action_apply_transaction_now){
+                } else if (menuItem.getItemId() == R.id.action_apply_transaction_now) {
                     new ConfirmationDialog(getContext(),
                             "Apply Transaction Now",
                             "Do you want to apply Transaction with current date ?",
-                            ()-> {
+                            () -> {
                                 viewModel.applyFutureTransaction(originalTransaction);
-                                originalTransaction=null;
+                                originalTransaction = null;
                                 NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_updateFutureTransactionFragment_to_recurringTransactionFragment);
                             },
-                            ()->{},
+                            () -> {
+                            },
                             "Apply",
                             "Cancel"
                     );
@@ -450,7 +454,7 @@ public class UpdateFutureTransactionFragment extends Fragment {
         try {
             deleteMenuItem.setVisible(isEditing);
             applyTransactionNow.setVisible(isEditing);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

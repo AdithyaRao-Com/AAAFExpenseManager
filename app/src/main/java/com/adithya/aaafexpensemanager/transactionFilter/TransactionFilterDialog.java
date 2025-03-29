@@ -30,7 +30,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-/** @noinspection CallToPrintStackTrace */
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class TransactionFilterDialog {
     private final Context context;
     private final CategoryViewModel categoryViewModel;
@@ -42,6 +44,7 @@ public class TransactionFilterDialog {
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private final DateTimeFormatter dateFormatterToDBInt = DateTimeFormatter.ofPattern("yyyyMMdd");
     private final OnFilterAppliedListener listener;
+    private final boolean isDateFilterEnabled;
     private AlertDialog filterDialog;
     private MultiSelectLookupEditText transactionNameTextView;
     private TextInputEditText fromDateEditText;
@@ -51,16 +54,16 @@ public class TransactionFilterDialog {
     private MultiSelectLookupEditText accountTypeTextView;
     private MultiSelectLookupEditText accountTagTextView;
     private LinearLayout dateFromToWrapper;
-    /** @noinspection FieldCanBeLocal*/
+    /**
+     * @noinspection FieldCanBeLocal
+     */
     private Button applyFilterButton;
-    /** @noinspection FieldCanBeLocal*/
+    /**
+     * @noinspection FieldCanBeLocal
+     */
     private Button clearFilterButton;
-    private final boolean isDateFilterEnabled;
-    public interface OnFilterAppliedListener {
-        void onFilterApplied(TransactionFilter filter);
-    }
 
-    public TransactionFilterDialog(Context context, ViewModelStoreOwner viewModelStoreOwner, TransactionFilter transactionFilter, OnFilterAppliedListener listener,boolean isDateFilterEnabled) {
+    public TransactionFilterDialog(Context context, ViewModelStoreOwner viewModelStoreOwner, TransactionFilter transactionFilter, OnFilterAppliedListener listener, boolean isDateFilterEnabled) {
         this.context = context;
         this.categoryViewModel = new ViewModelProvider(viewModelStoreOwner).get(CategoryViewModel.class);
         this.accountViewModel = new ViewModelProvider(viewModelStoreOwner).get(AccountViewModel.class);
@@ -141,10 +144,9 @@ public class TransactionFilterDialog {
         setAccountsTextView(accountsTextView);
         setAccountTypeTextView(accountTypeTextView);
         setAccountTagTextView(accountTagTextView);
-        if(isDateFilterEnabled){
+        if (isDateFilterEnabled) {
             dateFromToWrapper.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             dateFromToWrapper.setVisibility(View.GONE);
         }
     }
@@ -166,7 +168,8 @@ public class TransactionFilterDialog {
         }, year, month, day);
         datePickerDialog.show();
     }
-    private void setTransactionNameTextView(TextView selectedTransactionNamesTextView){
+
+    private void setTransactionNameTextView(TextView selectedTransactionNamesTextView) {
         List<String> transactionNamesList = Objects.requireNonNull(recentTransactionViewModel
                         .getRecentTransactions()
                         .getValue())
@@ -176,6 +179,7 @@ public class TransactionFilterDialog {
         transactionNameTextView.setItems(transactionNamesList);
         transactionNameTextView.setSelectedItems(transactionFilter.transactionNames);
     }
+
     private void setAccountTypeTextView(TextView selectedAccountTypesTextView) {
         List<String> accountTypes = accountTypeViewModel
                 .getAccountTypes()
@@ -196,6 +200,7 @@ public class TransactionFilterDialog {
         accountsTextView.setItems(accountNames);
         accountsTextView.setSelectedItems(transactionFilter.accountNames);
     }
+
     private void setCategoriesTextView(TextView selectedCategoriesTextView) {
         List<String> categoryNamesList = Objects.requireNonNull(categoryViewModel
                         .getCategories()
@@ -205,5 +210,9 @@ public class TransactionFilterDialog {
                 .collect(Collectors.toList());
         categoriesTextView.setItems(categoryNamesList);
         categoriesTextView.setSelectedItems(transactionFilter.categories);
+    }
+
+    public interface OnFilterAppliedListener {
+        void onFilterApplied(TransactionFilter filter);
     }
 }

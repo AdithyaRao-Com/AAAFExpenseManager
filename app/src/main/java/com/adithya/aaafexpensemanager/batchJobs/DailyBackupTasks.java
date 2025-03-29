@@ -29,10 +29,13 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-/** @noinspection CallToPrintStackTrace*/
-    public class DailyBackupTasks {
+/**
+ * @noinspection CallToPrintStackTrace
+ */
+public class DailyBackupTasks {
     private static final String TAG = "DailyDataSaver";
     private static final String WORK_TAG = "aaaf_expense_manager_backup";
+
     public static void scheduleDailySave(Context context) {
         Constraints constraints = new Constraints.Builder()
                 .build();
@@ -48,7 +51,9 @@ import java.util.concurrent.TimeUnit;
         );
     }
 
-    /** @noinspection CallToPrintStackTrace*/
+    /**
+     * @noinspection CallToPrintStackTrace
+     */
     public static class DataSaveWorker extends Worker {
         public DataSaveWorker(Context context, WorkerParameters workerParams) {
             super(context, workerParams);
@@ -81,7 +86,7 @@ import java.util.concurrent.TimeUnit;
                     new BatchRunDetailLog(batchRunLog,
                             "autoBackupDatabaseEveryDay",
                             "autoBackupDatabaseEveryDay starting"));
-            autoBackupDatabaseEveryDay(context,batchRunLog);
+            autoBackupDatabaseEveryDay(context, batchRunLog);
             batchRunRepository.addBatchRunDetailLog(
                     new BatchRunDetailLog(batchRunLog,
                             "autoBackupDatabaseEveryDay",
@@ -90,7 +95,7 @@ import java.util.concurrent.TimeUnit;
                     new BatchRunDetailLog(batchRunLog,
                             "dailyRecurringTransactionsSetup",
                             "dailyRecurringTransactionsSetup starting"));
-            dailyRecurringTransactionsSetup(context,batchRunLog);
+            dailyRecurringTransactionsSetup(context, batchRunLog);
             batchRunRepository.addBatchRunDetailLog(
                     new BatchRunDetailLog(batchRunLog,
                             "dailyRecurringTransactionsSetup",
@@ -98,19 +103,19 @@ import java.util.concurrent.TimeUnit;
             batchRunRepository.removeOldEntriesRunDetail();
             batchRunRepository.removeOldEntriesRun();
         }
+
         private void dailyRecurringTransactionsSetup(Context context, BatchRunLog batchRunLog) {
-            try{
+            try {
                 RecurringRepository recurringScheduleRepository =
                         new RecurringRepository((Application) context.getApplicationContext());
                 recurringScheduleRepository.keepFutureTransactionsUpToDate();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
         private void autoBackupDatabaseEveryDay(Context context, BatchRunLog batchRunLog) {
-            try{
+            try {
                 SettingsRepository settingsRepository = new SettingsRepository((Application)
                         context.getApplicationContext());
                 File file = settingsRepository.getDatabaseFile();
@@ -136,8 +141,7 @@ import java.util.concurrent.TimeUnit;
                     }
                     databaseExporter.exportDatabase(context, file, newFile.getUri());
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 Log.e(TAG, "Database export failed: " + e.getMessage());
                 e.printStackTrace();
             }

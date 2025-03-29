@@ -1,5 +1,7 @@
 package com.adithya.aaafexpensemanager.util;
 
-/** @noinspection unused*/
+/**
+ * @noinspection unused
+ */
 public class LowPriorityTasks {
 }

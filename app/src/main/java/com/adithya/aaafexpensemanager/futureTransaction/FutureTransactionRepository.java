@@ -25,17 +25,22 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** @noinspection CallToPrintStackTrace, UnusedReturnValue */
+/**
+ * @noinspection CallToPrintStackTrace, UnusedReturnValue
+ */
 public class FutureTransactionRepository {
-    private final SQLiteDatabase db;
     private static final String INSERTS = "Insert";
     private static final String UPDATES = "Update";
-    /** @noinspection unused*/
+    /**
+     * @noinspection unused
+     */
     private static final String DELETES = "Delete";
     final LocalDate TRANSACTION_DATE_DUMMY = AppConstants.TRANSACTION_DATE_DUMMY;
     final TransactionRepository transactionRepository;
-    private RecurringSchedule recurringSchedule;
+    private final SQLiteDatabase db;
     private final Application application;
+    private RecurringSchedule recurringSchedule;
+
     public FutureTransactionRepository(Application application) {
         //noinspection resource
         DatabaseHelper dbHelper = new DatabaseHelper(application);
@@ -43,6 +48,7 @@ public class FutureTransactionRepository {
         this.application = application;
         transactionRepository = new TransactionRepository(application);
     }
+
     public FutureTransaction getNextTransaction(RecurringSchedule recurringSchedule) {
         int transactionDateInt;
         LocalDate transactionDate = LocalDate.now();
@@ -51,12 +57,12 @@ public class FutureTransactionRepository {
                 transactionDateInt = cursor.getInt(0);
                 transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             transactionDate = TRANSACTION_DATE_DUMMY;
         }
-        return new FutureTransaction(recurringSchedule,transactionDate);
+        return new FutureTransaction(recurringSchedule, transactionDate);
     }
+
     public FutureTransaction getLastAvailableTransaction(RecurringSchedule recurringSchedule) {
         int transactionDateInt;
         LocalDate transactionDate = LocalDate.now();
@@ -65,12 +71,12 @@ public class FutureTransactionRepository {
                 transactionDateInt = cursor.getInt(0);
                 transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             transactionDate = TRANSACTION_DATE_DUMMY;
         }
-        return new FutureTransaction(recurringSchedule,transactionDate);
+        return new FutureTransaction(recurringSchedule, transactionDate);
     }
+
     public FutureTransaction getLastTransaction(RecurringSchedule recurringSchedule) {
         int transactionDateInt;
         LocalDate transactionDate = LocalDate.now();
@@ -79,27 +85,26 @@ public class FutureTransactionRepository {
                 transactionDateInt = cursor.getInt(0);
                 transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             transactionDate = TRANSACTION_DATE_DUMMY;
         }
-        return new FutureTransaction(recurringSchedule,transactionDate);
+        return new FutureTransaction(recurringSchedule, transactionDate);
     }
 
     public boolean addFutureTransaction(FutureTransaction futureTransaction) {
-        if(isDuplicateFutureTransactionExists(futureTransaction)){
+        if (isDuplicateFutureTransactionExists(futureTransaction)) {
             return false;
         }
         ContentValues values = ContentValuesFromObject(futureTransaction, INSERTS);
-        try{
+        try {
             db.insertOrThrow("recurring_transactions", null, values);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     private boolean isDuplicateFutureTransactionExists(FutureTransaction futureTransaction) {
         try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions WHERE recurring_schedule_uuid = ? AND transaction_date = ?",
                 new String[]{futureTransaction.recurringScheduleUUID.toString(),
@@ -110,63 +115,60 @@ public class FutureTransactionRepository {
 
     public boolean updateFutureTransaction(FutureTransaction futureTransaction) {
         ContentValues values = ContentValuesFromObject(futureTransaction, UPDATES);
-        try{
+        try {
             db.update("recurring_transactions", values, "transaction_uuid = ?", new String[]{futureTransaction.transactionUUID.toString()});
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean deleteFutureTransaction(FutureTransaction futureTransaction){
-        try{
+    public boolean deleteFutureTransaction(FutureTransaction futureTransaction) {
+        try {
             db.delete("recurring_transactions", "transaction_uuid = ?", new String[]{futureTransaction.transactionUUID.toString()});
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    public boolean deleteFutureTransactions(RecurringSchedule recurringSchedule){
-        try{
+
+    public boolean deleteFutureTransactions(RecurringSchedule recurringSchedule) {
+        try {
             db.delete("recurring_transactions", "recurring_schedule_uuid = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()});
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public boolean deleteAll(){
-        try{
+    public boolean deleteAll() {
+        try {
             db.delete("recurring_transactions", null, null);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public List<FutureTransaction> getAllFutureTransactions(TransactionFilter transactionFilters, int pageNumber){
+    public List<FutureTransaction> getAllFutureTransactions(TransactionFilter transactionFilters, int pageNumber) {
         List<FutureTransaction> futureTransactions = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,recurringSchedule,"",this.application);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters, recurringSchedule, "", this.application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
-        if(recurringSchedule!=null){
-            queryString = queryString.replace("<<recurring_schedule_uuid>>",recurringSchedule.recurringScheduleUUID.toString());
+        if (recurringSchedule != null) {
+            queryString = queryString.replace("<<recurring_schedule_uuid>>", recurringSchedule.recurringScheduleUUID.toString());
         }
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
         assert queryParms != null;
         int batchSize = AppConstants.BATCH_SIZE;
         String orderByArgs = "transaction_date ASC, create_date ASC LIMIT <<batchSize>> OFFSET <<offset>>"
-                .replace("<<batchSize>>",String.valueOf(batchSize))
-                .replace("<<offset>>",String.valueOf((pageNumber-1)* batchSize));
-        try(Cursor cursor = db.query("recurring_transactions_view", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
+                .replace("<<batchSize>>", String.valueOf(batchSize))
+                .replace("<<offset>>", String.valueOf((pageNumber - 1) * batchSize));
+        try (Cursor cursor = db.query("recurring_transactions_view", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)) {
             if (cursor.moveToFirst()) {
                 do {
                     FutureTransaction transaction = getRecurringTransactionFromCursor(cursor);
@@ -179,7 +181,7 @@ public class FutureTransactionRepository {
         return futureTransactions;
     }
 
-    public FutureTransaction getFutureTransaction(UUID transactionUUID){
+    public FutureTransaction getFutureTransaction(UUID transactionUUID) {
         try (Cursor cursor = db.rawQuery("SELECT * FROM recurring_transactions_view WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
             if (cursor.moveToFirst()) {
                 return getRecurringTransactionFromCursor(cursor);
@@ -192,7 +194,7 @@ public class FutureTransactionRepository {
 
     private ContentValues ContentValuesFromObject(
             FutureTransaction futureTransaction,
-            String operationType){
+            String operationType) {
         checkInterCurrencyTransfers(futureTransaction);
         ContentValues values = new ContentValues();
         values.put("recurring_schedule_uuid", futureTransaction.recurringScheduleUUID.toString());
@@ -202,10 +204,10 @@ public class FutureTransactionRepository {
         values.put("transfer_ind", futureTransaction.transactionType);
         values.put("category", futureTransaction.category);
         values.put("notes", futureTransaction.notes);
-        values.put("amount", Math.round(futureTransaction.amount*100.0)/100.0);
+        values.put("amount", Math.round(futureTransaction.amount * 100.0) / 100.0);
         values.put("account_name", futureTransaction.accountName);
         values.put("to_account_name", futureTransaction.toAccountName);
-        if(operationType.equals(INSERTS)){
+        if (operationType.equals(INSERTS)) {
             values.put("transaction_uuid", futureTransaction.transactionUUID.toString());
             values.put("create_date", futureTransaction.createDateTime);
         }
@@ -214,11 +216,11 @@ public class FutureTransactionRepository {
     }
 
     private void checkInterCurrencyTransfers(FutureTransaction futureTransaction) {
-        if(futureTransaction.transferInd.equals("Transfer")){
+        if (futureTransaction.transferInd.equals("Transfer")) {
             AccountRepository accountRepository = new AccountRepository(this.application);
             Account accountFrom = accountRepository.getAccountByName(futureTransaction.accountName);
             Account accountTo = accountRepository.getAccountByName(futureTransaction.toAccountName);
-            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))) {
+            if (!(accountFrom.currencyCode.equals(accountTo.currencyCode))) {
                 throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode, accountTo.currencyCode);
             }
         }
@@ -284,21 +286,22 @@ public class FutureTransactionRepository {
     }
 
     public boolean insertAllRecurringTransactions
-            (RecurringSchedule recurringSchedule,LocalDate referenceDate) {
+            (RecurringSchedule recurringSchedule, LocalDate referenceDate) {
         try {
-            insertAllRecurringTransactions(recurringSchedule,referenceDate,LocalDate.now().plusYears(3));
+            insertAllRecurringTransactions(recurringSchedule, referenceDate, LocalDate.now().plusYears(3));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     public boolean insertAllRecurringTransactions
-            (RecurringSchedule recurringSchedule,LocalDate referenceDate,LocalDate endDate) {
+            (RecurringSchedule recurringSchedule, LocalDate referenceDate, LocalDate endDate) {
         try {
             List<FutureTransaction> futureTransactions =
-                    getRecurringTransactionsFromSchedule(recurringSchedule,referenceDate,endDate);
-            for(FutureTransaction futureTransaction : futureTransactions){
+                    getRecurringTransactionsFromSchedule(recurringSchedule, referenceDate, endDate);
+            for (FutureTransaction futureTransaction : futureTransactions) {
                 addFutureTransaction(futureTransaction);
             }
             return true;
@@ -311,43 +314,42 @@ public class FutureTransactionRepository {
     public List<FutureTransaction> getRecurringTransactionsFromSchedule
             (RecurringSchedule recurringSchedule,
              LocalDate referenceDate,
-             LocalDate endDate){
+             LocalDate endDate) {
         List<FutureTransaction> futureTransactions = new ArrayList<>();
         FutureTransaction lastFutureTransaction = getLastTransaction(recurringSchedule);
         FutureTransaction lastAvailableFutureTransaction = getLastAvailableTransaction(recurringSchedule);
-        LocalDate lastTransactionInsertedDate= transactionRepository.getLastRecurringTransactionInserted(recurringSchedule);
-        boolean isTodayInsert = transactionRepository.checkScheduleInsertedForToday(recurringSchedule,LocalDate.now());
-        if(lastFutureTransaction.getTransactionLocalDate().isEqual(TRANSACTION_DATE_DUMMY)) {
+        LocalDate lastTransactionInsertedDate = transactionRepository.getLastRecurringTransactionInserted(recurringSchedule);
+        boolean isTodayInsert = transactionRepository.checkScheduleInsertedForToday(recurringSchedule, LocalDate.now());
+        if (lastFutureTransaction.getTransactionLocalDate().isEqual(TRANSACTION_DATE_DUMMY)) {
             if (referenceDate.isEqual(recurringSchedule.getRecurringEndDateLocalDate())
                     || referenceDate.isAfter(recurringSchedule.getRecurringEndDateLocalDate())) {
                 return new ArrayList<>();
             }
         }
-        if(lastFutureTransaction.getTransactionLocalDate().isEqual(
+        if (lastFutureTransaction.getTransactionLocalDate().isEqual(
                 recurringSchedule.getRecurringEndDateLocalDate()
-        )){
+        )) {
             return new ArrayList<>();
         }
-        if(!isTodayInsert &&
+        if (!isTodayInsert &&
                 recurringSchedule.getRecurringStartDateLocalDate().isEqual(LocalDate.now()) &&
                 referenceDate.isEqual(LocalDate.now())
-        ){
-            futureTransactions.add(new FutureTransaction(recurringSchedule,referenceDate));
+        ) {
+            futureTransactions.add(new FutureTransaction(recurringSchedule, referenceDate));
         }
         LocalDate referenceEndDate;
-        if(endDate.isBefore(recurringSchedule.getRecurringEndDateLocalDate())){
+        if (endDate.isBefore(recurringSchedule.getRecurringEndDateLocalDate())) {
             referenceEndDate = endDate;
-        }
-        else {
+        } else {
             referenceEndDate = recurringSchedule.getRecurringEndDateLocalDate().plusDays(1);
         }
         List<FutureTransaction> futureTransactions1 = referenceDate.datesUntil(referenceEndDate,
-                getPeriodFromSchedule(recurringSchedule))
-                .map(date1 -> new FutureTransaction(recurringSchedule,date1))
-                .filter(e->e.getTransactionLocalDate().isAfter(lastAvailableFutureTransaction.getTransactionLocalDate()))
-                .filter(e->e.getTransactionLocalDate().isAfter(lastTransactionInsertedDate))
-                .filter(e->e.getTransactionLocalDate().isAfter(recurringSchedule.getRecurringStartDateLocalDate()))
-                .filter(e->e.getTransactionLocalDate().isBefore(recurringSchedule.getRecurringEndDateLocalDate())
+                        getPeriodFromSchedule(recurringSchedule))
+                .map(date1 -> new FutureTransaction(recurringSchedule, date1))
+                .filter(e -> e.getTransactionLocalDate().isAfter(lastAvailableFutureTransaction.getTransactionLocalDate()))
+                .filter(e -> e.getTransactionLocalDate().isAfter(lastTransactionInsertedDate))
+                .filter(e -> e.getTransactionLocalDate().isAfter(recurringSchedule.getRecurringStartDateLocalDate()))
+                .filter(e -> e.getTransactionLocalDate().isBefore(recurringSchedule.getRecurringEndDateLocalDate())
                         || e.getTransactionLocalDate().isEqual(recurringSchedule.getRecurringEndDateLocalDate()))
                 .collect(Collectors.toList());
         futureTransactions.addAll(futureTransactions1);
@@ -382,21 +384,20 @@ public class FutureTransactionRepository {
                 futureTransactions.add(getRecurringTransactionFromCursor(cursor));
             }
             return futureTransactions;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
         }
     }
+
     public boolean applyRecurringTransactions() {
-        try{
+        try {
             List<FutureTransaction> futureTransactions = getRecurringTransactionsCurrentDate();
-            for(FutureTransaction futureTransaction : futureTransactions){
+            for (FutureTransaction futureTransaction : futureTransactions) {
                 transactionRepository.addTransaction(futureTransaction.getTransaction());
                 deleteFutureTransaction(futureTransaction);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -408,24 +409,22 @@ public class FutureTransactionRepository {
     }
 
     public void deleteInvalidFutureTxns() {
-        try{
+        try {
             db.delete("recurring_transactions", " NOT EXISTS (SELECT 1 FROM recurring_schedules " +
                             " WHERE recurring_transactions.recurring_schedule_uuid = recurring_schedules.recurring_schedule_uuid)",
                     null);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public boolean applyFutureTransaction(FutureTransaction originalTransaction) {
-        try{
+        try {
             originalTransaction.setTransactionLocalDate(LocalDate.now());
             transactionRepository.addTransaction(originalTransaction.getTransaction());
             deleteFutureTransaction(originalTransaction);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

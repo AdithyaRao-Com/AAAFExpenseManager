@@ -5,19 +5,22 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="7dp">
+
     <TextView
         android:id="@+id/accountTypeNameTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
     <TextView
         android:id="@+id/accountTypeDisplayOrder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"/>
+        android:textSize="14sp" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
 </LinearLayout>

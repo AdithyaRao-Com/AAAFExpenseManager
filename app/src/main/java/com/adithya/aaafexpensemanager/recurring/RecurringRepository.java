@@ -1,4 +1,5 @@
 package com.adithya.aaafexpensemanager.recurring;
+
 import android.app.Application;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -25,21 +26,29 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** @noinspection unused, CallToPrintStackTrace , UnusedReturnValue */
+/**
+ * @noinspection unused, CallToPrintStackTrace , UnusedReturnValue
+ */
 public class RecurringRepository {
-    private final SQLiteDatabase db;
     private static final String INSERTS = "Insert";
     private static final String UPDATES = "Update";
-    /** @noinspection unused*/
+    /**
+     * @noinspection unused
+     */
     private static final String DELETES = "Delete";
-    /** @noinspection FieldCanBeLocal*/
+    private final SQLiteDatabase db;
+    /**
+     * @noinspection FieldCanBeLocal
+     */
     private final int batchSize = AppConstants.BATCH_SIZE;
 
     private final FutureTransactionRepository futureTransactionRepository;
-
-    public int recordCount = 0;
     private final Application application;
-    /** @noinspection resource*/
+    public int recordCount = 0;
+
+    /**
+     * @noinspection resource
+     */
     public RecurringRepository(Application application) {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
@@ -50,21 +59,20 @@ public class RecurringRepository {
     public List<RecurringSchedule> getAllRecurringSchedules(TransactionFilter transactionFilters, int pageNumber) {
         List<RecurringSchedule> recurringSchedules = new ArrayList<>();
         disableTransactionDateFilters(transactionFilters);
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters, application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
         assert queryParms != null;
         String orderByArgs;
-        if(pageNumber<0) {
+        if (pageNumber < 0) {
             orderByArgs = "next_date ASC,create_date DESC";
-        }
-        else {
+        } else {
             orderByArgs = "next_date ASC,create_date DESC LIMIT <<batchSize>> OFFSET <<offset>>"
-                    .replace("<<batchSize>>",String.valueOf(batchSize))
-                    .replace("<<offset>>",String.valueOf((pageNumber-1)*batchSize));
+                    .replace("<<batchSize>>", String.valueOf(batchSize))
+                    .replace("<<offset>>", String.valueOf((pageNumber - 1) * batchSize));
         }
-        try (Cursor cursor = db.query("RecurringScheduleNextDate", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
+        try (Cursor cursor = db.query("RecurringScheduleNextDate", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)) {
             if (cursor.moveToFirst()) {
                 do {
                     RecurringSchedule recurringSchedule = getRecurringSchedulesFromCursor(cursor);
@@ -76,10 +84,12 @@ public class RecurringRepository {
         }
         return recurringSchedules;
     }
+
     private void disableTransactionDateFilters(TransactionFilter transactionFilters) {
         transactionFilters.fromTransactionDate = 0;
         transactionFilters.toTransactionDate = 0;
     }
+
     private RecurringSchedule getRecurringSchedulesFromCursor(Cursor cursor) {
         try {
             int uuidIndex = cursor.getColumnIndexOrThrow("recurring_schedule_uuid");
@@ -121,22 +131,22 @@ public class RecurringRepository {
             String currencyCode = cursor.getString(currencyCodeIndex);
             double conversionFactor = cursor.getDouble(conversionFactorIndex);
             String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
-            return new RecurringSchedule(transactionUUID,transactionName,recurringSchedule,
-                    repeatIntervalDays,recurringStartDate,recurringEndDate,notes,transactionType,
-                    category,amount,accountName,toAccountName,createDateTime,lastUpdateDateTime,
-                    transferInd,nextDate,currencyCode,conversionFactor,primaryCurrencyCode);
+            return new RecurringSchedule(transactionUUID, transactionName, recurringSchedule,
+                    repeatIntervalDays, recurringStartDate, recurringEndDate, notes, transactionType,
+                    category, amount, accountName, toAccountName, createDateTime, lastUpdateDateTime,
+                    transferInd, nextDate, currencyCode, conversionFactor, primaryCurrencyCode);
         } catch (Exception e) {
             return null;
         }
     }
 
     public boolean addRecurringSchedule(RecurringSchedule recurringSchedule) {
-        ContentValues values = getContentValuesForChange(recurringSchedule,INSERTS);
+        ContentValues values = getContentValuesForChange(recurringSchedule, INSERTS);
         try {
             long result = db.insertOrThrow("recurring_schedules", null, values);
             this.recordCount = this.recordCount + 1;
-            if(this.recordCount%100==0){
-                Log.d("RecurringRepository",this.recordCount + "records added");
+            if (this.recordCount % 100 == 0) {
+                Log.d("RecurringRepository", this.recordCount + "records added");
             }
             futureTransactionRepository.deleteFutureTransactions(recurringSchedule);
             futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
@@ -148,32 +158,34 @@ public class RecurringRepository {
         }
     }
 
-    public boolean keepFutureTransactionsUpToDate(){
-        try{
+    public boolean keepFutureTransactionsUpToDate() {
+        try {
             List<RecurringSchedule> recurringSchedules =
-                    getAllRecurringSchedules(new TransactionFilter(),-1);
-            for(RecurringSchedule recurringSchedule : recurringSchedules){
+                    getAllRecurringSchedules(new TransactionFilter(), -1);
+            for (RecurringSchedule recurringSchedule : recurringSchedules) {
                 futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
             }
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    /** @noinspection unused*/
+    /**
+     * @noinspection unused
+     */
     public void updateRecurringSchedule(RecurringSchedule recurringSchedule) {
-        ContentValues values = getContentValuesForChange(recurringSchedule,UPDATES);
+        ContentValues values = getContentValuesForChange(recurringSchedule, UPDATES);
         String whereClause = "recurring_schedule_uuid = ?";
         String[] whereArgs = new String[]{recurringSchedule.recurringScheduleUUID.toString()};
         int rowsAffected = db.update("recurring_schedules", values, whereClause, whereArgs);
         futureTransactionRepository.deleteFutureTransactions(recurringSchedule);
         futureTransactionRepository.insertAllRecurringTransactions(recurringSchedule, LocalDate.now());
     }
+
     @NonNull
-    private ContentValues getContentValuesForChange(RecurringSchedule recurringSchedule,String operationType) {
+    private ContentValues getContentValuesForChange(RecurringSchedule recurringSchedule, String operationType) {
         checkInterCurrencyTransfers(recurringSchedule);
         ContentValues values = new ContentValues();
         values.put("transaction_name", recurringSchedule.transactionName);
@@ -185,10 +197,10 @@ public class RecurringRepository {
         values.put("transfer_ind", recurringSchedule.transactionType);
         values.put("category", recurringSchedule.category);
         values.put("notes", recurringSchedule.notes);
-        values.put("amount", Math.round(recurringSchedule.amount*100.0)/100.0);
+        values.put("amount", Math.round(recurringSchedule.amount * 100.0) / 100.0);
         values.put("account_name", recurringSchedule.accountName);
         values.put("to_account_name", recurringSchedule.toAccountName);
-        if(operationType.equals(INSERTS)){
+        if (operationType.equals(INSERTS)) {
             values.put("recurring_schedule_uuid", recurringSchedule.recurringScheduleUUID.toString());
             values.put("create_date", recurringSchedule.createDateTime);
         }
@@ -197,12 +209,12 @@ public class RecurringRepository {
     }
 
     private void checkInterCurrencyTransfers(RecurringSchedule recurringSchedule) {
-        if(recurringSchedule.transactionType.equals("Transfer")){
+        if (recurringSchedule.transactionType.equals("Transfer")) {
             AccountRepository accountRepository = new AccountRepository(this.application);
             Account accountFrom = accountRepository.getAccountByName(recurringSchedule.accountName);
             Account accountTo = accountRepository.getAccountByName(recurringSchedule.toAccountName);
-            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))){
-                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode,accountTo.currencyCode);
+            if (!(accountFrom.currencyCode.equals(accountTo.currencyCode))) {
+                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode, accountTo.currencyCode);
             }
         }
     }
@@ -216,6 +228,7 @@ public class RecurringRepository {
         }
         return null;
     }
+
     public void deleteRecurringSchedule(RecurringSchedule recurringSchedule) {
         try {
             int rowsAffected = db.delete("recurring_schedules", "recurring_schedule_uuid = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()});
@@ -224,12 +237,14 @@ public class RecurringRepository {
 
         }
     }
-    public void deleteAll(){
+
+    public void deleteAll() {
         try {
             int rowsAffected = db.delete("recurring_schedules", null, null);
         } catch (RuntimeException ignored) {
         }
     }
+
     public boolean deleteInvalidSchedules() {
         try {
             int rowsAffected = db.delete("recurring_schedules", "recurring_end_date < ?",

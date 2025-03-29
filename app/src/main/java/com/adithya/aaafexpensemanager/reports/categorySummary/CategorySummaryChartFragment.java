@@ -40,18 +40,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class CategorySummaryChartFragment extends Fragment {
+    CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LookupEditText timePeriodSelection;
     private MaterialButton previousTimePeriodButton;
     private MaterialTextView timePeriodTextView;
     private MaterialButton nextTimePeriodButton;
     private TransactionFilterDialog filterDialog;
-    CategorySummaryRecord.TimePeriod selectedTimePeriod;
     private LocalDate selectedLocalDate;
     private CategorySummaryRepository categorySummaryRepository;
     private TransactionFilter transactionFilter;
     private BarChart barChart;
+
+    @NonNull
+    private static String getStartEndDateAsString(CategorySummaryRecord.TimePeriod selectedTimePeriod,
+                                                  LocalDate localDate) {
+        return selectedTimePeriod
+                .truncateToStart(localDate)
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " TO " +
+                selectedTimePeriod
+                        .truncateToEnd(localDate)
+                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,6 +77,7 @@ public class CategorySummaryChartFragment extends Fragment {
         setupPrevAndNext();
         return view;
     }
+
     private void setupPrevAndNext() {
         previousTimePeriodButton.setOnClickListener(v -> {
             this.selectedLocalDate = selectedTimePeriod.truncateToStart(selectedLocalDate).minusDays(1);
@@ -77,13 +92,14 @@ public class CategorySummaryChartFragment extends Fragment {
             getReportDataFromRepository();
         });
     }
+
     private void getReportDataFromRepository() {
-        if(transactionFilter==null){
+        if (transactionFilter == null) {
             transactionFilter = new TransactionFilter();
         }
         transactionFilter.fromTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToStart(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         transactionFilter.toTransactionDate = Integer.parseInt(selectedTimePeriod.truncateToEnd(selectedLocalDate).format(DateTimeFormatter.ofPattern("yyyyMMdd")));
-        List<CategorySummaryRecord> records =  categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter,selectedTimePeriod);
+        List<CategorySummaryRecord> records = categorySummaryRepository.getMonthlySummaryCategoryWise(transactionFilter, selectedTimePeriod);
         createBarChartFromReportData(records);
     }
 
@@ -91,9 +107,9 @@ public class CategorySummaryChartFragment extends Fragment {
         ArrayList<BarEntry> entries = new ArrayList<>();
         ArrayList<String> categoryNames = new ArrayList<>();
         int loopNumber = 0;
-        for(CategorySummaryRecord record : records){
+        for (CategorySummaryRecord record : records) {
             categoryNames.add(record.category);
-            entries.add(new BarEntry(loopNumber,(float)record.amount));
+            entries.add(new BarEntry(loopNumber, (float) record.amount));
             loopNumber++;
         }
         BarDataSet dataSet = new BarDataSet(entries, "Expenses");
@@ -132,23 +148,25 @@ public class CategorySummaryChartFragment extends Fragment {
                 .collect(Collectors.toList());
         timePeriodSelection.setItemObjects(timePeriods);
         setDefaultValuesForTimePeriod(timePeriods);
-        timePeriodSelection.setOnItemClickListener((item,int1) -> {
+        timePeriodSelection.setOnItemClickListener((item, int1) -> {
             this.selectedTimePeriod = (CategorySummaryRecord.TimePeriod) timePeriods.get(int1);
             this.selectedLocalDate = LocalDate.now();
             setItemTimePeriodTextView(selectedTimePeriod, selectedLocalDate);
             getReportDataFromRepository();
         });
     }
+
     private void setItemTimePeriodTextView(CategorySummaryRecord.TimePeriod selectedTimePeriod,
-                                           LocalDate localDate){
+                                           LocalDate localDate) {
         this.selectedLocalDate = localDate;
         this.selectedTimePeriod = selectedTimePeriod;
-        String timePeriodStartAndEndDateString = getStartEndDateAsString(selectedTimePeriod,localDate);
+        String timePeriodStartAndEndDateString = getStartEndDateAsString(selectedTimePeriod, localDate);
         timePeriodTextView.setText(timePeriodStartAndEndDateString);
     }
+
     private void setDefaultValuesForTimePeriod(List<Object> timePeriods) {
         Bundle args = getArguments();
-        if(args==null) {
+        if (args == null) {
             this.selectedTimePeriod
                     = (CategorySummaryRecord.TimePeriod) timePeriods.get(0);
             this.selectedLocalDate = LocalDate.now();
@@ -157,16 +175,7 @@ public class CategorySummaryChartFragment extends Fragment {
         setItemTimePeriodTextView(this.selectedTimePeriod, this.selectedLocalDate);
         getReportDataFromRepository();
     }
-    @NonNull
-    private static String getStartEndDateAsString(CategorySummaryRecord.TimePeriod selectedTimePeriod,
-                                                  LocalDate localDate) {
-        return selectedTimePeriod
-                .truncateToStart(localDate)
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) + " TO " +
-                selectedTimePeriod
-                        .truncateToEnd(localDate)
-                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-    }
+
     @NonNull
     private View setupTheViewElements(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_report_category_summary_chart, container, false);
@@ -177,6 +186,7 @@ public class CategorySummaryChartFragment extends Fragment {
         barChart = view.findViewById(R.id.barChart);
         return view;
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -186,37 +196,38 @@ public class CategorySummaryChartFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.category_summary_menu, menu);
             }
+
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_filters){
-                    if(transactionFilter==null){
+                if (menuItem.getItemId() == R.id.action_filters) {
+                    if (transactionFilter == null) {
                         transactionFilter = new TransactionFilter();
                     }
                     new TransactionFilterDialog(requireContext(),
                             requireActivity(),
                             transactionFilter,
-                            v-> getReportDataFromRepository(),
+                            v -> getReportDataFromRepository(),
                             false)
                             .showDialog();
                     return true;
-                }
-                else if(menuItem.getItemId()==R.id.action_show_data_chart){
+                } else if (menuItem.getItemId() == R.id.action_show_data_chart) {
                     Bundle args = new Bundle();
-                    args.putParcelable("transactionFilter",transactionFilter);
-                    args.putString("timePeriod",selectedTimePeriod.name());
-                    Navigation.findNavController(view).navigate(R.id.action_categorySummaryChartFragment_to_categorySummaryFragment,args);
+                    args.putParcelable("transactionFilter", transactionFilter);
+                    args.putString("timePeriod", selectedTimePeriod.name());
+                    Navigation.findNavController(view).navigate(R.id.action_categorySummaryChartFragment_to_categorySummaryFragment, args);
                     return true;
                 }
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
-    public void getParseArgs(){
+
+    public void getParseArgs() {
         Bundle args = getArguments();
-        if(args!=null){
+        if (args != null) {
             this.transactionFilter = args.getParcelable("transactionFilter");
             String timePeriodString = args.getString("timePeriod");
-            if(timePeriodString!=null){
+            if (timePeriodString != null) {
                 this.selectedTimePeriod = CategorySummaryRecord.TimePeriod.valueOf(timePeriodString);
                 this.selectedLocalDate = transactionFilter.fromTransactionDateToLocalDate();
             }

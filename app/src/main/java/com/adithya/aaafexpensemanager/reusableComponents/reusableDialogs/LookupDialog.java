@@ -18,12 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class LookupDialog {
-    public interface PositiveListener {
-        void onPositive(String selectedText);
-    }
-    public interface NegativeListener {
-        void onNegative(String selectedText);
-    }
     private final Context context;
     private final View customLayout;
     private final LookupEditText lookupEditText;
@@ -34,18 +28,18 @@ public class LookupDialog {
     private final String negativeButtonText;
     @SuppressLint("InflateParams")
     public LookupDialog(@NonNull
-                          Context context,
+                        Context context,
                         @NonNull
-                          String title,
+                        String title,
                         List<String> lookupItems,
                         @NonNull
-                          LookupDialog.PositiveListener positiveListener,
+                        LookupDialog.PositiveListener positiveListener,
                         LookupDialog.NegativeListener negativeListener,
                         String inputHint,
                         @NonNull
-                          String positiveButtonText,
+                        String positiveButtonText,
                         String negativeButtonText
-                          ){
+    ) {
         this.context = context;
         this.title = title;
         this.positiveListener = positiveListener;
@@ -56,7 +50,7 @@ public class LookupDialog {
         this.lookupEditText = customLayout.findViewById(R.id.dialogLookUpEditText);
         this.lookupEditText.setItemStrings(lookupItems);
         TextInputLayout textInputLayout = customLayout.findViewById(R.id.textInputLayout);
-        if(inputHint !=null && !inputHint.isBlank()){
+        if (inputHint != null && !inputHint.isBlank()) {
             textInputLayout.setHint(inputHint);
         }
         getAlertBuilder();
@@ -69,7 +63,7 @@ public class LookupDialog {
                         @NonNull
                         LookupDialog.PositiveListener positiveListener,
                         LookupDialog.NegativeListener negativeListener,
-                        String inputHint){
+                        String inputHint) {
         this(context,
                 title,
                 lookupItems,
@@ -79,7 +73,10 @@ public class LookupDialog {
                 "Ok",
                 "Cancel");
     }
-    /** @noinspection unused*/
+
+    /**
+     * @noinspection unused
+     */
     public LookupDialog(@NonNull
                         Context context,
                         @NonNull
@@ -87,7 +84,7 @@ public class LookupDialog {
                         List<String> lookupItems,
                         @NonNull
                         LookupDialog.PositiveListener positiveListener,
-                        LookupDialog.NegativeListener negativeListener){
+                        LookupDialog.NegativeListener negativeListener) {
         this(context,
                 title,
                 lookupItems,
@@ -97,15 +94,16 @@ public class LookupDialog {
                 "Ok",
                 "Cancel");
     }
+
     private void getAlertBuilder() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
         builder.setTitle(title);
         builder.setView(this.customLayout);
-        if(negativeListener!=null) builder.setNegativeButton(negativeButtonText, null);
-        if(positiveListener!=null) builder.setPositiveButton(positiveButtonText, null);
+        if (negativeListener != null) builder.setNegativeButton(negativeButtonText, null);
+        if (positiveListener != null) builder.setPositiveButton(positiveButtonText, null);
         AlertDialog dialog = builder.create();
         dialog.show();
-        if(positiveListener!=null){
+        if (positiveListener != null) {
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(view -> {
                 String selectedText = Optional.ofNullable(lookupEditText.getText())
                         .orElse(Editable.Factory.getInstance().newEditable(""))
@@ -118,7 +116,7 @@ public class LookupDialog {
                 }
             });
         }
-        if(negativeListener!=null) {
+        if (negativeListener != null) {
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnClickListener(view -> {
                 String selectedText;
                 selectedText = Optional.ofNullable(lookupEditText.getText())
@@ -128,5 +126,13 @@ public class LookupDialog {
                 dialog.dismiss();
             });
         }
+    }
+
+    public interface PositiveListener {
+        void onPositive(String selectedText);
+    }
+
+    public interface NegativeListener {
+        void onNegative(String selectedText);
     }
 }

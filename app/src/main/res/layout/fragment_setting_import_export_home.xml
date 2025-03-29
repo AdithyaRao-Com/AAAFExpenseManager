@@ -5,74 +5,88 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".settings.SettingsFragment">
+
     <TextView
         android:id="@+id/export_database_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_database"
-        style="@style/LargeText"/>
+        android:text="@string/export_database" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/import_database_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_database"
-        style="@style/LargeText"/>
+        android:text="@string/import_database" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/import_csv_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_csv"
-        style="@style/LargeText"/>
+        android:text="@string/import_csv" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/export_csv_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_csv"
-        style="@style/LargeText"/>
+        android:text="@string/export_csv" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/import_qif_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_qif"
-        style="@style/LargeText"/>
+        android:text="@string/import_qif" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/export_qif_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_qif"
-        style="@style/LargeText"/>
+        android:text="@string/export_qif" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/autobackup_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/auto_backup"
-        style="@style/LargeText"/>
+        android:text="@string/auto_backup" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
 </LinearLayout>

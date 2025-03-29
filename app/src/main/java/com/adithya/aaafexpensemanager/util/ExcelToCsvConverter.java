@@ -1,4 +1,5 @@
 package com.adithya.aaafexpensemanager.util;
+
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
@@ -20,18 +21,15 @@ import java.io.OutputStreamWriter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** @noinspection unused*/
+/**
+ * @noinspection unused
+ */
 public class ExcelToCsvConverter {
 
     private final Context context;
     private final ConversionListener listener;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor(); // Single thread for sequential tasks
-
-    public interface ConversionListener {
-        void onConversionComplete(Uri csvFileUri);
-
-        void onConversionFailed(String errorMessage);
-    }
+    private String errorMessage;
 
     public ExcelToCsvConverter(Context context, ConversionListener listener) {
         this.context = context;
@@ -52,8 +50,6 @@ public class ExcelToCsvConverter {
             }
         });
     }
-
-    private String errorMessage;
 
     private Uri doInBackground(@NonNull Uri excelFileUri) {
         InputStream inputStream = null;
@@ -127,5 +123,11 @@ public class ExcelToCsvConverter {
                 e.printStackTrace();
             }
         }
+    }
+
+    public interface ConversionListener {
+        void onConversionComplete(Uri csvFileUri);
+
+        void onConversionFailed(String errorMessage);
     }
 }

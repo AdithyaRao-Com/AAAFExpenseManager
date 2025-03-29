@@ -1,11 +1,14 @@
 package com.adithya.aaafexpensemanager.settings.category.exception;
 
-/** @noinspection unused*/
+/**
+ * @noinspection unused
+ */
 public class CategoryExistsException extends Exception {
-    public CategoryExistsException(String message){
+    public CategoryExistsException(String message) {
         super(String.format("Category name %s already exists", message));
     }
-    public CategoryExistsException(){
+
+    public CategoryExistsException() {
         super("Category name already exists");
     }
 }

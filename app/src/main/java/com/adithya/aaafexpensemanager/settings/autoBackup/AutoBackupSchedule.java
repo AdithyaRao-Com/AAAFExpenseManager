@@ -9,29 +9,35 @@ public class AutoBackupSchedule {
     private static final String TAG = "AutoBackupSchedule";
     private Duration backupInterval = Duration.ofDays(1);
     private LocalDateTime referenceBackupTime = LocalDate.now().atStartOfDay();
-    public AutoBackupSchedule(){
+
+    public AutoBackupSchedule() {
     }
-    public AutoBackupSchedule(LocalDateTime referenceBackupTime){
+
+    public AutoBackupSchedule(LocalDateTime referenceBackupTime) {
         this.referenceBackupTime = referenceBackupTime;
     }
 
-    public AutoBackupSchedule(Duration backupInterval){
+    public AutoBackupSchedule(Duration backupInterval) {
         this.backupInterval = backupInterval;
     }
-    public AutoBackupSchedule(Duration backupInterval, LocalDateTime referenceBackupTime){
+
+    public AutoBackupSchedule(Duration backupInterval, LocalDateTime referenceBackupTime) {
         this.backupInterval = backupInterval;
         this.referenceBackupTime = referenceBackupTime;
     }
-    public AutoBackupSchedule(LocalTime dailyRunTime){
+
+    public AutoBackupSchedule(LocalTime dailyRunTime) {
         this.referenceBackupTime = this.referenceBackupTime.toLocalDate().atTime(dailyRunTime);
     }
-    public LocalDateTime getNextBackupTime(){
-        do{
+
+    public LocalDateTime getNextBackupTime() {
+        do {
             referenceBackupTime = referenceBackupTime.plus(backupInterval);
-        } while(referenceBackupTime.isBefore(LocalDateTime.now().plusMinutes(1)));
+        } while (referenceBackupTime.isBefore(LocalDateTime.now().plusMinutes(1)));
         return referenceBackupTime;
     }
-    public long calculateDelay(){
+
+    public long calculateDelay() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime nextBackupTime = getNextBackupTime();
         return Duration.between(now, nextBackupTime).toMillis();

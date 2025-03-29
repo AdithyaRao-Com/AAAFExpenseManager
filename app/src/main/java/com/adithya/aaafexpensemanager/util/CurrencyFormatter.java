@@ -3,7 +3,7 @@ package com.adithya.aaafexpensemanager.util;
 import java.text.DecimalFormat;
 
 public class CurrencyFormatter {
-    public static String formatIndianStyle(Double value,String currency) {
+    public static String formatIndianStyle(Double value, String currency) {
         // Round to two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String positiveNegativeInd = value < 0 ? "-" : "";
@@ -24,9 +24,10 @@ public class CurrencyFormatter {
         // Format the integer part
         String formattedInteger = formatIntegerPartIndian(integerPart);
         // Combine integer and decimal parts
-        return positiveNegativeInd +formattedInteger + decimalPart + " "+currency;
+        return positiveNegativeInd + formattedInteger + decimalPart + " " + currency;
     }
-    public static String formatStandardStyle(double number,String currency) {
+
+    public static String formatStandardStyle(double number, String currency) {
         // Round to two decimal places
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String positiveNegativeInd = number < 0 ? "-" : "";
@@ -43,8 +44,9 @@ public class CurrencyFormatter {
             decimalPart = ".00"; // Default decimal part if no decimal point found
         }
         String formattedInteger = formatIntegerPartStandard(integerPart);
-        return positiveNegativeInd+formattedInteger + decimalPart + " "+currency;
+        return positiveNegativeInd + formattedInteger + decimalPart + " " + currency;
     }
+
     private static String formatIntegerPartIndian(String integerPart) {
         int len = integerPart.length();
         if (len <= 3) {
@@ -65,6 +67,7 @@ public class CurrencyFormatter {
         }
         return formatted.toString();
     }
+
     private static String formatIntegerPartStandard(String integerPart) {
         int len = integerPart.length();
         if (len <= 3) {

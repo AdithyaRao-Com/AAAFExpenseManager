@@ -15,8 +15,21 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
-/** @noinspection CallToPrintStackTrace, unused */
+/**
+ * @noinspection CallToPrintStackTrace, unused
+ */
 public class RecurringSchedule implements Parcelable {
+    public static final Parcelable.Creator<RecurringSchedule> CREATOR = new Parcelable.Creator<>() {
+        @Override
+        public RecurringSchedule createFromParcel(Parcel in) {
+            return new RecurringSchedule(in);
+        }
+
+        @Override
+        public RecurringSchedule[] newArray(int size) {
+            return new RecurringSchedule[size];
+        }
+    };
     public UUID recurringScheduleUUID;
     public String transactionName;
     public String recurringScheduleName;
@@ -59,11 +72,10 @@ public class RecurringSchedule implements Parcelable {
         this.createDateTime = createDateTime;
         this.lastUpdateDateTime = lastUpdateDateTime;
         this.transferInd = transferInd;
-        try{
+        try {
             LocalDate.parse(String.valueOf(nextRecurringDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
             this.nextRecurringDate = nextRecurringDate;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             this.nextRecurringDate = Integer.parseInt(AppConstants.TRANSACTION_DATE_DUMMY.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         }
         this.currencyCode = currencyCode;
@@ -92,6 +104,7 @@ public class RecurringSchedule implements Parcelable {
         this.lastUpdateDateTime = this.createDateTime;
         this.transferInd = transferInd;
     }
+
     public RecurringSchedule(String transactionName, String recurringScheduleName,
                              int repeatIntervalDays, int recurringStartDate, int recurringEndDate,
                              String category, String notes, String transactionType, double amount,
@@ -112,6 +125,7 @@ public class RecurringSchedule implements Parcelable {
         this.lastUpdateDateTime = this.createDateTime;
         this.transferInd = transferInd;
     }
+
     public RecurringSchedule(Parcel in) {
         String recurringScheduleUUIDString = in.readString();
         if (recurringScheduleUUIDString != null) {
@@ -192,6 +206,16 @@ public class RecurringSchedule implements Parcelable {
                 LocalDate.now().plusYears(AppConstants.DEFAULT_RECURRING_END_INTERVAL));
     }
 
+    @Nullable
+    public static LocalDate getLocalDateFromYYYYMMDDInt(int inputDate) {
+        try {
+            return LocalDate.parse(String.valueOf(inputDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -219,20 +243,11 @@ public class RecurringSchedule implements Parcelable {
         dest.writeDouble(conversionFactor);
         dest.writeString(primaryCurrencyCode);
     }
-    public static final Parcelable.Creator<RecurringSchedule> CREATOR = new Parcelable.Creator<>() {
-        @Override
-        public RecurringSchedule createFromParcel(Parcel in) {
-            return new RecurringSchedule(in);
-        }
 
-        @Override
-        public RecurringSchedule[] newArray(int size) {
-            return new RecurringSchedule[size];
-        }
-    };
     public LocalDate getRecurringStartDateLocalDate() {
         return getLocalDateFromYYYYMMDDInt(recurringStartDate);
     }
+
     public LocalDate getRecurringEndDateLocalDate() {
         return getLocalDateFromYYYYMMDDInt(recurringEndDate);
     }
@@ -240,24 +255,17 @@ public class RecurringSchedule implements Parcelable {
     public LocalDate getNextRecurringDateLocalDate() {
         return getLocalDateFromYYYYMMDDInt(nextRecurringDate);
     }
-    /** @noinspection unused*/
-    public int getRecurringDateStringToInt(String dateStringInYYYY_MM_DD){
+
+    /**
+     * @noinspection unused
+     */
+    public int getRecurringDateStringToInt(String dateStringInYYYY_MM_DD) {
         try {
             LocalDate date = LocalDate.parse(dateStringInYYYY_MM_DD, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             return Integer.parseInt(date.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
         } catch (DateTimeParseException e) {
             e.printStackTrace();
             return 0;
-        }
-    }
-
-    @Nullable
-    public static LocalDate getLocalDateFromYYYYMMDDInt(int inputDate) {
-        try {
-            return LocalDate.parse(String.valueOf(inputDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return null;
         }
     }
 
@@ -268,6 +276,7 @@ public class RecurringSchedule implements Parcelable {
             return "";
         }
     }
+
     public String getRecurringEndDateString() {
         try {
             return getRecurringEndDateLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
@@ -301,10 +310,12 @@ public class RecurringSchedule implements Parcelable {
                 ", primaryCurrencyCode='" + primaryCurrencyCode + '\'' +
                 '}';
     }
+
     public String amountToIndianFormat() {
-        return CurrencyFormatter.formatIndianStyle(this.amount,"INR");
+        return CurrencyFormatter.formatIndianStyle(this.amount, "INR");
     }
-    public String amountToStandardFormat(){
-        return CurrencyFormatter.formatStandardStyle(this.amount,"INR");
+
+    public String amountToStandardFormat() {
+        return CurrencyFormatter.formatStandardStyle(this.amount, "INR");
     }
 }

@@ -13,12 +13,15 @@ import java.util.List;
 
 public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAdapter.ViewHolder> {
     private List<ForecastReportRecord> items;
+
     public ForecastReportAdapter(List<ForecastReportRecord> items) {
         this.items = items;
     }
+
     public void setItems(List<ForecastReportRecord> items) {
         this.items = items;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -38,9 +41,10 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
         return this.items.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder  {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
         TextView amountTextView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.dateTextView);

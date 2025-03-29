@@ -50,7 +50,8 @@ public class AccountFragment extends Fragment {
 
         binding.searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -58,7 +59,8 @@ public class AccountFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
 
         return view;
@@ -71,15 +73,17 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         viewModel.setShowClosedAccounts(showClosedAccounts);
         viewModel.loadAccountNames();
     }
-    public void changeNavigation(int idNavigate,Bundle args){
+
+    public void changeNavigation(int idNavigate, Bundle args) {
         NavHostFragment.findNavController(this)
-                .navigate(idNavigate,args);
+                .navigate(idNavigate, args);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -90,20 +94,22 @@ public class AccountFragment extends Fragment {
                 menuInflater.inflate(R.menu.list_account_menu, menu);
                 showHideClosedAccountsMenuItem = menu.findItem(R.id.actionShowHideClosedAccountsMenuItem);
             }
+
             /** */
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.actionShowHideClosedAccountsMenuItem){
-                    String title = showClosedAccounts?"Hide Closed Accounts":"Show Closed Accounts";
+                if (menuItem.getItemId() == R.id.actionShowHideClosedAccountsMenuItem) {
+                    String title = showClosedAccounts ? "Hide Closed Accounts" : "Show Closed Accounts";
                     new ConfirmationDialog(getContext(),
                             title,
-                            "Are you sure you want to "+title,
-                            ()-> {
+                            "Are you sure you want to " + title,
+                            () -> {
                                 showClosedAccounts = !showClosedAccounts;
                                 viewModel.setShowClosedAccounts(showClosedAccounts);
                                 viewModel.loadAccountNames();
                             },
-                            ()->{},
+                            () -> {
+                            },
                             "Yes",
                             "No"
                     );

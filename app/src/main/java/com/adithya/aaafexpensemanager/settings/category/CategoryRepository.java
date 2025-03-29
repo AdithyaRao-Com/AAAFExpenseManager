@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** @noinspection unused*/
+/**
+ * @noinspection unused
+ */
 public class CategoryRepository {
     private final SQLiteDatabase db;
     private final Application application;
@@ -59,16 +61,16 @@ public class CategoryRepository {
             UUID categoryUUID = UUID.fromString(categoryUUIDStr);
             String categoryName = cursor.getString(cursor.getColumnIndexOrThrow("category_name"));
             String parentCategory = cursor.getString(cursor.getColumnIndexOrThrow("parent_category"));
-            return new Category(categoryUUID, categoryName,parentCategory);
+            return new Category(categoryUUID, categoryName, parentCategory);
         } catch (Exception e) {
             return null;
         }
     }
 
-    public void addCategory(Category category) throws CategoryExistsException{
+    public void addCategory(Category category) throws CategoryExistsException {
         boolean isRecordExists = checkCategoryNameExists(category.categoryName,
                 category.categoryUUID);
-        if(isRecordExists){
+        if (isRecordExists) {
             throw new CategoryExistsException(category.categoryName);
         }
         ContentValues values = new ContentValues();
@@ -78,35 +80,35 @@ public class CategoryRepository {
         long result = db.insert("categories", null, values);
     }
 
-    public boolean checkCategoryNameExists(String categoryName,UUID categoryUUID) {
+    public boolean checkCategoryNameExists(String categoryName, UUID categoryUUID) {
         String selection = "(category_name = ? AND category_uuid != ?)";
-        String[] selectionArgs = new String[]{categoryName,categoryUUID.toString()};
-        try(Cursor cursor = db.query("categories", null, selection, selectionArgs, null, null, null)){
-            if(cursor.getCount() > 0){
+        String[] selectionArgs = new String[]{categoryName, categoryUUID.toString()};
+        try (Cursor cursor = db.query("categories", null, selection, selectionArgs, null, null, null)) {
+            if (cursor.getCount() > 0) {
                 return true;
             }
         }
         return false;
     }
 
-    public void updateCategory(Category category) throws CategoryExistsException{
+    public void updateCategory(Category category) throws CategoryExistsException {
         Category originalCategory = getCategoryById(category.categoryUUID.toString());
-        if(originalCategory == null){
+        if (originalCategory == null) {
             return;
         }
         boolean isRecordExists = checkCategoryNameExists(category.categoryName,
                 category.categoryUUID);
-        if(isRecordExists){
+        if (isRecordExists) {
             throw new CategoryExistsException(category.categoryName);
         }
-        if(!originalCategory.categoryName.equals(category.categoryName)){
+        if (!originalCategory.categoryName.equals(category.categoryName)) {
             TransactionRepository transactionRepository = new TransactionRepository(application);
             TransactionFilter transactionFilter = new TransactionFilter();
             ArrayList<String> categories = new ArrayList<>();
             categories.add(originalCategory.categoryName);
             transactionFilter.categories = categories;
-            List<Transaction> transactions = transactionRepository.getAllTransactions(transactionFilter,-1);
-            for(Transaction transaction : transactions){
+            List<Transaction> transactions = transactionRepository.getAllTransactions(transactionFilter, -1);
+            for (Transaction transaction : transactions) {
                 transaction.category = category.categoryName;
                 transactionRepository.updateTransactionTableOnly(transaction);
             }
@@ -115,6 +117,7 @@ public class CategoryRepository {
         }
         updateCategoryOnly(category);
     }
+
     public void updateCategoryOnly(Category category) {
         ContentValues values = new ContentValues();
         values.put("category_name", category.categoryName);
@@ -130,7 +133,7 @@ public class CategoryRepository {
         int rowsAffected = db.delete("categories", "category_uuid = ?", new String[]{category.categoryUUID.toString()});
     }
 
-    public void deleteAll(){
+    public void deleteAll() {
         int rowsAffected = db.delete("categories", null, null);
     }
 
@@ -152,7 +155,7 @@ public class CategoryRepository {
 
     public List<String> getDistinctParentCategories() {
         List<String> parentCategories = new ArrayList<>();
-        try(Cursor cursor = db.rawQuery("SELECT DISTINCT parent_category FROM categories WHERE parent_category IS NOT NULL", null)){
+        try (Cursor cursor = db.rawQuery("SELECT DISTINCT parent_category FROM categories WHERE parent_category IS NOT NULL", null)) {
             if (cursor.moveToFirst()) {
                 do {
                     String parentCategoryName = cursor.getString(cursor.getColumnIndexOrThrow("parent_category"));

@@ -9,8 +9,8 @@
         android:id="@+id/list_date_separator_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:background="@color/background_list_date_separator"
+        android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceListItemSmall" />
 
     <View

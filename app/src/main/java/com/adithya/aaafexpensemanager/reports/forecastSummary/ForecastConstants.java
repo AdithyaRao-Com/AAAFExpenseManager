@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public class ForecastConstants {
     public enum ForecastTimePeriod implements LookupEditText.LookupEditTextItem {
-        THIS_MONTH(){
+        THIS_MONTH() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
@@ -32,11 +32,12 @@ public class ForecastConstants {
                 return "This Month";
             }
         },
-        NEXT_3_MONTHS(){
+        NEXT_3_MONTHS() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
@@ -55,11 +56,12 @@ public class ForecastConstants {
                 return "Next 3 Months";
             }
         },
-        NEXT_6_MONTHS(){
+        NEXT_6_MONTHS() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
@@ -83,6 +85,7 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
@@ -101,16 +104,18 @@ public class ForecastConstants {
                 return "Next 12 Months";
             }
         },
-        CURRENT_YEAR(){
+        CURRENT_YEAR() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public String toString() {
                 return "Current Year";
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
@@ -123,11 +128,12 @@ public class ForecastConstants {
                 return LocalDate.now();
             }
         },
-        NEXT_3_YEARS(){
+        NEXT_3_YEARS() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
@@ -146,8 +152,10 @@ public class ForecastConstants {
                 return "Next 3 Years";
             }
         };
+
         @NonNull
         public abstract LocalDate getEndDate();
+
         @NonNull
         public abstract LocalDate getStartDate();
     }

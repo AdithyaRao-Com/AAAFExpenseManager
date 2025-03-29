@@ -6,10 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
+
         <TextView
             android:id="@+id/categoryNameTextView"
             android:layout_width="wrap_content"
@@ -18,7 +20,8 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Category Name"/>
+            tools:text="Category Name" />
+
         <TextView
             android:id="@+id/amountTextView"
             android:layout_width="wrap_content"
@@ -29,6 +32,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Amount" />
+
         <TextView
             android:id="@+id/pctTextView"
             android:layout_width="wrap_content"
@@ -40,8 +44,9 @@
             app:layout_constraintTop_toBottomOf="@id/amountTextView"
             tools:text="Pct" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
 </LinearLayout>

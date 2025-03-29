@@ -37,16 +37,19 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_DATE = 0;
     private static final int TYPE_TRANSACTION = 1;
     private final List<Object> items;
     private final DateTimeFormatter dateFormatter;
-    private ActionMode actionMode;
     private final TransactionViewModel viewModel;
     private final TransactionFragment transactionFragment;
     private final List<Transaction> selectedTransactions = new ArrayList<>();
+    private ActionMode actionMode;
+
     public TransactionsAdapter(List<Transaction> transactions,
                                TransactionFragment transactionFragment,
                                TransactionViewModel viewModel) {
@@ -56,14 +59,17 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.viewModel = viewModel;
         addSeparators(transactions);
     }
+
     @Override
     public int getItemViewType(int position) {
         return items.get(position) instanceof LocalDate ? TYPE_DATE : TYPE_TRANSACTION;
     }
+
     public void setTransactions(List<Transaction> transactions) {
         items.clear();
         addTransactions(transactions);
     }
+
     @SuppressLint("NotifyDataSetChanged")
     public void addTransactions(List<Transaction> transactions) {
         addSeparators(transactions);
@@ -82,6 +88,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return new TransactionViewHolder(view);
         }
     }
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
@@ -98,7 +105,9 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /** @noinspection deprecation*/
+    /**
+     * @noinspection deprecation
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, Transaction transaction) {
         holder.transactionNameTextView.setText(transaction.transactionName);
@@ -172,7 +181,9 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /** @noinspection deprecation*/
+    /**
+     * @noinspection deprecation
+     */
     private void toggleSelection(TransactionViewHolder holder, int position) {
         Transaction transaction = (Transaction) items.get(position);
         if (selectedTransactions.contains(transaction)) {
@@ -190,13 +201,15 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /** @noinspection DataFlowIssue*/
+    /**
+     * @noinspection DataFlowIssue
+     */
     private void selectAll(List<Object> items) {
         RecyclerView recyclerView = transactionFragment.getView().findViewById(R.id.transactionsRecyclerView);
         selectedTransactions.clear();
         int itemPosition = 0;
-        for (Object listObject:items) {
-            if(listObject instanceof Transaction){
+        for (Object listObject : items) {
+            if (listObject instanceof Transaction) {
                 Transaction transaction = (Transaction) listObject;
                 selectedTransactions.add(transaction);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
@@ -213,10 +226,12 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             actionMode.setTitle(String.valueOf(selectedTransactions.size()));
         }
     }
+
     private void deSelectAll() {
         selectedTransactions.clear();
         actionMode.finish();
     }
+
     private void deleteSelectedTransactions() {
         if (!selectedTransactions.isEmpty()) {
             for (Transaction transaction : selectedTransactions) {
@@ -225,12 +240,13 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             Toast.makeText(this.transactionFragment.getContext(), selectedTransactions.size() + " transactions deleted", Toast.LENGTH_SHORT).show();
             selectedTransactions.clear();
-            this.transactionFragment.currentPage=1;
+            this.transactionFragment.currentPage = 1;
             viewModel.getTransactions(this.transactionFragment.transactionFilter,
-                    this.transactionFragment.currentPage)
-                        .observe(this.transactionFragment.getViewLifecycleOwner(), this.transactionFragment::updateRecyclerView);
+                            this.transactionFragment.currentPage)
+                    .observe(this.transactionFragment.getViewLifecycleOwner(), this.transactionFragment::updateRecyclerView);
         }
     }
+
     private void startActionMode() {
         //noinspection DataFlowIssue
         actionMode = this.transactionFragment.getActivity().startActionMode(new ActionMode.Callback() {
@@ -251,100 +267,95 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
                 if (item.getItemId() == R.id.action_delete) {
                     long selectionCount = selectedTransactions.size();
-                    if(selectionCount%AppConstants.BATCH_SIZE==0
-                    &&selectionCount!=0){
+                    if (selectionCount % AppConstants.BATCH_SIZE == 0
+                            && selectionCount != 0) {
                         deleteAllFilteredTransactions(transactionFragment.transactionFilter);
                         return true;
                     }
                     deleteSelectedTransactions();
                     mode.finish();
                     return true;
-                }
-                else if(item.getItemId() == R.id.action_select_all){
+                } else if (item.getItemId() == R.id.action_select_all) {
                     selectAll(items);
-                }
-                else if(item.getItemId() == R.id.action_deselect_all){
+                } else if (item.getItemId() == R.id.action_deselect_all) {
                     deSelectAll();
-                }
-                else if(item.getItemId() == R.id.action_copy_txn){
-                    if(selectedTransactions.size() >= AppConstants.COPY_LIMIT){
-                        Snackbar.make(transactionFragment.getView(),"Copy is not supported for more than "+AppConstants.COPY_LIMIT+" transactions",Snackbar.LENGTH_SHORT).show();
+                } else if (item.getItemId() == R.id.action_copy_txn) {
+                    if (selectedTransactions.size() >= AppConstants.COPY_LIMIT) {
+                        Snackbar.make(transactionFragment.getView(), "Copy is not supported for more than " + AppConstants.COPY_LIMIT + " transactions", Snackbar.LENGTH_SHORT).show();
                     } else {
                         copyTransactions(selectedTransactions);
                     }
-                }
-                else if(item.getItemId() == R.id.action_update_account){
+                } else if (item.getItemId() == R.id.action_update_account) {
                     AccountViewModel accountViewModel = new ViewModelProvider(transactionFragment.requireActivity()).get(AccountViewModel.class);
                     List<String> lookupItems = accountViewModel
                             .getAccounts()
                             .getValue()
                             .stream()
-                            .map(e-> e.accountName)
+                            .map(e -> e.accountName)
                             .toList();
                     new LookupDialog(transactionFragment.getContext(),
                             "Update Account",
                             lookupItems,
-                            (selectedText)->{
-                                viewModel.updateTransactionFields(selectedTransactions,"account_name",selectedText);
+                            (selectedText) -> {
+                                viewModel.updateTransactionFields(selectedTransactions, "account_name", selectedText);
                                 transactionFragment.reloadData();
-                                Snackbar.make(transactionFragment.getView(),"Update Account is successful",Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(transactionFragment.getView(), "Update Account is successful", Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (selectedText)-> Snackbar.make(transactionFragment.getView(),"Update Account is failed",Snackbar.LENGTH_SHORT).show(),
+                            (selectedText) -> Snackbar.make(transactionFragment.getView(), "Update Account is failed", Snackbar.LENGTH_SHORT).show(),
                             "Account Name");
-                }
-                else if(item.getItemId() == R.id.action_update_category){
+                } else if (item.getItemId() == R.id.action_update_category) {
                     CategoryViewModel categoryViewModel = new ViewModelProvider(transactionFragment.requireActivity()).get(CategoryViewModel.class);
                     List<String> lookupItems = categoryViewModel
                             .getCategories()
                             .getValue()
                             .stream()
-                            .map(e-> e.categoryName)
+                            .map(e -> e.categoryName)
                             .toList();
                     new LookupDialog(transactionFragment.getContext(),
                             "Update Category",
                             lookupItems,
-                            (selectedText)->{
+                            (selectedText) -> {
                                 viewModel.updateTransactionFields(selectedTransactions,
                                         "category",
                                         selectedText);
                                 transactionFragment.reloadData();
-                                Snackbar.make(transactionFragment.getView(),"Update Category is successful",Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(transactionFragment.getView(), "Update Category is successful", Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (selectedText)->{},
+                            (selectedText) -> {
+                            },
                             "Category Name");
-                }
-                else if(item.getItemId() == R.id.action_update_transaction_name){
+                } else if (item.getItemId() == R.id.action_update_transaction_name) {
                     new EditTextDialog(transactionFragment.getContext(),
                             "Update Transaction Name",
-                            (inputText)->{
-                                viewModel.updateTransactionFields(selectedTransactions,"transaction_name",inputText);
+                            (inputText) -> {
+                                viewModel.updateTransactionFields(selectedTransactions, "transaction_name", inputText);
                                 transactionFragment.reloadData();
-                                Snackbar.make(transactionFragment.getView(),"Update Transaction Name is successful",Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(transactionFragment.getView(), "Update Transaction Name is successful", Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (inputText)->{},
+                            (inputText) -> {
+                            },
                             "Transaction Name");
-                }
-                else if(item.getItemId() == R.id.action_update_to_account){
+                } else if (item.getItemId() == R.id.action_update_to_account) {
                     AccountViewModel accountViewModel = new ViewModelProvider(transactionFragment.requireActivity()).get(AccountViewModel.class);
                     List<String> lookupItems = accountViewModel
                             .getAccounts()
                             .getValue()
                             .stream()
-                            .map(e-> e.accountName)
+                            .map(e -> e.accountName)
                             .toList();
                     new LookupDialog(transactionFragment.getContext(),
                             "Update To Account",
                             lookupItems,
-                            (selectedText)->{
-                                viewModel.updateTransactionFields(selectedTransactions,"to_account_name",selectedText);
+                            (selectedText) -> {
+                                viewModel.updateTransactionFields(selectedTransactions, "to_account_name", selectedText);
                                 transactionFragment.reloadData();
-                                Snackbar.make(transactionFragment.getView(),"Update To Account is successful",Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(transactionFragment.getView(), "Update To Account is successful", Snackbar.LENGTH_SHORT).show();
                                 deSelectAll();
                             },
-                            (selectedText)-> Snackbar.make(transactionFragment.getView(),"Update To Account is failed",Snackbar.LENGTH_SHORT).show(),
+                            (selectedText) -> Snackbar.make(transactionFragment.getView(), "Update To Account is failed", Snackbar.LENGTH_SHORT).show(),
                             "To Account Name");
                 }
                 return false;
@@ -363,16 +374,17 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void copyTransactions(List<Transaction> selectedTransactions) {
         Map<String, Transaction> transactionMap =
                 selectedTransactions.stream()
-                        .collect(Collectors.toMap(e->e.transactionUUID.toString(),e->e));
-        transactionMap.forEach((key,value) -> viewModel.copyTransaction(value));
+                        .collect(Collectors.toMap(e -> e.transactionUUID.toString(), e -> e));
+        transactionMap.forEach((key, value) -> viewModel.copyTransaction(value));
         new ConfirmationDialog(transactionFragment.getContext(),
                 "Copy Transactions",
                 "Are you sure you want to copy these transactions?",
-                ()-> transactionMap.forEach((key, value) -> viewModel.copyTransaction(value)),
-                ()->{},
+                () -> transactionMap.forEach((key, value) -> viewModel.copyTransaction(value)),
+                () -> {
+                },
                 "Copy",
                 "Cancel"
-                );
+        );
         deSelectAll();
         this.transactionFragment.reloadData();
     }
@@ -380,7 +392,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private void deleteAllFilteredTransactions(TransactionFilter transactionFilter) {
         viewModel.deleteAllFilteredTransactions(transactionFilter);
         selectedTransactions.clear();
-        this.transactionFragment.currentPage=1;
+        this.transactionFragment.currentPage = 1;
         viewModel.getTransactions(this.transactionFragment.transactionFilter,
                         this.transactionFragment.currentPage)
                 .observe(this.transactionFragment.getViewLifecycleOwner(), this.transactionFragment::updateRecyclerView);
@@ -391,6 +403,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemCount() {
         return items.size();
     }
+
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionNameTextView;
         TextView transactionDateTextView;
@@ -399,6 +412,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         LinearLayout transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
+
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionNameTextView = itemView.findViewById(R.id.transactionNameTextView);
@@ -410,8 +424,10 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             categoryNameTextView = itemView.findViewById(R.id.categoryNameTextView);
         }
     }
+
     public static class DateViewHolder extends RecyclerView.ViewHolder {
         TextView dateTextView;
+
         public DateViewHolder(@NonNull View itemView) {
             super(itemView);
             dateTextView = itemView.findViewById(R.id.list_date_separator_text); // Replace with your date TextView ID

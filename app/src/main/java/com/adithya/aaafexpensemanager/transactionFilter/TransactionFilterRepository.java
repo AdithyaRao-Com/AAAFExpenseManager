@@ -14,60 +14,17 @@ import com.adithya.aaafexpensemanager.util.GsonListStringConversion;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection resource, CallToPrintStackTrace , FieldCanBeLocal */
+/**
+ * @noinspection resource, CallToPrintStackTrace , FieldCanBeLocal
+ */
 public class TransactionFilterRepository {
     private final SQLiteDatabase db;
     private final Application application;
+
     public TransactionFilterRepository(Application application) {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
         this.application = application;
-    }
-    public void addTransactionFilter(TransactionFilter transactionFilter) {
-        boolean updateInd =false;
-        ContentValues values = getContentValues(transactionFilter);
-        try {
-            db.insertOrThrow("transaction_filters", null, values);
-        }
-        catch (SQLiteConstraintException e){
-            updateInd = true;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        if(updateInd){
-            try{
-                db.update("transaction_filters", values, "report_name = ?", new String[]{transactionFilter.reportName});
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void deleteTransactionFilter(TransactionFilter transactionFilter) {
-        try {
-            db.delete("transaction_filters", "report_name = ?", new String[]{transactionFilter.reportName});
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public List<TransactionFilter> getAllTransactionFilters() {
-        List<TransactionFilter> transactionFilters = new ArrayList<>();
-        try(Cursor cursor = db.query("transaction_filters", null, null, null, null, null, null)) {
-            if (cursor.moveToFirst()) {
-                do {
-                    TransactionFilter transactionFilter = getTransactionFilterFromCursor(cursor);
-                    transactionFilters.add(transactionFilter);
-                } while (cursor.moveToNext());
-            }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return transactionFilters;
     }
 
     @NonNull
@@ -110,5 +67,47 @@ public class TransactionFilterRepository {
         values.put("period_name", transactionFilter.periodName);
         values.put("account_tags", GsonListStringConversion.listToJson(transactionFilter.accountTags));
         return values;
+    }
+
+    public void addTransactionFilter(TransactionFilter transactionFilter) {
+        boolean updateInd = false;
+        ContentValues values = getContentValues(transactionFilter);
+        try {
+            db.insertOrThrow("transaction_filters", null, values);
+        } catch (SQLiteConstraintException e) {
+            updateInd = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (updateInd) {
+            try {
+                db.update("transaction_filters", values, "report_name = ?", new String[]{transactionFilter.reportName});
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteTransactionFilter(TransactionFilter transactionFilter) {
+        try {
+            db.delete("transaction_filters", "report_name = ?", new String[]{transactionFilter.reportName});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<TransactionFilter> getAllTransactionFilters() {
+        List<TransactionFilter> transactionFilters = new ArrayList<>();
+        try (Cursor cursor = db.query("transaction_filters", null, null, null, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                do {
+                    TransactionFilter transactionFilter = getTransactionFilterFromCursor(cursor);
+                    transactionFilters.add(transactionFilter);
+                } while (cursor.moveToNext());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return transactionFilters;
     }
 }

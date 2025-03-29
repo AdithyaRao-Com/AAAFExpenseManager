@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_delete_account"
-        android:title="@string/delete_account"
+    <item
+        android:id="@+id/action_delete_account"
         android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom"/>
-    <item android:id="@+id/action_show_account_transactions"
-        android:title="@string/show_transactions"
+        android:title="@string/delete_account"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_show_account_transactions"
         android:orderInCategory="100"
-        app:showAsAction="never"/>
+        android:title="@string/show_transactions"
+        app:showAsAction="never" />
 </menu>

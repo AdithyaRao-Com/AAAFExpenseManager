@@ -12,6 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 
 public class TransactionFilter implements Parcelable {
+    public static final Parcelable.Creator<TransactionFilter> CREATOR = new Parcelable.Creator<>() {
+        @Override
+        public TransactionFilter createFromParcel(Parcel in) {
+            return new TransactionFilter(in);
+        }
+
+        @Override
+        public TransactionFilter[] newArray(int size) {
+            return new TransactionFilter[size];
+        }
+    };
     // TODO - Create a new ListView fragment for Saved Filters (Have search here as well) - TransactionFilter
     // TODO - Create a new Fragment to Add/Update and Delete saved filters - TransactionFilter
     public ArrayList<String> transactionNames;
@@ -46,6 +57,24 @@ public class TransactionFilter implements Parcelable {
         periodName = "";
         accountTags = new ArrayList<>();
         reportType = "";
+    }
+
+    protected TransactionFilter(Parcel in) {
+        transactionNames = in.createStringArrayList();
+        fromTransactionDate = in.readInt();
+        toTransactionDate = in.readInt();
+        categories = in.createStringArrayList();
+        accountNames = in.createStringArrayList();
+        toAccountNames = in.createStringArrayList();
+        fromAmount = in.readDouble();
+        toAmount = in.readDouble();
+        transactionTypes = in.createStringArrayList();
+        searchText = in.readString();
+        accountTypes = in.createStringArrayList();
+        reportName = in.readString();
+        periodName = in.readString();
+        accountTags = in.createStringArrayList();
+        reportType = in.readString();
     }
 
     @NonNull
@@ -94,52 +123,22 @@ public class TransactionFilter implements Parcelable {
         dest.writeString(reportType);
     }
 
-    public static final Parcelable.Creator<TransactionFilter> CREATOR = new Parcelable.Creator<>() {
-        @Override
-        public TransactionFilter createFromParcel(Parcel in) {
-            return new TransactionFilter(in);
-        }
-
-        @Override
-        public TransactionFilter[] newArray(int size) {
-            return new TransactionFilter[size];
-        }
-    };
-
-    protected TransactionFilter(Parcel in) {
-        transactionNames = in.createStringArrayList();
-        fromTransactionDate = in.readInt();
-        toTransactionDate = in.readInt();
-        categories = in.createStringArrayList();
-        accountNames = in.createStringArrayList();
-        toAccountNames = in.createStringArrayList();
-        fromAmount = in.readDouble();
-        toAmount = in.readDouble();
-        transactionTypes = in.createStringArrayList();
-        searchText=in.readString();
-        accountTypes = in.createStringArrayList();
-        reportName = in.readString();
-        periodName = in.readString();
-        accountTags = in.createStringArrayList();
-        reportType = in.readString();
-    }
-
     public boolean isEmpty() {
-        if(transactionNames!=null && !transactionNames.isEmpty()) return false;
-        if(fromTransactionDate!=0) return false;
-        if(toTransactionDate!=0) return false;
-        if(categories!=null && !categories.isEmpty()) return false;
-        if(accountNames!=null && !accountNames.isEmpty()) return false;
-        if(toAccountNames!=null && !toAccountNames.isEmpty()) return false;
-        if(fromAmount!=0) return false;
-        if(toAmount!=0) return false;
-        if(transactionTypes!=null && !transactionTypes.isEmpty()) return false;
-        if(searchText!=null && !searchText.isBlank()) return false;
-        if(accountTypes!=null && !accountTypes.isEmpty()) return false;
-        if(reportName!=null && !reportName.isBlank()) return false;
-        if(periodName!=null && !periodName.isBlank()) return false;
-        if(accountTags!=null && !accountTags.isEmpty()) return false;
-        if(reportType!=null && !reportType.isBlank()) return false;
+        if (transactionNames != null && !transactionNames.isEmpty()) return false;
+        if (fromTransactionDate != 0) return false;
+        if (toTransactionDate != 0) return false;
+        if (categories != null && !categories.isEmpty()) return false;
+        if (accountNames != null && !accountNames.isEmpty()) return false;
+        if (toAccountNames != null && !toAccountNames.isEmpty()) return false;
+        if (fromAmount != 0) return false;
+        if (toAmount != 0) return false;
+        if (transactionTypes != null && !transactionTypes.isEmpty()) return false;
+        if (searchText != null && !searchText.isBlank()) return false;
+        if (accountTypes != null && !accountTypes.isEmpty()) return false;
+        if (reportName != null && !reportName.isBlank()) return false;
+        if (periodName != null && !periodName.isBlank()) return false;
+        if (accountTags != null && !accountTags.isEmpty()) return false;
+        if (reportType != null && !reportType.isBlank()) return false;
         return true;
     }
 
@@ -161,39 +160,42 @@ public class TransactionFilter implements Parcelable {
         reportType = "";
     }
 
-    public LocalDate fromTransactionDateToLocalDate(){
+    public LocalDate fromTransactionDateToLocalDate() {
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(String.valueOf(fromTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } catch (Exception e){
+        } catch (Exception e) {
             localDate = LocalDate.now();
         }
         return localDate;
     }
-    public LocalDate toTransactionDateToLocalDate(){
+
+    public LocalDate toTransactionDateToLocalDate() {
         LocalDate localDate;
         try {
             localDate = LocalDate.parse(String.valueOf(toTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } catch (Exception e){
+        } catch (Exception e) {
             localDate = LocalDate.now();
         }
         return localDate;
     }
+
     public void setFromTransactionDate(LocalDate fromTransactionDate) {
         this.fromTransactionDate = Integer.parseInt(fromTransactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
+
     public void setToTransactionDate(LocalDate toTransactionDate) {
         this.toTransactionDate = Integer.parseInt(toTransactionDate.format(DateTimeFormatter.ofPattern("yyyyMMdd")));
     }
 
     public void addAccountNames(List<String> taggedAccounts) {
-        if(accountNames ==null) accountNames = new ArrayList<>();
-        HashMap<String,String> deDupedAccounts = new HashMap<>();
-        for(String accountName : taggedAccounts){
-            deDupedAccounts.put(accountName,accountName);
+        if (accountNames == null) accountNames = new ArrayList<>();
+        HashMap<String, String> deDupedAccounts = new HashMap<>();
+        for (String accountName : taggedAccounts) {
+            deDupedAccounts.put(accountName, accountName);
         }
-        for(String accountName : accountNames){
-            deDupedAccounts.put(accountName,accountName);
+        for (String accountName : accountNames) {
+            deDupedAccounts.put(accountName, accountName);
         }
         accountNames.clear();
         accountNames.addAll(deDupedAccounts.keySet());

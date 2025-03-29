@@ -14,7 +14,8 @@ public class GsonListStringConversion {
 
     public static List<String> jsonToList(String jsonString) {
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<String>>() {}.getType();
+        Type listType = new TypeToken<List<String>>() {
+        }.getType();
         return gson.fromJson(jsonString, listType);
     }
 }

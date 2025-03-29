@@ -23,11 +23,11 @@ import java.util.List;
 
 
 public class RecurringFragment extends Fragment {
-    private RecurringViewModel viewModel;
     private final TransactionFilter transactionFilter = new TransactionFilter();
+    public int currentPage = 1;
+    private RecurringViewModel viewModel;
     private RecyclerView recurringRecyclerView;
     private RecurringAdapter adapter;
-    public int currentPage = 1;
     private boolean isLoading = false;
 
     @Override
@@ -45,19 +45,21 @@ public class RecurringFragment extends Fragment {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchText = s.toString();
                 if (searchText.isEmpty()) {
                     transactionFilter.searchText = "";
-                    currentPage=1;
-                    viewModel.getRecurringSchedules(transactionFilter,currentPage).observe(getViewLifecycleOwner(), transactions -> updateRecyclerView(transactions));
+                    currentPage = 1;
+                    viewModel.getRecurringSchedules(transactionFilter, currentPage).observe(getViewLifecycleOwner(), transactions -> updateRecyclerView(transactions));
                 } else {
                     transactionFilter.searchText = searchText;
-                    currentPage=1;
-                    viewModel.getRecurringSchedules(transactionFilter,currentPage);
+                    currentPage = 1;
+                    viewModel.getRecurringSchedules(transactionFilter, currentPage);
                 }
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -75,7 +77,7 @@ public class RecurringFragment extends Fragment {
                     if (!isLoading && (firstVisibleItemPosition + visibleItemCount >= totalItemCount) && totalItemCount > 0) {
                         isLoading = true;
                         currentPage++;
-                        updateRecyclerView(viewModel.getRecurringSchedules(transactionFilter,currentPage).getValue());
+                        updateRecyclerView(viewModel.getRecurringSchedules(transactionFilter, currentPage).getValue());
                         isLoading = false;
                     }
                 }
@@ -83,16 +85,17 @@ public class RecurringFragment extends Fragment {
         });
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        currentPage=1;
-        viewModel.getRecurringSchedules(transactionFilter,currentPage).observe(getViewLifecycleOwner(), this::updateRecyclerView);
+        currentPage = 1;
+        viewModel.getRecurringSchedules(transactionFilter, currentPage).observe(getViewLifecycleOwner(), this::updateRecyclerView);
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateRecyclerView(List<RecurringSchedule> recurringSchedules) {
-        if (adapter == null || currentPage==1) {
+        if (adapter == null || currentPage == 1) {
             adapter = new RecurringAdapter(recurringSchedules,
                     this,
                     viewModel);

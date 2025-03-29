@@ -49,9 +49,11 @@ public class DecimalLimitEditText extends TextInputEditText {
 
     public class DecimalDigitsInputFilter implements InputFilter {
         private final int decimalDigits;
+
         public DecimalDigitsInputFilter(int decimalDigits) {
             this.decimalDigits = decimalDigits;
         }
+
         @Override
         public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
             int dotPos = -1;

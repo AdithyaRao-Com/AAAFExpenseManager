@@ -13,9 +13,12 @@ import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection resource, CallToPrintStackTrace , unused */
+/**
+ * @noinspection resource, CallToPrintStackTrace , unused
+ */
 public class RecentTransactionRepository {
     private final SQLiteDatabase db;
+
     public RecentTransactionRepository(Application application) {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
@@ -24,7 +27,7 @@ public class RecentTransactionRepository {
     public List<RecentTransaction> getAllRecentTransactions() {
         List<RecentTransaction> transactions = new ArrayList<>();
         try (Cursor cursor = db.query("recent_transactions", null, null, null, null, null,
-                "create_date DESC")){
+                "create_date DESC")) {
             if (cursor.moveToFirst()) {
                 do {
                     RecentTransaction transaction = getRecentTransactionFromCursor(cursor);
@@ -36,6 +39,7 @@ public class RecentTransactionRepository {
         }
         return transactions;
     }
+
     private RecentTransaction getRecentTransactionFromCursor(Cursor cursor) {
         try {
             int nameIndex = cursor.getColumnIndexOrThrow("transaction_name");
@@ -57,7 +61,7 @@ public class RecentTransactionRepository {
             String toAccountName = cursor.getString(toAccountIndex);
             long createDateTime = cursor.getLong(createDateTimeIndex);
             long lastUpdateDateTime = cursor.getLong(lastUpdateDateTimeIndex);
-            return new RecentTransaction(transactionName, transactionType, category, notes, amount, accountName, toAccountName,createDateTime,lastUpdateDateTime);
+            return new RecentTransaction(transactionName, transactionType, category, notes, amount, accountName, toAccountName, createDateTime, lastUpdateDateTime);
         } catch (IllegalArgumentException e) { // Catch column not found
             e.printStackTrace();
         } catch (Exception e) {
@@ -65,6 +69,7 @@ public class RecentTransactionRepository {
         }
         return null;
     }
+
     public RecentTransaction getRecentTransactionByName(String transactionName) {
         try (Cursor cursor = db.rawQuery("SELECT * FROM recent_transactions WHERE transaction_name = ?", new String[]{transactionName})) {
             if (cursor.moveToFirst()) {
@@ -73,17 +78,19 @@ public class RecentTransactionRepository {
         }
         return null;
     }
-    public void deleteAll(){
+
+    public void deleteAll() {
         int rowsAffected = db.delete("recent_transactions", null, null);
     }
+
     public void insertRecentTransaction(RecentTransaction recentTransaction) {
-        try{
+        try {
             ContentValues values = new ContentValues();
             values.put("transaction_name", recentTransaction.transactionName);
             values.put("transaction_type", recentTransaction.transactionType);
             values.put("category", recentTransaction.category);
             values.put("notes", recentTransaction.notes);
-            values.put("amount", Math.round(recentTransaction.amount*100.0)/100.0);
+            values.put("amount", Math.round(recentTransaction.amount * 100.0) / 100.0);
             values.put("account_name", recentTransaction.accountName);
             values.put("to_account_name", recentTransaction.toAccountName);
             values.put("create_date", recentTransaction.createDateTime);
@@ -93,11 +100,11 @@ public class RecentTransactionRepository {
             db.insert("recent_transactions", null, values);
             db.setTransactionSuccessful();
         } catch (SQLiteException ignored) {
-        }
-        finally {
+        } finally {
             db.endTransaction();
         }
     }
+
     public void updateRecentTransaction(RecentTransaction recentTransaction) {
         try {
             insertRecentTransaction(recentTransaction);
@@ -110,7 +117,7 @@ public class RecentTransactionRepository {
         updateRecentTransaction(recentTransaction);
     }
 
-    public void updateAllRecentTransactions(){
+    public void updateAllRecentTransactions() {
         List<RecentTransaction> recentTransactions = recreateAllRecentTransactions();
         Log.d("RecentTransactionRepository", "Updating " + recentTransactions.size() + " recent transactions");
         for (RecentTransaction recentTransaction : recentTransactions) {
@@ -118,7 +125,7 @@ public class RecentTransactionRepository {
         }
     }
 
-    public List<RecentTransaction> recreateAllRecentTransactions(){
+    public List<RecentTransaction> recreateAllRecentTransactions() {
         List<RecentTransaction> recentTransactions = new ArrayList<>();
         String selectQuery = "SELECT * FROM " +
                 "(SELECT transaction_name," +
@@ -135,7 +142,7 @@ public class RecentTransactionRepository {
                 "create_date DESC) AS row_num " +
                 "FROM transactions)" +
                 " WHERE row_num =1";
-        try (Cursor cursor = db.rawQuery(selectQuery,null)){
+        try (Cursor cursor = db.rawQuery(selectQuery, null)) {
             if (cursor.moveToFirst()) {
                 do {
                     RecentTransaction transaction = getRecentTransactionFromCursor(cursor);
@@ -144,8 +151,7 @@ public class RecentTransactionRepository {
                     }
                 } while (cursor.moveToNext());
             }
-        }
-        catch (SQLiteException e){
+        } catch (SQLiteException e) {
             e.printStackTrace();
         }
         return recentTransactions;

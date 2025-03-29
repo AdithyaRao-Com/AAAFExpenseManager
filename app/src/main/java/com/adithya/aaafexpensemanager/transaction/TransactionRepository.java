@@ -29,44 +29,47 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-/** @noinspection CallToPrintStackTrace, SameParameterValue */
+/**
+ * @noinspection CallToPrintStackTrace, SameParameterValue
+ */
 public class TransactionRepository {
+    private static final String INSERTS = "Insert";
+    private static final String DELETES = "Delete";
+    private static final String UPDATES = "Update";
     private final SQLiteDatabase db;
     private final Application application;
     private final AccountRepository accountRepository;
     private final RecentTransactionRepository recentTransactionRepository;
-    private static final String INSERTS = "Insert";
-    private static final String DELETES = "Delete";
-    private static final String UPDATES = "Update";
-
     public int recordCount = 0;
-    /** @noinspection resource*/
+
+    /**
+     * @noinspection resource
+     */
     public TransactionRepository(Application application) {
         DatabaseHelper dbHelper = new DatabaseHelper(application);
         db = dbHelper.getWritableDatabase();
         accountRepository = new AccountRepository(application);
-        recentTransactionRepository =  new RecentTransactionRepository(application);
+        recentTransactionRepository = new RecentTransactionRepository(application);
         this.application = application;
     }
 
     public List<Transaction> getAllTransactions(TransactionFilter transactionFilters, int pageNumber) {
         List<Transaction> transactions = new ArrayList<>();
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters, application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
         assert queryParms != null;
         int batchSize = AppConstants.BATCH_SIZE;
         String orderByArgs;
-        if(pageNumber<0) {
+        if (pageNumber < 0) {
             orderByArgs = "transaction_date DESC, create_date DESC";
-        }
-        else {
+        } else {
             orderByArgs = "transaction_date DESC, create_date DESC LIMIT <<batchSize>> OFFSET <<offset>>"
                     .replace("<<batchSize>>", String.valueOf(batchSize))
                     .replace("<<offset>>", String.valueOf((pageNumber - 1) * batchSize));
         }
-        try (Cursor cursor = db.query("SplitTransfers", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)){
+        try (Cursor cursor = db.query("SplitTransfers", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)) {
             if (cursor.moveToFirst()) {
                 do {
                     Transaction transaction = getTransactionFromCursor(cursor);
@@ -120,8 +123,8 @@ public class TransactionRepository {
             String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
             return new Transaction(transactionUUID, transactionName, transactionDateInt,
                     transactionType, category, notes, amount, accountName, toAccountName,
-                    createDateTime, lastUpdateDateTime, transferInd,recurringScheduleUUID,
-                    currencyCode,conversionFactor,primaryCurrencyCode);
+                    createDateTime, lastUpdateDateTime, transferInd, recurringScheduleUUID,
+                    currencyCode, conversionFactor, primaryCurrencyCode);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,39 +133,37 @@ public class TransactionRepository {
     }
 
     public void addTransaction(Transaction transaction) {
-        if (updateAccountBalances(transaction,TransactionRepository.INSERTS)) return;
+        if (updateAccountBalances(transaction, TransactionRepository.INSERTS)) return;
         try {
-            ContentValues values = getContentValues(transaction,TransactionRepository.INSERTS);
+            ContentValues values = getContentValues(transaction, TransactionRepository.INSERTS);
             db.insertOrThrow("transactions", null, values);
             recentTransactionRepository.updateRecentTransaction(transaction);
             this.recordCount = this.recordCount + 1;
-            if(this.recordCount%100==0){
-                Log.d("TransactionRepository",this.recordCount + "records added");
+            if (this.recordCount % 100 == 0) {
+                Log.d("TransactionRepository", this.recordCount + "records added");
             }
-        }
-        catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             throw new InterCurrencyTransferNotSupported(e.getMessage());
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     private void checkInterCurrencyTransfers(Transaction transaction) {
-        if(transaction.transferInd.equals("Transfer")) {
+        if (transaction.transferInd.equals("Transfer")) {
             Account accountFrom = accountRepository.getAccountByName(transaction.accountName);
             Account accountTo = accountRepository.getAccountByName(transaction.toAccountName);
-            if(!(accountFrom.currencyCode.equals(accountTo.currencyCode))){
-                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode,accountTo.currencyCode);
+            if (!(accountFrom.currencyCode.equals(accountTo.currencyCode))) {
+                throw new InterCurrencyTransferNotSupported(accountFrom.currencyCode, accountTo.currencyCode);
             }
         }
     }
 
     @NonNull
-    private ContentValues getContentValues(Transaction transaction,String operation) {
+    private ContentValues getContentValues(Transaction transaction, String operation) {
         checkInterCurrencyTransfers(transaction);
         ContentValues values = new ContentValues();
-        if(operation.equals(TransactionRepository.INSERTS)){
+        if (operation.equals(TransactionRepository.INSERTS)) {
             values.put("transaction_uuid", transaction.transactionUUID.toString());
             values.put("create_date", transaction.createDateTime);
         }
@@ -172,7 +173,7 @@ public class TransactionRepository {
         values.put("transfer_ind", transaction.transactionType);
         values.put("category", transaction.category);
         values.put("notes", transaction.notes);
-        values.put("amount", Math.round(transaction.amount*100.0)/100.0);
+        values.put("amount", Math.round(transaction.amount * 100.0) / 100.0);
         values.put("account_name", transaction.accountName);
         values.put("to_account_name", transaction.toAccountName);
         values.put("last_update_date", transaction.lastUpdateDateTime);
@@ -182,33 +183,34 @@ public class TransactionRepository {
 
     public void updateTransaction(Transaction transaction) {
         Transaction beforeTran = this.getTransactionById(transaction.transactionUUID);
-        if (updateAccountBalances(beforeTran,TransactionRepository.DELETES)) return;
-        if (updateAccountBalances(transaction,TransactionRepository.INSERTS)) return;
-        ContentValues values = getContentValues(transaction,TransactionRepository.UPDATES);
+        if (updateAccountBalances(beforeTran, TransactionRepository.DELETES)) return;
+        if (updateAccountBalances(transaction, TransactionRepository.INSERTS)) return;
+        ContentValues values = getContentValues(transaction, TransactionRepository.UPDATES);
         String whereClause = "transaction_uuid = ?";
         String[] whereArgs = new String[]{transaction.transactionUUID.toString()};
         try {
             int updatedCount = db.update("transactions", values, whereClause, whereArgs);
-            if(updatedCount<=0) throw new RuntimeException("Transaction not updated "+ transaction);
+            if (updatedCount <= 0)
+                throw new RuntimeException("Transaction not updated " + transaction);
             recentTransactionRepository.updateRecentTransaction(transaction);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void updateTransactionTableOnly(Transaction transaction) {
-        ContentValues values = getContentValues(transaction,TransactionRepository.UPDATES);
+        ContentValues values = getContentValues(transaction, TransactionRepository.UPDATES);
         String whereClause = "transaction_uuid = ?";
         String[] whereArgs = new String[]{transaction.transactionUUID.toString()};
         try {
             int updatedCount = db.update("transactions", values, whereClause, whereArgs);
-            if(updatedCount<=0) throw new RuntimeException("Transaction not updated "+ transaction);
-        }
-        catch (Exception e){
+            if (updatedCount <= 0)
+                throw new RuntimeException("Transaction not updated " + transaction);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private LocalDate convertIntToLocalDate(int dateInt) {
         try {
             String dateStr = String.valueOf(dateInt);
@@ -217,36 +219,39 @@ public class TransactionRepository {
             return null;
         }
     }
+
     public Transaction getTransactionById(UUID transactionUUID) {
         try (Cursor cursor = db.rawQuery("SELECT * FROM transactions_view WHERE transaction_uuid = ?", new String[]{transactionUUID.toString()})) {
             if (cursor.moveToFirst()) {
                 return getTransactionFromCursor(cursor);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
     public void deleteTransaction(Transaction transaction) {
         try {
-            if (updateAccountBalances(transaction,TransactionRepository.DELETES)) return;
+            if (updateAccountBalances(transaction, TransactionRepository.DELETES)) return;
             db.delete("transactions", "transaction_uuid = ?", new String[]{transaction.transactionUUID.toString()});
         } catch (RuntimeException ignored) {
 
         }
     }
-    public void deleteAll(){
+
+    public void deleteAll() {
         try {
             db.delete("transactions", null, null);
         } catch (RuntimeException ignored) {
         }
     }
-    private boolean updateAccountBalances(Transaction transaction,String operation) {
+
+    private boolean updateAccountBalances(Transaction transaction, String operation) {
         double modifiedAmount = transaction.amount;
         Transaction transactionActual = transaction;
         String transactionTypeActual = "";
-        if(operation.equals(TransactionRepository.INSERTS)){
+        if (operation.equals(TransactionRepository.INSERTS)) {
             modifiedAmount = 1 * modifiedAmount;
             transactionTypeActual = transaction.transactionType;
         } else if (operation.equals(TransactionRepository.DELETES)) {
@@ -290,10 +295,11 @@ public class TransactionRepository {
         }
         return false;
     }
+
     public void addTransactionsRaw(List<Transaction> transactions) {
         try {
             db.beginTransaction();
-            for(Transaction transaction : transactions){
+            for (Transaction transaction : transactions) {
                 try {
                     ContentValues values = getContentValues(transaction, TransactionRepository.INSERTS);
                     db.insertOrThrow("transactions", null, values);
@@ -301,27 +307,26 @@ public class TransactionRepository {
                     if (this.recordCount % 100 == 0) {
                         Log.d("TransactionRepository", this.recordCount + "records added");
                     }
-                }
-                catch (InterCurrencyTransferNotSupported e){
+                } catch (InterCurrencyTransferNotSupported e) {
                     e.printStackTrace();
                 }
             }
             db.setTransactionSuccessful();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             db.endTransaction();
         }
     }
-    public HashMap<String,Double> getAccountBalances() {
-        HashMap<String,Double> balances = new HashMap<>();
+
+    public HashMap<String, Double> getAccountBalances() {
+        HashMap<String, Double> balances = new HashMap<>();
         try (Cursor cursor = db.rawQuery("SELECT account_name," +
                 "SUM(CASE transaction_type " +
                 "WHEN 'Expense' THEN -1*amount " +
                 "WHEN 'Income'  THEN 1*amount " +
                 "END) as amount from SplitTransfers " +
-                "GROUP BY account_name", null)){
+                "GROUP BY account_name", null)) {
             if (cursor.moveToFirst()) {
                 do {
                     balances.put(
@@ -334,7 +339,7 @@ public class TransactionRepository {
     }
 
     public void deleteAllFilteredTransactions(TransactionFilter transactionFilters) {
-        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters,application);
+        HashMap<String, Object> queryAllData = TransactionFilterUtils.generateTransactionFilterQuery(transactionFilters, application);
         String queryString = Objects.requireNonNull(queryAllData.get("QUERY")).toString();
         //noinspection unchecked
         ArrayList<String> queryParms = (ArrayList<String>) queryAllData.get("VALUES");
@@ -348,24 +353,24 @@ public class TransactionRepository {
         recentTransactionRepository.updateAllRecentTransactions();
     }
 
-    public boolean checkScheduleInsertedForToday(RecurringSchedule recurringSchedule,LocalDate localDate) {
+    public boolean checkScheduleInsertedForToday(RecurringSchedule recurringSchedule, LocalDate localDate) {
         try (Cursor cursor = db.rawQuery("SELECT COUNT(*) count_1 FROM transactions " +
                 " WHERE recurring_schedule_uuid = ? " +
-                " AND transaction_date = ?",new String[]{recurringSchedule.recurringScheduleUUID.toString()
-        ,localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))})) {
+                " AND transaction_date = ?", new String[]{recurringSchedule.recurringScheduleUUID.toString()
+                , localDate.format(DateTimeFormatter.ofPattern("yyyyMMdd"))})) {
             int countData;
             if (cursor.moveToFirst()) {
                 countData = cursor.getInt(0);
-                if(countData>0){
+                if (countData > 0) {
                     return true;
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
+
     public LocalDate getLastRecurringTransactionInserted(RecurringSchedule recurringSchedule) {
         int transactionDateInt;
         LocalDate transactionDate = LocalDate.now();
@@ -374,8 +379,7 @@ public class TransactionRepository {
                 transactionDateInt = cursor.getInt(0);
                 transactionDate = LocalDate.parse(String.valueOf(transactionDateInt), DateTimeFormatter.ofPattern("yyyyMMdd"));
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             transactionDate = AppConstants.TRANSACTION_DATE_DUMMY;
         }
         return transactionDate;
@@ -388,8 +392,7 @@ public class TransactionRepository {
             var fieldContentValues = new ContentValues();
             fieldContentValues.put(fieldName, updatedValue);
             db.update("transactions", fieldContentValues, "transaction_uuid = ?", new String[]{transaction.transactionUUID.toString()});
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -397,30 +400,27 @@ public class TransactionRepository {
     public void updateTransactionFields(List<Transaction> transactions,
                                         String fieldName,
                                         String selectedText) {
-        if(fieldName.equals("account_name")){
+        if (fieldName.equals("account_name")) {
             for (Transaction transaction : transactions) {
-                if(transaction.transferInd.equals("Transfer")){
-                    if(!transaction.transactionType.equals("Income")){
-                        updateTransactionField(transaction,"account_name",selectedText);
+                if (transaction.transferInd.equals("Transfer")) {
+                    if (!transaction.transactionType.equals("Income")) {
+                        updateTransactionField(transaction, "account_name", selectedText);
                     }
-                }
-                else{
-                    updateTransactionField(transaction,"account_name",selectedText);
+                } else {
+                    updateTransactionField(transaction, "account_name", selectedText);
                 }
             }
-        }
-        else if(fieldName.equals("to_account_name")){
+        } else if (fieldName.equals("to_account_name")) {
             for (Transaction transaction : transactions) {
-                if(transaction.transferInd.equals("Transfer")){
-                    if(!transaction.transactionType.equals("Expense")){
-                        updateTransactionField(transaction,"to_account_name",selectedText);
+                if (transaction.transferInd.equals("Transfer")) {
+                    if (!transaction.transactionType.equals("Expense")) {
+                        updateTransactionField(transaction, "to_account_name", selectedText);
                     }
                 }
             }
-        }
-        else{
+        } else {
             for (Transaction transaction : transactions) {
-                updateTransactionField(transaction,fieldName,selectedText);
+                updateTransactionField(transaction, fieldName, selectedText);
             }
         }
         recentTransactionRepository.deleteAll();

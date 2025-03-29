@@ -5,24 +5,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".reports.ReportsHomeFragment">
+
     <TextView
         android:id="@+id/categorySummaryTextView"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/category_summary"
-        style="@style/LargeText"/>
+        android:text="@string/category_summary" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/balanceForecastTextView"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/balance_forecast_summary"
-        style="@style/LargeText"/>
+        android:text="@string/balance_forecast_summary" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
 </LinearLayout>

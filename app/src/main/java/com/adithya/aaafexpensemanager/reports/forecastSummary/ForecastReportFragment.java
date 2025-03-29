@@ -23,18 +23,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
+    private final TransactionFilter transactionFilter = new TransactionFilter();
     private LookupEditText timePeriodSelection;
     private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
     private RecyclerView reportsRecyclerView;
-    private final TransactionFilter transactionFilter = new TransactionFilter();
     private List<LookupEditText.LookupEditTextItem> timePeriods = new ArrayList<>();
     private Application application;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.application = requireActivity().getApplication();
-        View view =  inflater.inflate(R.layout.fragment_report_forecast_summary, container, false);
+        View view = inflater.inflate(R.layout.fragment_report_forecast_summary, container, false);
         assignLayoutComponents(view);
         setupTimePeriodSelection();
         setupFilterButton();
@@ -46,7 +47,7 @@ public class ForecastReportFragment extends Fragment {
         filterButton.setOnClickListener(v -> new TransactionFilterDialog(requireContext(),
                 requireActivity(),
                 transactionFilter,
-                filter-> loadReportData(),
+                filter -> loadReportData(),
                 false)
                 .showDialog());
     }
@@ -62,10 +63,11 @@ public class ForecastReportFragment extends Fragment {
         reportsRecyclerView.setAdapter(forecastReportAdapter);
     }
 
-    private void setDefaultTimePeriodSelection(){
+    private void setDefaultTimePeriodSelection() {
         timePeriodSelection.setText(timePeriods.get(0).toString());
         selectedTimePeriod = (ForecastTimePeriod) timePeriods.get(0);
     }
+
     private void setupTimePeriodSelection() {
         timePeriods = Arrays
                 .stream(ForecastConstants.ForecastTimePeriod.values())

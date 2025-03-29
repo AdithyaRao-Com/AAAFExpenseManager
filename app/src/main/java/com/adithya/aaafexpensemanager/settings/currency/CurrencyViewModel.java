@@ -39,18 +39,20 @@ public class CurrencyViewModel extends AndroidViewModel {
         List<Currency> currencyList = repository.getAllCurrencies();
         ((MutableLiveData<List<Currency>>) currencies).setValue(currencyList);
     }
+
     public void filterCurrencies(String searchText) {
         List<Currency> filteredCurrencies = repository.filterCurrencies(searchText);
         ((MutableLiveData<List<Currency>>) currencies).setValue(filteredCurrencies);
     }
-    public void setPrimaryCurrency(String currencyName) {
-        repository.setPrimaryCurrency(currencyName);
-        loadCurrencies();
-    }
+
     public String getPrimaryCurrency() {
         return repository.getPrimaryCurrency();
     }
 
+    public void setPrimaryCurrency(String currencyName) {
+        repository.setPrimaryCurrency(currencyName);
+        loadCurrencies();
+    }
 
     public void updateCurrency(Currency originalCurrency) throws CurrencyExistsException {
         repository.addCurrency(originalCurrency);

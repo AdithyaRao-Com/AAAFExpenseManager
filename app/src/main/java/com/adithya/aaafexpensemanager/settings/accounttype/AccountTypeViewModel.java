@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountTypeViewModel extends AndroidViewModel {
-    private List<AccountType> accountTypes = new ArrayList<>();
     private final AccountTypeRepository accountTypeRepository;
+    private List<AccountType> accountTypes = new ArrayList<>();
 
     public AccountTypeViewModel(Application application) {
         super(application);
@@ -24,18 +24,20 @@ public class AccountTypeViewModel extends AndroidViewModel {
     public List<AccountType> getAccountTypes() {
         return accountTypes;
     }
+
     public List<AccountType> filterAccountTypes(String searchText) {
         return accountTypeRepository.filterAccountTypes(searchText);
     }
+
     public void createAccountType(AccountType accountType) {
-        if(accountTypeRepository.getAccountTypeFromName(accountType.accountType)==null){
+        if (accountTypeRepository.getAccountTypeFromName(accountType.accountType) == null) {
             accountTypeRepository.createAccountType(accountType);
-        }
-        else{
+        } else {
             accountTypeRepository.updateAccountType(accountType);
         }
         loadAccountTypes();
     }
+
     public void deleteAccountType(String accountType) {
         accountTypeRepository.deleteAccountType(accountType);
         loadAccountTypes();

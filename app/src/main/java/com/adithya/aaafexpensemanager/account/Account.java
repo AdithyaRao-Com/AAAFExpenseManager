@@ -7,8 +7,21 @@ import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 
 import java.util.Objects;
 
-/** @noinspection unused*/
+/**
+ * @noinspection unused
+ */
 public class Account implements Parcelable {
+    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<>() {
+        @Override
+        public Account createFromParcel(Parcel in) {
+            return new Account(in);
+        }
+
+        @Override
+        public Account[] newArray(int size) {
+            return new Account[size];
+        }
+    };
     public String accountName;
     public String accountType;
     public double accountBalance;
@@ -19,7 +32,7 @@ public class Account implements Parcelable {
     public boolean doNotShowInDropdownInd;
 
     public Account(String accountName, String accountType, double accountBalance,
-                   String accountTags,int displayOrder,String currencyCode,boolean closeAccountInd,
+                   String accountTags, int displayOrder, String currencyCode, boolean closeAccountInd,
                    boolean doNotShowInDropdownInd) {
         this.accountName = accountName;
         this.accountType = accountType;
@@ -59,18 +72,6 @@ public class Account implements Parcelable {
         dest.writeByte((byte) (doNotShowInDropdownInd ? 1 : 0));
     }
 
-    public static final Parcelable.Creator<Account> CREATOR = new Parcelable.Creator<>() {
-        @Override
-        public Account createFromParcel(Parcel in) {
-            return new Account(in);
-        }
-
-        @Override
-        public Account[] newArray(int size) {
-            return new Account[size];
-        }
-    };
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -84,10 +85,11 @@ public class Account implements Parcelable {
         return Objects.hashCode(accountName);
     }
 
-    public String accountBalanceToIndianFormat(){
-        return CurrencyFormatter.formatIndianStyle(accountBalance,currencyCode);
+    public String accountBalanceToIndianFormat() {
+        return CurrencyFormatter.formatIndianStyle(accountBalance, currencyCode);
     }
-    public String accountBalanceToStandardFormat(){
-        return CurrencyFormatter.formatStandardStyle(accountBalance,currencyCode);
+
+    public String accountBalanceToStandardFormat() {
+        return CurrencyFormatter.formatStandardStyle(accountBalance, currencyCode);
     }
 }

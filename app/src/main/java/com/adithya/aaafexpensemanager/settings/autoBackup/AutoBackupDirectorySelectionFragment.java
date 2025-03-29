@@ -22,11 +22,15 @@ import androidx.fragment.app.Fragment;
 
 import com.adithya.aaafexpensemanager.R;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class AutoBackupDirectorySelectionFragment extends Fragment {
 
     private TextView selectedDirectoryTextView;
-    /** @noinspection FieldCanBeLocal*/
+    /**
+     * @noinspection FieldCanBeLocal
+     */
     private Button selectDirectoryButton;
     private Uri selectedDirectoryUri;
     private CheckBox autoBackupEnabledCheckBox;

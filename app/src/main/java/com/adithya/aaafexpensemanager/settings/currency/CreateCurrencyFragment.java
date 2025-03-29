@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** @noinspection FieldCanBeLocal, DataFlowIssue */
+/**
+ * @noinspection FieldCanBeLocal, DataFlowIssue
+ */
 public class CreateCurrencyFragment extends Fragment {
     private CurrencyViewModel viewModel;
     private EditText currencyNameEditText;
@@ -40,7 +42,10 @@ public class CreateCurrencyFragment extends Fragment {
     private Currency originalCurrency;
     private MenuItem deleteMenuItem;
     private boolean isEditing = false;
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,8 +78,8 @@ public class CreateCurrencyFragment extends Fragment {
                     conversionFactorEditText.setError("Conversion factor cannot be empty");
                     return;
                 }
-                try{
-                    conversionFactor = (double) Math.round(Double.parseDouble(conversionFactorString) * 1000000.0) /1000000.0;
+                try {
+                    conversionFactor = (double) Math.round(Double.parseDouble(conversionFactorString) * 1000000.0) / 1000000.0;
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -87,8 +92,7 @@ public class CreateCurrencyFragment extends Fragment {
                     viewModel.addCurrency(newCategory);
                 }
                 Navigation.findNavController(requireView()).navigate(R.id.action_createCurrencyFragment_to_currencyFragment);
-            }
-            catch (CurrencyExistsException e) {
+            } catch (CurrencyExistsException e) {
                 //noinspection DataFlowIssue
                 Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_SHORT).show();
             }
@@ -104,7 +108,9 @@ public class CreateCurrencyFragment extends Fragment {
         currencyNameEditText.setFilters(newFilters);
     }
 
-    /** @noinspection SameParameterValue*/
+    /**
+     * @noinspection SameParameterValue
+     */
     private void setEditTextEnabled(EditText editTextField, boolean enabledFlag) {
         editTextField.setEnabled(enabledFlag);
         editTextField.setFocusable(enabledFlag);
@@ -125,14 +131,16 @@ public class CreateCurrencyFragment extends Fragment {
 
             @Override
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId()==R.id.action_delete_currency){
+                if (menuItem.getItemId() == R.id.action_delete_currency) {
                     new ConfirmationDialog(getContext(),
                             "Delete Currency",
                             "Are you sure you want to delete this currency? \n",
-                            ()-> {
+                            () -> {
                                 viewModel.deleteCurrency(originalCurrency);
-                                Navigation.findNavController(getView()).navigate(R.id.nav_currency);},
-                            ()->{},
+                                Navigation.findNavController(getView()).navigate(R.id.nav_currency);
+                            },
+                            () -> {
+                            },
                             "Delete",
                             "Cancel"
                     );
@@ -140,12 +148,13 @@ public class CreateCurrencyFragment extends Fragment {
                 }
                 return false;
             }
-        },getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
+
     private void setOptions(boolean isEditing) {
         try {
             deleteMenuItem.setVisible(isEditing);
+        } catch (Exception ignored) {
         }
-        catch (Exception ignored){}
     }
 }

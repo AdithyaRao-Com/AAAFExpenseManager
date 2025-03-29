@@ -6,16 +6,29 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class Currency implements Parcelable {
+    public static final Creator<Currency> CREATOR = new Creator<>() {
+        @Override
+        public Currency createFromParcel(Parcel in) {
+            return new Currency(in);
+        }
+
+        @Override
+        public Currency[] newArray(int size) {
+            return new Currency[size];
+        }
+    };
     public String currencyName;
     public boolean isPrimary;
     public double conversionFactor;
     public String primaryCurrencyName;
-    public Currency(String currencyName, boolean isPrimary, double conversionFactor,String primaryCurrencyName) {
+
+    public Currency(String currencyName, boolean isPrimary, double conversionFactor, String primaryCurrencyName) {
         this.currencyName = currencyName;
         this.isPrimary = isPrimary;
         this.conversionFactor = conversionFactor;
         this.primaryCurrencyName = primaryCurrencyName;
     }
+
     public Currency(String currencyName, double conversionFactor) {
         this.currencyName = currencyName;
         this.isPrimary = false;
@@ -28,18 +41,6 @@ public class Currency implements Parcelable {
         conversionFactor = in.readDouble();
         primaryCurrencyName = in.readString();
     }
-
-    public static final Creator<Currency> CREATOR = new Creator<>() {
-        @Override
-        public Currency createFromParcel(Parcel in) {
-            return new Currency(in);
-        }
-
-        @Override
-        public Currency[] newArray(int size) {
-            return new Currency[size];
-        }
-    };
 
     @Override
     public int describeContents() {

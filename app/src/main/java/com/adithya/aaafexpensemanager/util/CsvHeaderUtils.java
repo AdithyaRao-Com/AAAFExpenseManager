@@ -1,4 +1,5 @@
 package com.adithya.aaafexpensemanager.util;
+
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
@@ -55,7 +56,7 @@ public class CsvHeaderUtils {
                 CSVParser parser = CSVParser.parse(reader, format);
 
                 CSVRecord firstRecord = parser.iterator().next();
-                for(int i = 0; i < firstRecord.size(); i++){
+                for (int i = 0; i < firstRecord.size(); i++) {
                     headers.add("Column " + (i + 1));
                 }
 

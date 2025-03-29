@@ -1,80 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/timePeriodSelectionTextInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:hint="@string/time_period"
                     app:layout_constraintEnd_toStartOf="@id/filterButtonWrapper"
-                    app:layout_constraintTop_toTopOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="@string/time_period">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
                         android:id="@+id/timePeriodSelection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         tools:ignore="TouchTargetSizeCheck,TextContrastCheck,VisualLintTextFieldSize" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/filterButtonWrapper"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:hint="@string/filter_parameters"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:hint="@string/filter_parameters">
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <Button
                         android:id="@+id/filterButton"
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:layout_marginTop="20dp"
                         android:layout_marginStart="20dp"
+                        android:layout_marginTop="20dp"
                         android:background="@mipmap/ic_filter_green_foreground"
                         android:backgroundTint="@color/white"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
                 </com.google.android.material.textfield.TextInputLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                    android:layout_gravity="center">
+
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/timePeriodTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:textAlignment="center" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reportsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/separator_color"/>
+                android:background="@color/separator_color" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

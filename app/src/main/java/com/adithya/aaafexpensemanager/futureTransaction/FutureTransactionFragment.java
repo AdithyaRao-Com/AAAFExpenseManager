@@ -25,15 +25,18 @@ import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FutureTransactionFragment extends Fragment implements TransactionFilterDialog.OnFilterAppliedListener{
+public class FutureTransactionFragment extends Fragment implements TransactionFilterDialog.OnFilterAppliedListener {
+    public TransactionFilter transactionFilter;
+    public int currentPage = 1;
     private FutureTransactionViewModel viewModel;
     private RecyclerView transactionsRecyclerView;
     private Button filterButton;
     private FutureTransactionsAdapter adapter;
-    public TransactionFilter transactionFilter;
-    public int currentPage = 1;
     private boolean isLoading = false;
-    /** @noinspection deprecation*/
+
+    /**
+     * @noinspection deprecation
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_transaction, container, false);
@@ -47,8 +50,7 @@ public class FutureTransactionFragment extends Fragment implements TransactionFi
             if (getArguments().getParcelable("recurringSchedule") != null) {
                 RecurringSchedule recurringSchedule = getArguments().getParcelable("recurringSchedule");
                 viewModel.setRecurringSchedule(recurringSchedule);
-            }
-            else{
+            } else {
                 viewModel.setRecurringSchedule(null);
             }
         }
@@ -59,25 +61,27 @@ public class FutureTransactionFragment extends Fragment implements TransactionFi
                 this,
                 viewModel);
         transactionsRecyclerView.setAdapter(adapter);
-        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter,currentPage).getValue());
+        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter, currentPage).getValue());
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String searchText = s.toString();
                 if (searchText.isEmpty()) {
                     transactionFilter.searchText = "";
-                    currentPage=1;
-                    viewModel.getFutureTransactions(transactionFilter,currentPage).getValue();
+                    currentPage = 1;
+                    viewModel.getFutureTransactions(transactionFilter, currentPage).getValue();
                 } else {
                     transactionFilter.searchText = searchText;
-                    currentPage=1;
-                    updateRecyclerView(viewModel.getFutureTransactions(transactionFilter,currentPage).getValue());
+                    currentPage = 1;
+                    updateRecyclerView(viewModel.getFutureTransactions(transactionFilter, currentPage).getValue());
                 }
                 checkSetToggleFilter();
             }
+
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -95,34 +99,35 @@ public class FutureTransactionFragment extends Fragment implements TransactionFi
                     if (!isLoading && (firstVisibleItemPosition + visibleItemCount >= totalItemCount) && totalItemCount > 0) {
                         isLoading = true;
                         currentPage++;
-                        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter,currentPage).getValue());
+                        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter, currentPage).getValue());
                         isLoading = false;
                     }
                 }
             }
         });
-        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this,true).showDialog());
+        filterButton.setOnClickListener((view1) -> new TransactionFilterDialog(requireContext(), requireActivity(), transactionFilter, this, true).showDialog());
         return view;
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        currentPage=1;
-        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter,currentPage).getValue());
+        currentPage = 1;
+        updateRecyclerView(viewModel.getFutureTransactions(transactionFilter, currentPage).getValue());
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public void updateRecyclerView(List<FutureTransaction> transactions) {
         if (adapter == null) {
-            adapter = new FutureTransactionsAdapter(transactions,this,viewModel);
+            adapter = new FutureTransactionsAdapter(transactions, this, viewModel);
             transactionsRecyclerView.setAdapter(adapter);
-        }
-        else if(currentPage==1){
+        } else if (currentPage == 1) {
             adapter.setTransactions(transactions);
-        }else {
+        } else {
             adapter.addTransactions(transactions);
         }
     }
+
     @Override
     public void onFilterApplied(TransactionFilter filter) {
         this.transactionFilter = filter;
@@ -136,15 +141,15 @@ public class FutureTransactionFragment extends Fragment implements TransactionFi
         updateRecyclerView(viewModel.getFutureTransactions(transactionFilter, currentPage).getValue());
         checkSetToggleFilter();
     }
-    private void checkSetToggleFilter(){
-        if(filterButton==null){
+
+    private void checkSetToggleFilter() {
+        if (filterButton == null) {
             //noinspection DataFlowIssue
             filterButton = getView().findViewById(R.id.button);
         }
-        if(transactionFilter!=null && !transactionFilter.isEmpty()){
+        if (transactionFilter != null && !transactionFilter.isEmpty()) {
             filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.filter_enabled)));
-        }
-        else{
+        } else {
             filterButton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.filter_disabled)));
         }
     }

@@ -5,54 +5,64 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".settings.SettingsFragment">
+
     <TextView
         android:id="@+id/account_type_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/manage_account_types"
-        style="@style/LargeText"/>
+        android:text="@string/manage_account_types" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/categories_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/manage_categories"
-        style="@style/LargeText"/>
+        android:text="@string/manage_categories" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/currencies_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/manage_currencies"
-        style="@style/LargeText"/>
+        android:text="@string/manage_currencies" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/import_export_home_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/import_export"
-        style="@style/LargeText"/>
+        android:text="@string/import_export" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/future_transactions_text_view"
+        style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/future_transactions"
-        style="@style/LargeText"/>
+        android:text="@string/future_transactions" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/separator_color"/>
+        android:background="@color/separator_color" />
 </LinearLayout>

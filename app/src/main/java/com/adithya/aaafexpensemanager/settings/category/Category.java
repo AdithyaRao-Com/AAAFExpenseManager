@@ -7,12 +7,22 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Category implements Parcelable {
+    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
+        @Override
+        public Category createFromParcel(Parcel in) {
+            return new Category(in);
+        }
+
+        @Override
+        public Category[] newArray(int size) {
+            return new Category[size];
+        }
+    };
     public UUID categoryUUID;
     public String categoryName;
-
     public String parentCategory;
 
-    public Category(String categoryName,String parentCategory) {
+    public Category(String categoryName, String parentCategory) {
         this.categoryUUID = UUID.randomUUID();
         this.categoryName = categoryName;
         this.parentCategory = parentCategory;
@@ -43,18 +53,6 @@ public class Category implements Parcelable {
         dest.writeString(categoryName);
         dest.writeString(parentCategory);
     }
-
-    public static final Parcelable.Creator<Category> CREATOR = new Parcelable.Creator<Category>() {
-        @Override
-        public Category createFromParcel(Parcel in) {
-            return new Category(in);
-        }
-
-        @Override
-        public Category[] newArray(int size) {
-            return new Category[size];
-        }
-    };
 
     @Override
     public boolean equals(Object o) {

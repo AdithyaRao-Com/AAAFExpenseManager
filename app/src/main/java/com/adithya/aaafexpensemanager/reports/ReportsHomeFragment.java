@@ -19,13 +19,13 @@ public class ReportsHomeFragment extends Fragment {
         TextView categorySummaryTextView = view.findViewById(R.id.categorySummaryTextView);
         //noinspection unused
         TextView balanceForecastTextView = view.findViewById(R.id.balanceForecastTextView);
-        categorySummaryTextView.setOnClickListener(v->{
+        categorySummaryTextView.setOnClickListener(v -> {
             //noinspection DataFlowIssue
             NavHostFragment
                     .findNavController(getParentFragment())
                     .navigate(R.id.action_reportsHomeFragment_to_categorySummaryFragment);
         });
-        balanceForecastTextView.setOnClickListener( v->{
+        balanceForecastTextView.setOnClickListener(v -> {
             //noinspection DataFlowIssue
             NavHostFragment
                     .findNavController(getParentFragment())

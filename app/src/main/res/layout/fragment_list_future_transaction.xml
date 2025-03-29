@@ -4,19 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="0dp"
-            android:layout_weight="10"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="10"
             android:hint="@string/search"
             android:inputType="text"
-            android:layout_marginBottom="8dp"
             tools:ignore="Autofill,VisualLintTextFieldSize" />
+
         <Button
             android:id="@+id/button"
             android:layout_width="0dp"
@@ -26,6 +29,7 @@
             android:backgroundTint="@color/white"
             tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/transactionsRecyclerView"
         android:layout_width="match_parent"

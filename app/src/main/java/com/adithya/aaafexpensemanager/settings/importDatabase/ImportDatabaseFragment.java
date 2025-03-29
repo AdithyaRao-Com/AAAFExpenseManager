@@ -24,7 +24,9 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class ImportDatabaseFragment extends Fragment {
 
     private Button selectFileButton;
