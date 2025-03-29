@@ -42,9 +42,7 @@ public class MultiSelectLookupAdapter extends RecyclerView.Adapter<MultiSelectLo
         String item = filteredItems.get(position);
         holder.checkBox.setText(item);
         holder.checkBox.setChecked(selectedItems.contains(item));
-        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            onItemCheckedChangeListener.onItemCheckedChange(item, isChecked);
-        });
+        holder.checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> onItemCheckedChangeListener.onItemCheckedChange(item, isChecked));
     }
 
     @Override
@@ -77,6 +75,7 @@ public class MultiSelectLookupAdapter extends RecyclerView.Adapter<MultiSelectLo
             @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
+                //noinspection unchecked
                 filteredItems = (List<String>) results.values;
                 notifyDataSetChanged();
             }

@@ -10,6 +10,7 @@ import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+/** @noinspection FieldCanBeLocal*/
 public class AccountTypeRepository {
     private final DatabaseHelper dbHelper;
     private final SQLiteDatabase db;
@@ -28,14 +29,12 @@ public class AccountTypeRepository {
     public List<AccountType> getAccountTypes() {
         List<AccountType> accountTypes = new ArrayList<>();
         Cursor cursor = db.query("account_types", null, null, null, null, null, "account_type_display_order ASC");
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    accountTypes.add(getAccountTypesFromCursor(cursor));
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
+        if (cursor.moveToFirst()) {
+            do {
+                accountTypes.add(getAccountTypesFromCursor(cursor));
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return accountTypes;
     }
 
@@ -44,14 +43,12 @@ public class AccountTypeRepository {
         String selection = "account_type LIKE ?";
         String[] selectionArgs = new String[]{"%" + searchText + "%"}; // Use wildcards for "contains"
         Cursor cursor = db.query("account_types", null, selection, selectionArgs, null, null, "account_type_display_order ASC");
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    filteredAccounts.add(getAccountTypesFromCursor(cursor));
-                } while (cursor.moveToNext());
-            }
-            cursor.close();
+        if (cursor.moveToFirst()) {
+            do {
+                filteredAccounts.add(getAccountTypesFromCursor(cursor));
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return filteredAccounts;
     }
 
@@ -86,12 +83,10 @@ public class AccountTypeRepository {
     public AccountType getAccountTypeFromName(String accountTypeName) {
         Cursor cursor = db.query("account_types", null, "account_type = ?", new String[]{accountTypeName}, null, null, null);
         AccountType accountType = null;
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                accountType = getAccountTypesFromCursor(cursor);
-            }
-            cursor.close();
+        if (cursor.moveToFirst()) {
+            accountType = getAccountTypesFromCursor(cursor);
         }
+        cursor.close();
         return accountType;
     }
 }

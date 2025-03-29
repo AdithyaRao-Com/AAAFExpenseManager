@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight"></style>
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight" />
 
     <style name="LargeText" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textSize">@dimen/large_text_size</item>

@@ -18,7 +18,7 @@ import com.adithya.aaafexpensemanager.recurring.RecurringRepository;
 import com.adithya.aaafexpensemanager.settings.SettingsRepository;
 import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackUpSharedPrefs;
 import com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupSchedule;
-import com.adithya.aaafexpensemanager.settings.exportDatabase.DatabaseExporter;
+import com.adithya.aaafexpensemanager.settings.importExportDatabase.DatabaseExporter;
 import com.adithya.aaafexpensemanager.util.UriUtils;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.importdata;
+package com.adithya.aaafexpensemanager.settings.importExportCSV;
 
 import com.adithya.aaafexpensemanager.account.Account;
 import com.adithya.aaafexpensemanager.settings.category.Category;

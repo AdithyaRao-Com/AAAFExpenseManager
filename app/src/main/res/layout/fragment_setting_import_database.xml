@@ -15,14 +15,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="No file selected" />
+        android:text="@string/no_file_selected" />
 
     <Button
         android:id="@+id/importButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Import Database" />
+        android:text="@string/import_database" />
 
     <TextView
         android:id="@+id/importStatusTextView"

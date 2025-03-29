@@ -124,4 +124,7 @@
     <string name="period_name">Period Name</string>
     <string name="from_date">From Date</string>
     <string name="to_date">To Date</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="upload_and_process">Upload and Process</string>
+    <string name="new_item">New Item</string>
 </resources>

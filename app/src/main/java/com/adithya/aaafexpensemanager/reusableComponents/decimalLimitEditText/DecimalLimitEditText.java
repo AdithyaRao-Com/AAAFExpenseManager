@@ -47,7 +47,7 @@ public class DecimalLimitEditText extends TextInputEditText {
         setFilters(new InputFilter[]{new DecimalDigitsInputFilter(decimalPlaces)});
     }
 
-    public class DecimalDigitsInputFilter implements InputFilter {
+    public static class DecimalDigitsInputFilter implements InputFilter {
         private final int decimalDigits;
 
         public DecimalDigitsInputFilter(int decimalDigits) {
@@ -74,6 +74,7 @@ public class DecimalLimitEditText extends TextInputEditText {
                 if (dend <= dotPos) {
                     return null;
                 }
+                //noinspection ConstantValue
                 if (len - dotPos >= decimalDigits + 1 && dend > dotPos) { //added dend > dotpos to prevent cut off when deleting whole numbers.
                     return "";
                 }

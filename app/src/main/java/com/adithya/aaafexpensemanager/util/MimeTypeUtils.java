@@ -8,7 +8,6 @@ public class MimeTypeUtils {
 
     public static String getMimeType(Context context, Uri uri) {
         ContentResolver cR = context.getContentResolver();
-        String mime = cR.getType(uri);
-        return mime;
+        return cR.getType(uri);
     }
 }

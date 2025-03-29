@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.settings.importDatabase;
+package com.adithya.aaafexpensemanager.settings.importExportDatabase;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/** @noinspection CallToPrintStackTrace*/
 public class LockedFileReplace {
     public static void replaceLockedFile(Path sourceFilePath, Path destinationFilePath) throws IOException {
 

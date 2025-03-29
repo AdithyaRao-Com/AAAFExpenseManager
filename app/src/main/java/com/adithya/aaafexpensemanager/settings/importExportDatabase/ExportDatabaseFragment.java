@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.settings.exportDatabase;
+package com.adithya.aaafexpensemanager.settings.importExportDatabase;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.settings.importDatabase;
+package com.adithya.aaafexpensemanager.settings.importExportDatabase;
 
 import android.content.Context;
 import android.net.Uri;

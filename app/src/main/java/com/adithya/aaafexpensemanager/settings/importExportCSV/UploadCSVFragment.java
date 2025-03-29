@@ -1,4 +1,4 @@
-package com.adithya.aaafexpensemanager.settings.importCSV;
+package com.adithya.aaafexpensemanager.settings.importExportCSV;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,7 +21,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.adithya.aaafexpensemanager.R;
-import com.adithya.aaafexpensemanager.importdata.ImportCSVParser;
 import com.adithya.aaafexpensemanager.util.CsvFileTypeDetector;
 import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
 import com.google.android.material.snackbar.Snackbar;

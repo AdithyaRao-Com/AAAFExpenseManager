@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @noinspection unused
+ * @noinspection unused, CallToPrintStackTrace
  */
 public class ExcelToCsvConverter {
 
@@ -67,10 +67,6 @@ public class ExcelToCsvConverter {
 
             String csvFileName = "converted_" + System.currentTimeMillis() + ".csv";
             File csvFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), csvFileName);
-            if (csvFile == null) {
-                errorMessage = "Failed to create file in download directory";
-                return null;
-            }
             fileOutputStream = new FileOutputStream(csvFile);
             writer = new OutputStreamWriter(fileOutputStream);
 
@@ -111,6 +107,7 @@ public class ExcelToCsvConverter {
             return Uri.fromFile(csvFile);
 
         } catch (Exception e) {
+            //noinspection CallToPrintStackTrace
             e.printStackTrace();
             errorMessage = "Conversion failed: " + e.getMessage();
             return null;

@@ -12,8 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.UUID;
 
+/** @noinspection CallToPrintStackTrace*/
 public class FutureTransaction implements Parcelable {
-    public static final Parcelable.Creator<FutureTransaction> CREATOR = new Parcelable.Creator<FutureTransaction>() {
+    public static final Parcelable.Creator<FutureTransaction> CREATOR = new Parcelable.Creator<>() {
         @Override
         public FutureTransaction createFromParcel(Parcel in) {
             return new FutureTransaction(in);

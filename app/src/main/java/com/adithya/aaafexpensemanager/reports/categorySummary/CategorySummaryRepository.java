@@ -67,6 +67,7 @@ public class CategorySummaryRepository {
             categorySummaryTxnRecordHashMap.put(categorySummaryHashCode, categorySummaryTxnRecord);
         }
         List<CategorySummaryRecord> records = categorySummaryTxnRecordHashMap.values().stream().toList();
+        //noinspection ReplaceNullCheck
         if (records == null) {
             return new ArrayList<>();
         } else {

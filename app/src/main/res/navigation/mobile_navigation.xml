@@ -206,12 +206,12 @@
     </fragment>
     <fragment
         android:id="@+id/nav_export_database"
-        android:name="com.adithya.aaafexpensemanager.settings.exportDatabase.ExportDatabaseFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportDatabase.ExportDatabaseFragment"
         android:label="Export Database"
         tools:layout="@layout/fragment_setting_export_database" />
     <fragment
         android:id="@+id/nav_import_database"
-        android:name="com.adithya.aaafexpensemanager.settings.importDatabase.ImportDatabaseFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportDatabase.ImportDatabaseFragment"
         android:label="Import Database"
         tools:layout="@layout/fragment_setting_import_database" />
     <fragment
@@ -234,7 +234,7 @@
         android:id="@+id/nav_balance_forecast"
         android:name="com.adithya.aaafexpensemanager.reports.forecastSummary.ForecastReportFragment"
         android:label="Balance Forecast"
-        tools:layout="@layout/fragment_report_forecast_summary"></fragment>
+        tools:layout="@layout/fragment_report_forecast_summary" />
     <fragment
         android:id="@+id/nav_category_summary"
         android:name="com.adithya.aaafexpensemanager.reports.categorySummary.CategorySummaryFragment"
@@ -259,14 +259,14 @@
     </fragment>
     <fragment
         android:id="@+id/nav_import_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importCSV.UploadCSVFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.UploadCSVFragment"
         android:label="Import CSV"
-        tools:layout="@layout/fragment_setting_upload_csv"></fragment>
+        tools:layout="@layout/fragment_setting_upload_csv" />
     <fragment
         android:id="@+id/nav_autobackup_dir_sel"
         android:name="com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupDirectorySelectionFragment"
         android:label="Auto Backup"
-        tools:layout="@layout/fragment_setting_autobackup_directory_selection"></fragment>
+        tools:layout="@layout/fragment_setting_autobackup_directory_selection" />
     <fragment
         android:id="@+id/nav_currency"
         android:name="com.adithya.aaafexpensemanager.settings.currency.CurrencyFragment"
