@@ -185,8 +185,8 @@ public class CategorySummaryFragment extends Fragment {
                     return true;
                 } else if (menuItem.getItemId() == R.id.action_show_data_chart) {
                     Bundle args = new Bundle();
+                    transactionFilter.periodName = selectedTimePeriod.name();
                     args.putParcelable("transactionFilter", transactionFilter);
-                    args.putString("timePeriod", selectedTimePeriod.name());
                     Navigation.findNavController(view).navigate(R.id.action_categorySummaryFragment_to_categorySummaryChartFragment, args);
                     return true;
                 }
@@ -202,11 +202,26 @@ public class CategorySummaryFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             this.transactionFilter = args.getParcelable("transactionFilter");
-            String timePeriodString = args.getString("timePeriod");
+            assert this.transactionFilter != null;
+            String timePeriodString = this.transactionFilter.periodName;
             if (timePeriodString != null) {
-                this.selectedTimePeriod = CategorySummaryRecord.TimePeriod.valueOf(timePeriodString);
+                this.selectedTimePeriod = getSelectedPeriodEnum(timePeriodString);
                 this.selectedLocalDate = transactionFilter.fromTransactionDateToLocalDate();
             }
         }
+    }
+    private CategorySummaryRecord.TimePeriod getSelectedPeriodEnum(String selectedTimePeriodString){
+        try{
+            CategorySummaryRecord.TimePeriod.valueOf(selectedTimePeriodString);
+        }
+        catch (Exception e){
+            CategorySummaryRecord.TimePeriod[] l1= CategorySummaryRecord.TimePeriod.values();
+            for(CategorySummaryRecord.TimePeriod listItem:l1){
+                if(listItem.toString().equals(selectedTimePeriodString)){
+                    return listItem;
+                }
+            }
+        }
+        return null;
     }
 }

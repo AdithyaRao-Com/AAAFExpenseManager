@@ -337,5 +337,15 @@
             app:destination="@id/nav_create_saved_report"
             app:popUpTo="@id/nav_create_saved_report"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_transactionFilterListFragment_to_balanceForecastFragment"
+            app:destination="@id/nav_balance_forecast"
+            app:popUpTo="@id/nav_balance_forecast"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_transactionFilterListFragment_to_categorySummaryFragment"
+            app:destination="@id/nav_category_summary"
+            app:popUpTo="@id/nav_category_summary"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
-    private final TransactionFilter transactionFilter = new TransactionFilter();
+    private TransactionFilter transactionFilter = new TransactionFilter();
     private LookupEditText timePeriodSelection;
     private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
@@ -37,10 +37,26 @@ public class ForecastReportFragment extends Fragment {
         this.application = requireActivity().getApplication();
         View view = inflater.inflate(R.layout.fragment_report_forecast_summary, container, false);
         assignLayoutComponents(view);
+        parseArgs();
         setupTimePeriodSelection();
         setupFilterButton();
         loadReportData();
         return view;
+    }
+
+    private void parseArgs() {
+        Bundle args = getArguments();
+        if (args != null) {
+            //noinspection deprecation
+            transactionFilter = args.getParcelable("transactionFilter");
+            assert transactionFilter != null;
+            String selectedTimePeriodString = transactionFilter.periodName;
+            selectedTimePeriod = getSelectedPeriodEnum(selectedTimePeriodString);
+        }
+        else {
+            setDefaultTimePeriodSelection();
+            transactionFilter = new TransactionFilter();
+        }
     }
 
     private void setupFilterButton() {
@@ -72,8 +88,8 @@ public class ForecastReportFragment extends Fragment {
         timePeriods = Arrays
                 .stream(ForecastConstants.ForecastTimePeriod.values())
                 .collect(Collectors.toList());
-        setDefaultTimePeriodSelection();
         timePeriodSelection.setItems(timePeriods);
+        timePeriodSelection.setText(selectedTimePeriod.toString());
         timePeriodSelection.setOnItemClickListener((selectedItem, position) -> {
             selectedTimePeriod = (ForecastTimePeriod) selectedItem;
             loadReportData();
@@ -84,5 +100,20 @@ public class ForecastReportFragment extends Fragment {
         timePeriodSelection = view.findViewById(R.id.timePeriodSelection);
         filterButton = view.findViewById(R.id.filterButton);
         reportsRecyclerView = view.findViewById(R.id.reportsRecyclerView);
+    }
+
+    private ForecastTimePeriod getSelectedPeriodEnum(String selectedTimePeriodString){
+        try{
+            ForecastTimePeriod.valueOf(selectedTimePeriodString);
+        }
+        catch (Exception e){
+            ForecastTimePeriod[] l1= ForecastTimePeriod.values();
+            for(ForecastTimePeriod listItem:l1){
+                if(listItem.toString().equals(selectedTimePeriodString)){
+                    return listItem;
+                }
+            }
+        }
+        return null;
     }
 }
