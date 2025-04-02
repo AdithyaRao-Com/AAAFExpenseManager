@@ -14,7 +14,6 @@ import java.util.Objects;
 
 /** @noinspection FieldCanBeLocal*/
 public class QIFImporter {
-    // TODO - Build UI for QIF Importer
     // TODO - Test functionality for QIF Importer
     private final QIFImportExportRepository repository;
     private final Application application;

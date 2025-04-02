@@ -1,7 +1,6 @@
 package com.adithya.aaafexpensemanager.settings.importExportQIF;
 
 import android.app.Application;
-import android.content.Context;
 import android.net.Uri;
 
 import java.io.BufferedWriter;
@@ -13,7 +12,6 @@ import java.util.List;
 
 /** @noinspection CallToPrintStackTrace, FieldCanBeLocal */
 public class QIFExporter {
-    // TODO - Build UI for QIF Exporter
     // TODO - Test functionality for QIF Exporter
     private final QIFImportExportRepository repository;
     private final Application application;
@@ -21,10 +19,11 @@ public class QIFExporter {
         this.application = application;
         repository = new QIFImportExportRepository(application);
     }
-    public boolean generateQIF(Uri fileUri, Context context) {
+    /** @noinspection UnusedReturnValue*/
+    public boolean generateQIF(Uri fileUri) {
         List<QIFImportExportRecord> records = repository.getAllQIFImportExportRecords();
         try {
-            OutputStream outputStream = context.getContentResolver().openOutputStream(fileUri);
+            OutputStream outputStream = application.getContentResolver().openOutputStream(fileUri);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
             writeQIFHeader(writer);
             writeTransactions(writer,records);

@@ -6,28 +6,30 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/selectFileButton"
+        android:id="@+id/selectQifFileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Select Database Zip File"
+        android:text="Select QIF Export Location"
         tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/fileSelectedTextView"
+        android:id="@+id/qifFileSelectedTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/no_file_selected" />
+        android:text="No location selected"
+        tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/importButton"
+        android:id="@+id/exportQifButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/import_database" />
+        android:text="Export QIF"
+        tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/importStatusTextView"
+        android:id="@+id/exportQifStatusTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

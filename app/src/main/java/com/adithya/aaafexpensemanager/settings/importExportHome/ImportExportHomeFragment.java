@@ -18,8 +18,8 @@ import com.adithya.aaafexpensemanager.R;
  */
 public class ImportExportHomeFragment extends Fragment {
     //TODO - Export CSV Feature
-    //TODO - Import QIF
-    //TODO - Export QIF
+    //TODO - Import Recurring Schedules CSV
+    //TODO - Export Recurring Schedules CSV
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
     private TextView exportCSVTextView;
@@ -33,19 +33,19 @@ public class ImportExportHomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_import_export_home, container, false);
         exportDatabaseTextView = view.findViewById(R.id.export_database_text_view);
-        exportDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_exportDatabaseFragment));
+        exportDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportDatabaseFragment));
         importDatabaseTextView = view.findViewById(R.id.import_database_text_view);
-        importDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importDatabaseFragment));
+        importDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importDatabaseFragment));
         exportCSVTextView = view.findViewById(R.id.export_csv_text_view);
 //        exportCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_exportCSVFragment));
         importCSVTextView = view.findViewById(R.id.import_csv_text_view);
-        importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importCSVFragment));
+        importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importCSVFragment));
         importQIFTextView = view.findViewById(R.id.import_qif_text_view);
-//        importQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importQIFFragment));
+        importQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importQIFFragment));
         exportQIFTextView = view.findViewById(R.id.export_qif_text_view);
-//        exportQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_exportQIFFragment));
+        exportQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportQIFFragment));
         autoBackupTextView = view.findViewById(R.id.autobackup_text_view);
-        autoBackupTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_autoBackupFragment));
+        autoBackupTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_autoBackupFragment));
         return view;
     }
 }
