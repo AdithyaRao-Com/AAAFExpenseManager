@@ -24,7 +24,10 @@ public class ImportDataRecord {
     public String notes;
     public String labels;
     public String status;
-
+    public enum CSV_VERSION{
+        V1(),
+        V2()
+    }
     public ImportDataRecord(String type, String date, String time, String title, String amount, String currency, String exchangeRate, String categoryGroupName, String category, String account, String notes, String labels, String status) {
         this.type = type;
         this.date = date;
@@ -41,20 +44,22 @@ public class ImportDataRecord {
         this.status = status;
     }
 
-    public ImportDataRecord(CSVRecord record) {
-        this.type = record.get(0);
-        this.date = record.get(1);
-        this.time = record.get(2);
-        this.title = record.get(3);
-        this.amount = record.get(4);
-        this.currency = record.get(5);
-        this.exchangeRate = record.get(6);
-        this.categoryGroupName = record.get(7);
-        this.category = record.get(8);
-        this.account = record.get(9);
-        this.notes = record.get(10);
-        this.labels = record.get(11);
-        this.status = record.get(12);
+    public ImportDataRecord(CSVRecord record,CSV_VERSION version) {
+        if(version == CSV_VERSION.V1) {
+            this.type = record.get(0);
+            this.date = record.get(1);
+            this.time = record.get(2);
+            this.title = record.get(3);
+            this.amount = record.get(4);
+            this.currency = record.get(5);
+            this.exchangeRate = record.get(6);
+            this.categoryGroupName = record.get(7);
+            this.category = record.get(8);
+            this.account = record.get(9);
+            this.notes = record.get(10);
+            this.labels = record.get(11);
+            this.status = record.get(12);
+        }
     }
 
     public LocalDate getTransactionDate() {
