@@ -9,8 +9,10 @@ import org.apache.commons.csv.CSVRecord;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ImportDataRecord {
+public class ImportExportCSVRecord {
     public String type;
     public String date;
     public String time;
@@ -28,7 +30,7 @@ public class ImportDataRecord {
         V1(),
         V2()
     }
-    public ImportDataRecord(String type, String date, String time, String title, String amount, String currency, String exchangeRate, String categoryGroupName, String category, String account, String notes, String labels, String status) {
+    public ImportExportCSVRecord(String type, String date, String time, String title, String amount, String currency, String exchangeRate, String categoryGroupName, String category, String account, String notes, String labels, String status) {
         this.type = type;
         this.date = date;
         this.time = time;
@@ -44,7 +46,7 @@ public class ImportDataRecord {
         this.status = status;
     }
 
-    public ImportDataRecord(CSVRecord record,CSV_VERSION version) {
+    public ImportExportCSVRecord(CSVRecord record, CSV_VERSION version) {
         if(version == CSV_VERSION.V1) {
             this.type = record.get(0);
             this.date = record.get(1);
@@ -61,17 +63,44 @@ public class ImportDataRecord {
             this.status = record.get(12);
         }
     }
+    public ImportExportCSVRecord(Transaction transaction,String parentCategoryName) {
+        this.type = transaction.transactionType;
+        this.date = transaction.getFormattedTransactionDateYYYY_MM_DD();
+        this.time = "00:01";
+        this.title = transaction.transactionName;
+        if(transaction.transactionType.equals("Income")){
+            this.amount = String.valueOf(transaction.amount);
+        }
+        else {
+            this.amount = String.valueOf(-1*transaction.amount);
+        }
+        this.currency = "INR";
+        this.exchangeRate = "1";
+        this.categoryGroupName = parentCategoryName;
+        this.category = transaction.category;
+        this.account = transaction.accountName;
+        this.notes = transaction.notes;
+        this.labels = "";
+    }
 
     public LocalDate getTransactionDate() {
         try {
-            return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
-        } catch (DateTimeParseException e) {
+            try {
+                return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            } catch (DateTimeParseException ignored) {
+            }
             try {
                 return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-            } catch (Exception e1) {
-                return LocalDate.now().minusDays(365);
+            } catch (DateTimeParseException ignored) {
+            }
+            try {
+                return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
+            } catch (DateTimeParseException ignored) {
             }
         }
+        catch (Exception ignored){
+        }
+        return LocalDate.now().minusYears(1);
     }
 
     public double getAmount() {
@@ -122,6 +151,17 @@ public class ImportDataRecord {
                 defaultCurrency,
                 false,
                 false);
+    }
+    public String[] getStringArray(){
+        List<String> headers = new ArrayList<>();
+        headers.add(this.date);
+        headers.add(this.title);
+        headers.add(this.amount);
+        headers.add(this.categoryGroupName);
+        headers.add(this.category);
+        headers.add(this.account);
+        headers.add(this.notes);
+        return headers.toArray(String[]::new);
     }
 }
 

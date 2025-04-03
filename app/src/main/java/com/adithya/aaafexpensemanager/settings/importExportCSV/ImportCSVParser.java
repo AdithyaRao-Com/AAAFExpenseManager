@@ -73,14 +73,14 @@ public class ImportCSVParser {
             }
             List<CSVRecord> records = csvParser.getRecords();
             records.stream()
-                    .map(value -> new ImportDataRecord(value, ImportDataRecord.CSV_VERSION.V1))
+                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V1))
                     .map(importRecord -> importRecord.toAccount(defaultCurrency))
                     .distinct()
                     .forEach(accountRepository::createAccount);
             Set<Category> uniqueValues = new HashSet<>();
             for (CSVRecord record : records) {
-                ImportDataRecord importDataRecord = new ImportDataRecord(record, ImportDataRecord.CSV_VERSION.V1);
-                Category category = importDataRecord.toCategory();
+                ImportExportCSVRecord importExportCSVRecord = new ImportExportCSVRecord(record, ImportExportCSVRecord.CSV_VERSION.V1);
+                Category category = importExportCSVRecord.toCategory();
                 if (uniqueValues.add(category)) {
                     try {
                         categoryRepository.addCategory(category);
@@ -90,8 +90,8 @@ public class ImportCSVParser {
                 }
             }
             List<Transaction> transactions = records.stream()
-                    .map(value -> new ImportDataRecord(value, ImportDataRecord.CSV_VERSION.V1))
-                    .map(ImportDataRecord::toTransaction)
+                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V1))
+                    .map(ImportExportCSVRecord::toTransaction)
                     .collect(Collectors.toList());
             transactionRepository.addTransactionsRaw(transactions);
             accountRepository.updateAccountBalances(transactionRepository);
@@ -125,14 +125,14 @@ public class ImportCSVParser {
             List<String> headersList = csvParser.getHeaderNames();
             List<CSVRecord> records = csvParser.getRecords();
             records.stream()
-                    .map(value -> new ImportDataRecord(value, ImportDataRecord.CSV_VERSION.V2))
+                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V2))
                     .map(importRecord -> importRecord.toAccount(defaultCurrency))
                     .distinct()
                     .forEach(accountRepository::createAccount);
             Set<Category> uniqueValues = new HashSet<>();
             for (CSVRecord record : records) {
-                ImportDataRecord importDataRecord = new ImportDataRecord(record, ImportDataRecord.CSV_VERSION.V2);
-                Category category = importDataRecord.toCategory();
+                ImportExportCSVRecord importExportCSVRecord = new ImportExportCSVRecord(record, ImportExportCSVRecord.CSV_VERSION.V2);
+                Category category = importExportCSVRecord.toCategory();
                 if (uniqueValues.add(category)) {
                     try {
                         categoryRepository.addCategory(category);
@@ -142,8 +142,8 @@ public class ImportCSVParser {
                 }
             }
             List<Transaction> transactions = records.stream()
-                    .map(value -> new ImportDataRecord(value, ImportDataRecord.CSV_VERSION.V2))
-                    .map(ImportDataRecord::toTransaction)
+                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V2))
+                    .map(ImportExportCSVRecord::toTransaction)
                     .collect(Collectors.toList());
             transactionRepository.addTransactionsRaw(transactions);
             accountRepository.updateAccountBalances(transactionRepository);

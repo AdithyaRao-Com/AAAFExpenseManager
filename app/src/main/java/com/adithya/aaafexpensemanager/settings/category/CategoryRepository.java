@@ -54,6 +54,15 @@ public class CategoryRepository {
         }
         return category;
     }
+    public Category getCategoryByName(String categoryName) {
+        Category category = null;
+        try (Cursor cursor = db.query("categories", null, "category_name = ?", new String[]{categoryName}, null, null, null)) {
+            if (cursor.moveToFirst()) {
+                category = getCategoryFromCursor(cursor);
+            }
+        }
+        return category;
+    }
 
     private Category getCategoryFromCursor(Cursor cursor) {
         try {

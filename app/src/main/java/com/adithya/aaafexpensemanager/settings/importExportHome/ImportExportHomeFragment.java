@@ -17,7 +17,6 @@ import com.adithya.aaafexpensemanager.R;
  * @noinspection FieldCanBeLocal
  */
 public class ImportExportHomeFragment extends Fragment {
-    //TODO - Export CSV Feature
     //TODO - Import Recurring Schedules CSV
     //TODO - Export Recurring Schedules CSV
     private TextView exportDatabaseTextView;
