@@ -61,6 +61,14 @@ public class ImportExportCSVRecord {
             this.notes = record.get(10);
             this.labels = record.get(11);
             this.status = record.get(12);
+        } else if(version == CSV_VERSION.V2){
+            this.date = record.get(0);
+            this.title = record.get(1);
+            this.amount = record.get(2);
+            this.categoryGroupName = record.get(3);
+            this.category = record.get(4);
+            this.account = record.get(5);
+            this.notes = record.get(6);
         }
     }
     public ImportExportCSVRecord(Transaction transaction,String parentCategoryName) {
