@@ -12,7 +12,6 @@ import java.util.List;
 
 /** @noinspection CallToPrintStackTrace, FieldCanBeLocal */
 public class QIFExporter {
-    // TODO - Test functionality for QIF Exporter
     private final QIFImportExportRepository repository;
     private final Application application;
     public QIFExporter(Application application) {

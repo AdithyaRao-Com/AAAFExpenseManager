@@ -1,5 +1,9 @@
 package com.adithya.aaafexpensemanager.settings.importExportQIF;
 
+import android.annotation.SuppressLint;
+
+import com.adithya.aaafexpensemanager.transaction.Transaction;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -30,5 +34,16 @@ public class QIFImportExportRecord {
         this.payee = payee;
         this.memo = memo;
         this.category = category;
+    }
+
+    @SuppressLint("DefaultLocale")
+    public QIFImportExportRecord(Transaction record) {
+        this.accountName = record.accountName;
+        this.accountType = "Bank";
+        this.transactionDate = record.getTransactionLocalDate();
+        this.amount = String.format("%.2f",record.amount);
+        this.payee = record.transactionName;
+        this.memo = record.notes;
+        this.category = record.category;
     }
 }

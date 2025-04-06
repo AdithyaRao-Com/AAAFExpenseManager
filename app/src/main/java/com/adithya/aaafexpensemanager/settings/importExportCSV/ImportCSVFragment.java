@@ -80,7 +80,7 @@ public class ImportCSVFragment extends Fragment {
     private void processCsvFile(Uri fileUri) {
         if (CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)) {
             ImportCSVParser.parseTransactions(this.context, fileUri);
-            Snackbar.make(viewGroup.getRootView(), "Upload Successful", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
         } else {
             Toast.makeText(this.context, "File is not a CSV", Toast.LENGTH_SHORT).show();
             ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {

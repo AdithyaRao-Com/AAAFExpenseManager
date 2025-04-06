@@ -5,6 +5,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.adithya.aaafexpensemanager.transaction.Transaction;
+import com.adithya.aaafexpensemanager.transaction.TransactionRepository;
+import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +47,22 @@ public class QIFImportExportRepository {
             addQIFImportExportRecord(record);
         }
     }
+    public void loadQIFInterfaceTable(){
+        try {
+            TransactionRepository repository = new TransactionRepository(application);
+            List<Transaction> records = repository.getAllTransactions(new TransactionFilter(),-1);
+            deleteAllQIFImportExportRecords();
+            records.stream()
+                    .map(QIFImportExportRecord::new)
+                    .forEach(this::addQIFImportExportRecord);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
     public List<QIFImportExportRecord> getAllQIFImportExportRecords() {
         List<QIFImportExportRecord> records = new ArrayList<>();
+        loadQIFInterfaceTable();
         try(Cursor cursor = db.query(QIFImportExportDBHelper.TABLE_TRANSACTIONS, null, null, null, null, null, null)){
             if (cursor.moveToFirst()) {
                 do {
@@ -58,6 +76,7 @@ public class QIFImportExportRepository {
         catch (Exception e) {
             e.printStackTrace();
         }
+        deleteAllQIFImportExportRecords();
         return records;
     }
     private QIFImportExportRecord getQIFImportExportRecordFromCursor(Cursor cursor) {

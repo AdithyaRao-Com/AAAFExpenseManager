@@ -42,7 +42,12 @@ public class ImportQIFFragment extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         importUri = result.getData().getData();
                         if (importUri != null) {
-                            fileSelectedTextView.setText("File Selected: " + importUri);
+                            String filePath = importUri.toString();
+                            if (filePath.toLowerCase().endsWith(".qif")) {
+                                fileSelectedTextView.setText("File Selected: " + importUri);
+                            } else {
+                                Snackbar.make(requireView(), "Selected file is not a QIF file.", Snackbar.LENGTH_SHORT).show();
+                            }
                         } else {
                             showSnackbar("QIF file selection failed.");
                         }
@@ -71,7 +76,7 @@ public class ImportQIFFragment extends Fragment {
     private void selectImportFile() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/qif"); // QIF file type
+        intent.setType("*/*");
         pickFileLauncher.launch(intent);
     }
 

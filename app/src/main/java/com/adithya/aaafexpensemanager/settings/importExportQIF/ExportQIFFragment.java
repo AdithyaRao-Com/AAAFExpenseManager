@@ -85,7 +85,7 @@ public class ExportQIFFragment extends Fragment {
 
         ContentValues values = new ContentValues();
         values.put(MediaStore.MediaColumns.DISPLAY_NAME, qifFileName);
-        values.put(MediaStore.MediaColumns.MIME_TYPE, "application/octet-stream"); // For QIF
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "text/qif");
         values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
 
         Uri collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
@@ -94,7 +94,7 @@ public class ExportQIFFragment extends Fragment {
         if (item != null) {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("application/octet-stream"); // For QIF
+            intent.setType("text/qif");
             intent.putExtra(Intent.EXTRA_TITLE, qifFileName);
             createWriteRequestLauncher.launch(intent);
         } else {
