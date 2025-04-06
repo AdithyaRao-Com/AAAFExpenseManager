@@ -1,0 +1,40 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Button
+        android:id="@+id/selectCSVFileButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select CSV Export Location"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/csvFileSelectedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="No location selected"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/exportCSVButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Export CSV"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/exportCSVStatusTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:maxLines="10"
+        android:scrollbars="vertical"
+        android:text="" />
+
+</LinearLayout>

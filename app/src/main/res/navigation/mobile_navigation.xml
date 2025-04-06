@@ -134,6 +134,11 @@
             app:popUpTo="@id/nav_import_csv"
             app:popUpToInclusive="true" />
         <action
+            android:id="@+id/action_importExportHomeFragment_to_exportCSVFragment"
+            app:destination="@id/nav_export_csv"
+            app:popUpTo="@id/nav_export_csv"
+            app:popUpToInclusive="true" />
+        <action
             android:id="@+id/action_importExportHomeFragment_to_autoBackupFragment"
             app:destination="@id/nav_autobackup_dir_sel"
             app:popUpTo="@id/nav_autobackup_dir_sel"
@@ -269,9 +274,15 @@
     </fragment>
     <fragment
         android:id="@+id/nav_import_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.UploadCSVFragment"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.ImportCSVFragment"
         android:label="Import CSV"
         tools:layout="@layout/fragment_setting_upload_csv" />
+    <fragment
+        android:id="@+id/nav_export_csv"
+        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.ExportCSVFragment"
+        android:label="Export CSV"
+        tools:layout="@layout/fragment_setting_export_csv">
+    </fragment>
     <fragment
         android:id="@+id/nav_autobackup_dir_sel"
         android:name="com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupDirectorySelectionFragment"

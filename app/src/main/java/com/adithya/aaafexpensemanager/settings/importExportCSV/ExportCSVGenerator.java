@@ -19,9 +19,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection deprecation*/
+/** @noinspection deprecation, UnusedReturnValue */
 public class ExportCSVGenerator {
-    //TODO - Test this Export CSV Feature
     public static boolean generateCSV(Context context, Uri fileUri) {
         List<ImportExportCSVRecord> records = getCSVRecords(context);
         String[] headers = getCSVHeaders().toArray(String[]::new);

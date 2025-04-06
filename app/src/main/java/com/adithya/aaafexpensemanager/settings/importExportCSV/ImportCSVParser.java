@@ -30,15 +30,7 @@ import java.util.stream.Collectors;
  * @noinspection CallToPrintStackTrace
  */
 public class ImportCSVParser {
-    public static void parseTransactions(Context context,Uri fileUri){
-        try{
-            parseTransactionsV1(context, fileUri);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    public static void parseTransactionsV1(Context context,
+    public static void parseTransactions(Context context,
                                          Uri fileUri) {
         ImportExportCSVRecord.CSV_VERSION version;
         CategoryRepository categoryRepository = new CategoryRepository((Application) context.getApplicationContext());
@@ -56,7 +48,7 @@ public class ImportCSVParser {
              InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
              CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)) {
             List<String> headersList = csvParser.getHeaderNames();
-            if(!headersList.get(0).equals("Type")){
+            if(headersList.get(0).equals("Type")){
                 version = ImportExportCSVRecord.CSV_VERSION.V1;
             }
             else {
@@ -64,7 +56,7 @@ public class ImportCSVParser {
             }
             List<CSVRecord> records = csvParser.getRecords();
             records.stream()
-                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V1))
+                    .map(value -> new ImportExportCSVRecord(value, version))
                     .map(importRecord -> importRecord.toAccount(defaultCurrency))
                     .distinct()
                     .forEach(accountRepository::createAccount);
@@ -81,7 +73,7 @@ public class ImportCSVParser {
                 }
             }
             List<Transaction> transactions = records.stream()
-                    .map(value -> new ImportExportCSVRecord(value, ImportExportCSVRecord.CSV_VERSION.V1))
+                    .map(value -> new ImportExportCSVRecord(value, version))
                     .map(ImportExportCSVRecord::toTransaction)
                     .collect(Collectors.toList());
             transactionRepository.addTransactionsRaw(transactions);

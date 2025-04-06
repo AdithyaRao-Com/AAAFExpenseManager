@@ -12,6 +12,7 @@ public class CsvFileTypeDetector {
             List<String> headers = CsvHeaderUtils.getCsvHeaders(context, fileUri);
             if (headers.isEmpty()) return false;
             else if (headers.get(1).equals("Date")) return true;
+            else if (headers.get(0).equals("Date")) return true;
             else return false;
         } catch (Exception e) {
             return false;

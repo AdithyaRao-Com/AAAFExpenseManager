@@ -69,6 +69,12 @@ public class ImportExportCSVRecord {
             this.category = record.get(4);
             this.account = record.get(5);
             this.notes = record.get(6);
+            if (Double.parseDouble(this.amount) < 0.0){
+                this.type = "Expense";
+            }
+            else {
+                this.type = "Income";
+            }
         }
     }
     public ImportExportCSVRecord(Transaction transaction,String parentCategoryName) {
@@ -130,7 +136,14 @@ public class ImportExportCSVRecord {
             } else {
                 return "Income";
             }
-        } else {
+        } else if(this.type.isBlank()){
+            if (this.getAmount() <= 0.0) {
+                return "Expense";
+            } else {
+                return "Income";
+            }
+        }
+        else {
             return this.type;
         }
     }

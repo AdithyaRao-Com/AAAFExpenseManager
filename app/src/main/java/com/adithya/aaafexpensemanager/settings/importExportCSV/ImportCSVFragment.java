@@ -25,7 +25,7 @@ import com.adithya.aaafexpensemanager.util.CsvFileTypeDetector;
 import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
 import com.google.android.material.snackbar.Snackbar;
 
-public class UploadCSVFragment extends Fragment {
+public class ImportCSVFragment extends Fragment {
     private TextView fileSelectedTextView;
     private Button uploadButton;
     private Uri selectedFileUri;

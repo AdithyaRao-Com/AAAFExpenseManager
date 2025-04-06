@@ -36,7 +36,7 @@ public class ImportExportHomeFragment extends Fragment {
         importDatabaseTextView = view.findViewById(R.id.import_database_text_view);
         importDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importDatabaseFragment));
         exportCSVTextView = view.findViewById(R.id.export_csv_text_view);
-//        exportCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_exportCSVFragment));
+        exportCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportCSVFragment));
         importCSVTextView = view.findViewById(R.id.import_csv_text_view);
         importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importCSVFragment));
         importQIFTextView = view.findViewById(R.id.import_qif_text_view);
