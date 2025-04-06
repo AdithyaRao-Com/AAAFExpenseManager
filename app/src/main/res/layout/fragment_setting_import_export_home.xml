@@ -77,7 +77,28 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/separator_color" />
+    <TextView
+        android:id="@+id/export_schedule_csv_text_view"
+        style="@style/LargeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/export_schedules_csv" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color" />
+    <TextView
+        android:id="@+id/import_schedule_csv_text_view"
+        style="@style/LargeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/import_schedules_csv" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color" />
     <TextView
         android:id="@+id/autobackup_text_view"
         style="@style/LargeText"

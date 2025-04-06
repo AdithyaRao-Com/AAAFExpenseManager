@@ -128,4 +128,6 @@
     <string name="upload_and_process">Upload and Process</string>
     <string name="new_item">New Item</string>
     <string name="saved_reports">Saved Reports</string>
+    <string name="export_schedules_csv">Export Schedules CSV</string>
+    <string name="import_schedules_csv">Import Schedules CSV</string>
 </resources>

@@ -18,4 +18,14 @@ public class CsvFileTypeDetector {
             return false;
         }
     }
+    public static boolean isLikelyScheduleCsv(Context context, Uri fileUri) {
+        try {
+            List<String> headers = CsvHeaderUtils.getCsvHeaders(context, fileUri);
+            if (headers.isEmpty()) return false;
+            else if (headers.get(0).equals("Transaction Name")) return true;
+            else return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

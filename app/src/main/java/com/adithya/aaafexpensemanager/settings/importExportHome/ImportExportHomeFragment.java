@@ -17,8 +17,6 @@ import com.adithya.aaafexpensemanager.R;
  * @noinspection FieldCanBeLocal
  */
 public class ImportExportHomeFragment extends Fragment {
-    //TODO - Import Recurring Schedules CSV
-    //TODO - Export Recurring Schedules CSV
     private TextView exportDatabaseTextView;
     private TextView importDatabaseTextView;
     private TextView exportCSVTextView;
@@ -26,6 +24,8 @@ public class ImportExportHomeFragment extends Fragment {
     private TextView importQIFTextView;
     private TextView exportQIFTextView;
     private TextView autoBackupTextView;
+    private TextView exportSchedulesCSVTextView;
+    private TextView importSchedulesCSVTextView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,6 +45,10 @@ public class ImportExportHomeFragment extends Fragment {
         exportQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportQIFFragment));
         autoBackupTextView = view.findViewById(R.id.autobackup_text_view);
         autoBackupTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_autoBackupFragment));
+        exportSchedulesCSVTextView = view.findViewById(R.id.export_schedule_csv_text_view);
+        exportSchedulesCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportSchedulesCSVFragment));
+        importSchedulesCSVTextView = view.findViewById(R.id.import_schedule_csv_text_view);
+        importSchedulesCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importSchedulesCSVFragment));
         return view;
     }
 }
