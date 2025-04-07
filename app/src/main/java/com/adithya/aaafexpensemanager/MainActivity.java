@@ -56,7 +56,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 R.id.nav_settings,
                 R.id.nav_reports,
                 R.id.nav_import_export_home,
-                R.id.nav_transaction_filter_list)
+                R.id.nav_transaction_filter_list,
+                R.id.nav_test_fragment)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -87,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 navController.navigate(R.id.nav_create_saved_report);
             } else if (item.getItemId() == R.id.nav_transaction_filter_list) {
                 navController.navigate(R.id.nav_transaction_filter_list);
+            } else if (item.getItemId() == R.id.nav_test_fragment) {
+                navController.navigate(R.id.nav_test_fragment);
             }
             drawer.close();
             return true;

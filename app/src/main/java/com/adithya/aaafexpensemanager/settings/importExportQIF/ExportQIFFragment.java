@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,6 +40,7 @@ public class ExportQIFFragment extends Fragment {
     private SettingsRepository settingsRepository;
     private Uri exportUri;
     private QIFExporter qifExporter;
+    private ProgressBar circularProgress;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -66,7 +68,7 @@ public class ExportQIFFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_export_qif, container, false);
-
+        circularProgress = view.findViewById(R.id.progress_circular);
         selectFileButton = view.findViewById(R.id.selectQifFileButton);
         fileSelectedTextView = view.findViewById(R.id.qifFileSelectedTextView);
         exportButton = view.findViewById(R.id.exportQifButton);
@@ -104,13 +106,25 @@ public class ExportQIFFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void exportQif() {
-        if (exportUri == null) {
-            showSnackbar("Please select an export location first.");
-            return;
+        circularProgress.setVisibility(View.VISIBLE);
+        try {
+            circularProgress.setVisibility(View.VISIBLE);
+            if (exportUri == null) {
+                showSnackbar("Please select an export location first.");
+                return;
+            }
+            qifExporter.generateQIF(exportUri);
+            circularProgress.setVisibility(View.GONE);
+            exportStatusTextView.setText("QIF export completed.");
+            showSnackbar("QIF file exported successfully.");
         }
-        qifExporter.generateQIF(exportUri);
-        exportStatusTextView.setText("QIF export completed.");
-        showSnackbar("QIF file exported successfully.");
+        catch (Exception e){
+            e.printStackTrace();
+            showSnackbar("QIF export failed");
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
+        }
     }
 
     private void showSnackbar(String message) {

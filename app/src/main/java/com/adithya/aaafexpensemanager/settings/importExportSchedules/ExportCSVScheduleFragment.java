@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -39,6 +40,7 @@ public class ExportCSVScheduleFragment extends Fragment {
     private SettingsRepository settingsRepository;
     private Uri exportUri;
     private Application application;
+    private ProgressBar circularProgress;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -66,6 +68,7 @@ public class ExportCSVScheduleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_export_csv, container, false);
+        circularProgress = view.findViewById(R.id.progress_circular);
 
         selectFileButton = view.findViewById(R.id.selectCSVFileButton);
         fileSelectedTextView = view.findViewById(R.id.csvFileSelectedTextView);
@@ -107,9 +110,19 @@ public class ExportCSVScheduleFragment extends Fragment {
             showSnackbar("Please select an export location first.");
             return;
         }
-        ExportScheduleCSVGenerator.generateCSV(application, exportUri);
-        exportStatusTextView.setText("Schedules CSV export completed.");
-        showSnackbar("Schedules CSV file exported successfully.");
+        try {
+            circularProgress.setVisibility(View.VISIBLE);
+            ExportScheduleCSVGenerator.generateCSV(application, exportUri);
+            exportStatusTextView.setText("Schedules CSV export completed.");
+            showSnackbar("Schedules CSV file exported successfully.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            showSnackbar("Schedules CSV export failed");
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
+        }
     }
 
     private void showSnackbar(String message) {

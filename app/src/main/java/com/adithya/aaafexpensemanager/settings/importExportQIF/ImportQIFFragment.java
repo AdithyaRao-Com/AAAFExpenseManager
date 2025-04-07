@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +31,7 @@ public class ImportQIFFragment extends Fragment {
     private ActivityResultLauncher<Intent> pickFileLauncher;
     private Uri importUri;
     private QIFImporter qifImporter;
+    private ProgressBar circularProgress;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -61,6 +63,7 @@ public class ImportQIFFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_import_qif, container, false);
+        circularProgress = view.findViewById(R.id.progress_circular);
 
         selectFileButton = view.findViewById(R.id.selectFileButton);
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
@@ -86,8 +89,8 @@ public class ImportQIFFragment extends Fragment {
             showSnackbar("Please select a QIF file first.");
             return;
         }
-
         try {
+            circularProgress.setVisibility(View.VISIBLE);
             boolean success = qifImporter.importQIF(importUri);
             if (success) {
                 importStatusTextView.setText("QIF import completed successfully.");
@@ -100,6 +103,9 @@ public class ImportQIFFragment extends Fragment {
             importStatusTextView.setText("QIF import failed: " + e.getMessage());
             showSnackbar("QIF file import failed: " + e.getMessage());
             e.printStackTrace();
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
         }
     }
 

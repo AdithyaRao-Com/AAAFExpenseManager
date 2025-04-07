@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
 import com.google.android.material.snackbar.Snackbar;
 
 public class ImportCSVFragment extends Fragment {
+    private ProgressBar circularProgress;
     private TextView fileSelectedTextView;
     private Button uploadButton;
     private Uri selectedFileUri;
@@ -56,6 +58,7 @@ public class ImportCSVFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_setting_upload_csv, container, false);
         this.viewGroup = container;
         this.context = getContext();
+        circularProgress = view.findViewById(R.id.progress_circular);
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
         uploadButton = view.findViewById(R.id.uploadButton);
         Button selectFileButton = view.findViewById(R.id.selectFileButton);
@@ -79,14 +82,14 @@ public class ImportCSVFragment extends Fragment {
 
     private void processCsvFile(Uri fileUri) {
         if (CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)) {
-            ImportCSVParser.parseTransactions(this.context, fileUri);
+            parseTransactions(this.context, fileUri);
             Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
         } else {
             Toast.makeText(this.context, "File is not a CSV", Toast.LENGTH_SHORT).show();
             ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
                 @Override
                 public void onConversionComplete(Uri csvFileUri) {
-                    ImportCSVParser.parseTransactions(context, csvFileUri);
+                    parseTransactions(context, csvFileUri);
                 }
 
                 @Override
@@ -101,6 +104,19 @@ public class ImportCSVFragment extends Fragment {
                 Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
                 Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
             }
+        }
+    }
+
+    private void parseTransactions(Context context,Uri fileUri){
+        try {
+            circularProgress.setVisibility(View.VISIBLE);
+            ImportCSVParser.parseTransactions(this.context, fileUri);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
         }
     }
 }

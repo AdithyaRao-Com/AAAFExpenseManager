@@ -36,5 +36,10 @@
         android:maxLines="10"
         android:scrollbars="vertical"
         android:text="" />
-
+    <ProgressBar
+        android:id="@+id/progress_circular"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 </LinearLayout>

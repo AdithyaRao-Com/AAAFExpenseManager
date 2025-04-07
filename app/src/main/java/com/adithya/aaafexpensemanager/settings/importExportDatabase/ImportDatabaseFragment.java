@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -38,6 +39,7 @@ public class ImportDatabaseFragment extends Fragment {
     private File databaseFile;
     private Uri importUri;
     private DatabaseImporter databaseImporter;
+    private ProgressBar circularProgress;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -65,7 +67,7 @@ public class ImportDatabaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_import_database, container, false);
-
+        circularProgress = view.findViewById(R.id.progress_circular);
         selectFileButton = view.findViewById(R.id.selectFileButton);
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
         importButton = view.findViewById(R.id.importButton);
@@ -88,18 +90,28 @@ public class ImportDatabaseFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void importDatabase() {
-        if (importUri == null) {
-            showSnackbar("Please select a database zip file first.");
-            return;
-        }
+        try {
+            circularProgress.setVisibility(View.VISIBLE);
+            if (importUri == null) {
+                showSnackbar("Please select a database zip file first.");
+                return;
+            }
 
-        boolean success = databaseImporter.importDatabase(requireContext(), importUri, databaseFile);
-        if (success) {
-            importStatusTextView.setText("Import completed successfully.");
-            showSnackbar("Database imported successfully.");
-        } else {
-            importStatusTextView.setText("Import failed.");
-            showSnackbar("Database import failed.");
+            boolean success = databaseImporter.importDatabase(requireContext(), importUri, databaseFile);
+            if (success) {
+                importStatusTextView.setText("Import completed successfully.");
+                showSnackbar("Database imported successfully.");
+            } else {
+                importStatusTextView.setText("Import failed.");
+                showSnackbar("Database import failed.");
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            showSnackbar("Database import failed");
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
         }
     }
 

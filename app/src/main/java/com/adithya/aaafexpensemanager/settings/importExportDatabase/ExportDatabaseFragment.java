@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -44,6 +45,7 @@ public class ExportDatabaseFragment extends Fragment {
     private File databaseFile;
     private Uri exportUri;
     private DatabaseExporter databaseExporter;
+    private ProgressBar circularProgress;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -71,7 +73,7 @@ public class ExportDatabaseFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_export_database, container, false);
-
+        circularProgress = view.findViewById(R.id.progress_circular);
         selectFileButton = view.findViewById(R.id.selectFileButton);
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
         exportButton = view.findViewById(R.id.exportButton);
@@ -111,14 +113,24 @@ public class ExportDatabaseFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void exportDatabase() {
-        if (exportUri == null) {
-            showSnackbar("Please select an export location first.");
-            return;
-        }
+        try {
+            circularProgress.setVisibility(View.VISIBLE);
+            if (exportUri == null) {
+                showSnackbar("Please select an export location first.");
+                return;
+            }
 
-        databaseExporter.exportDatabase(requireContext(), databaseFile, exportUri);
-        exportStatusTextView.setText("Export completed.");
-        showSnackbar("Database exported successfully.");
+            databaseExporter.exportDatabase(requireContext(), databaseFile, exportUri);
+            exportStatusTextView.setText("Export completed.");
+            showSnackbar("Database exported successfully.");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            showSnackbar("Database import failed");
+        }
+        finally {
+            circularProgress.setVisibility(View.GONE);
+        }
     }
 
     private void showSnackbar(String message) {
