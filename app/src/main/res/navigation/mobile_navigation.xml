@@ -370,7 +370,7 @@
     <fragment
         android:id="@+id/nav_transaction_filter_list"
         android:name="com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterListFragment"
-        android:label="Transaction Filter List"
+        android:label="Saved Reports"
         tools:layout="@layout/fragment_list_transaction_filter">
         <action
             android:id="@+id/action_transactionFilterListFragment_to_createTransactionFilterFragment"
