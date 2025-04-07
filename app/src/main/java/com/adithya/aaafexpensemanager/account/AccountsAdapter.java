@@ -29,6 +29,7 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final Context context;
     private final List<Object> items;
     private final NavigationListener navigationListener;
+
     public AccountsAdapter(List<Account> accounts,
                            Context context,
                            NavigationListener navigationListener

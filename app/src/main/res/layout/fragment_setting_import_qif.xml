@@ -33,6 +33,7 @@
         android:maxLines="10"
         android:scrollbars="vertical"
         android:text="" />
+
     <ProgressBar
         android:id="@+id/progress_circular"
         android:layout_width="100dp"

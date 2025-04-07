@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
                 fabDestination = R.id.nav_create_currency;
             } else if (destination.getId() == R.id.nav_transaction_filter_list) {
                 fabDestination = R.id.nav_create_saved_report;
-            }else {
+            } else {
                 fabDestination = 0;
             }
             if (fabDestination != 0) {

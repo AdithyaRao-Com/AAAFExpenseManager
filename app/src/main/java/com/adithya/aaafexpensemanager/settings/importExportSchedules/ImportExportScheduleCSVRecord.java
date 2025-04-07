@@ -21,6 +21,7 @@ public class ImportExportScheduleCSVRecord {
     public String toAccountName;
     public String category;
     public String notes;
+
     @SuppressLint("DefaultLocale")
     public ImportExportScheduleCSVRecord(RecurringSchedule recurringSchedule) {
         this.transactionName = recurringSchedule.transactionName;
@@ -29,7 +30,7 @@ public class ImportExportScheduleCSVRecord {
         this.recurringStartDate = convertDateToString(recurringSchedule.getRecurringStartDateLocalDate());
         this.recurringEndDate = convertDateToString(recurringSchedule.getRecurringEndDateLocalDate());
         this.transactionType = recurringSchedule.transferInd;
-        this.amount = String.format("%.2f",recurringSchedule.amount);
+        this.amount = String.format("%.2f", recurringSchedule.amount);
         this.accountName = recurringSchedule.accountName;
         this.toAccountName = recurringSchedule.toAccountName;
         this.category = recurringSchedule.category;
@@ -50,15 +51,18 @@ public class ImportExportScheduleCSVRecord {
         this.notes = value.get(10);
     }
 
-    public LocalDate getRecurringStartDate() {
-        return LocalDate.parse(recurringStartDate, DateTimeFormatter.ISO_LOCAL_DATE);
-    }
-    public LocalDate getRecurringEndDate() {
-        return LocalDate.parse(recurringEndDate,DateTimeFormatter.ISO_LOCAL_DATE);
-    }
     public static String convertDateToString(LocalDate inputDate) {
         return inputDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
+
+    public LocalDate getRecurringStartDate() {
+        return LocalDate.parse(recurringStartDate, DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
+    public LocalDate getRecurringEndDate() {
+        return LocalDate.parse(recurringEndDate, DateTimeFormatter.ISO_LOCAL_DATE);
+    }
+
     public String[] getStringArray() {
         return new String[]{
                 transactionName,
@@ -77,22 +81,22 @@ public class ImportExportScheduleCSVRecord {
 
     public RecurringSchedule toRecurringSchedule() {
         return new RecurringSchedule(
-            this.transactionName,
-            this.recurringFrequency,
-            this.getRepeatInterval(),
-            this.getRecurringStartDate(),
-            this.getRecurringEndDate(),
-            this.category,
-            this.notes,
-            this.transactionType,
-            this.getAmount(),
-            this.accountName,
-            this.getToAccountName(),
-            this.transactionType);
+                this.transactionName,
+                this.recurringFrequency,
+                this.getRepeatInterval(),
+                this.getRecurringStartDate(),
+                this.getRecurringEndDate(),
+                this.category,
+                this.notes,
+                this.transactionType,
+                this.getAmount(),
+                this.accountName,
+                this.getToAccountName(),
+                this.transactionType);
     }
 
     private String getToAccountName() {
-        if(toAccountName==null || toAccountName.isEmpty()) {
+        if (toAccountName == null || toAccountName.isEmpty()) {
             return "";
         } else {
             return toAccountName;
@@ -100,15 +104,15 @@ public class ImportExportScheduleCSVRecord {
     }
 
     private double getAmount() {
-        try{
-            return Math.round(100.00*Double.parseDouble(amount))/100.00;
+        try {
+            return Math.round(100.00 * Double.parseDouble(amount)) / 100.00;
         } catch (NumberFormatException e) {
             return 0.0;
         }
     }
 
     private int getRepeatInterval() {
-        try{
+        try {
             return Integer.parseInt(repeatInterval);
         } catch (NumberFormatException e) {
             return 0;

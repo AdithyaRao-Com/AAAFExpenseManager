@@ -26,10 +26,7 @@ public class ImportExportCSVRecord {
     public String notes;
     public String labels;
     public String status;
-    public enum CSV_VERSION{
-        V1(),
-        V2()
-    }
+
     public ImportExportCSVRecord(String type, String date, String time, String title, String amount, String currency, String exchangeRate, String categoryGroupName, String category, String account, String notes, String labels, String status) {
         this.type = type;
         this.date = date;
@@ -47,7 +44,7 @@ public class ImportExportCSVRecord {
     }
 
     public ImportExportCSVRecord(CSVRecord record, CSV_VERSION version) {
-        if(version == CSV_VERSION.V1) {
+        if (version == CSV_VERSION.V1) {
             this.type = record.get(0);
             this.date = record.get(1);
             this.time = record.get(2);
@@ -61,7 +58,7 @@ public class ImportExportCSVRecord {
             this.notes = record.get(10);
             this.labels = record.get(11);
             this.status = record.get(12);
-        } else if(version == CSV_VERSION.V2){
+        } else if (version == CSV_VERSION.V2) {
             this.date = record.get(0);
             this.title = record.get(1);
             this.amount = record.get(2);
@@ -69,24 +66,23 @@ public class ImportExportCSVRecord {
             this.category = record.get(4);
             this.account = record.get(5);
             this.notes = record.get(6);
-            if (Double.parseDouble(this.amount) < 0.0){
+            if (Double.parseDouble(this.amount) < 0.0) {
                 this.type = "Expense";
-            }
-            else {
+            } else {
                 this.type = "Income";
             }
         }
     }
-    public ImportExportCSVRecord(Transaction transaction,String parentCategoryName) {
+
+    public ImportExportCSVRecord(Transaction transaction, String parentCategoryName) {
         this.type = transaction.transactionType;
         this.date = transaction.getFormattedTransactionDateYYYY_MM_DD();
         this.time = "00:01";
         this.title = transaction.transactionName;
-        if(transaction.transactionType.equals("Income")){
+        if (transaction.transactionType.equals("Income")) {
             this.amount = String.valueOf(transaction.amount);
-        }
-        else {
-            this.amount = String.valueOf(-1*transaction.amount);
+        } else {
+            this.amount = String.valueOf(-1 * transaction.amount);
         }
         this.currency = "INR";
         this.exchangeRate = "1";
@@ -111,8 +107,7 @@ public class ImportExportCSVRecord {
                 return LocalDate.parse(this.date, DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"));
             } catch (DateTimeParseException ignored) {
             }
-        }
-        catch (Exception ignored){
+        } catch (Exception ignored) {
         }
         return LocalDate.now().minusYears(1);
     }
@@ -136,14 +131,13 @@ public class ImportExportCSVRecord {
             } else {
                 return "Income";
             }
-        } else if(this.type.isBlank()){
+        } else if (this.type.isBlank()) {
             if (this.getAmount() <= 0.0) {
                 return "Expense";
             } else {
                 return "Income";
             }
-        }
-        else {
+        } else {
             return this.type;
         }
     }
@@ -173,7 +167,8 @@ public class ImportExportCSVRecord {
                 false,
                 false);
     }
-    public String[] getStringArray(){
+
+    public String[] getStringArray() {
         List<String> headers = new ArrayList<>();
         headers.add(this.date);
         headers.add(this.title);
@@ -183,6 +178,11 @@ public class ImportExportCSVRecord {
         headers.add(this.account);
         headers.add(this.notes);
         return headers.toArray(String[]::new);
+    }
+
+    public enum CSV_VERSION {
+        V1(),
+        V2()
     }
 }
 

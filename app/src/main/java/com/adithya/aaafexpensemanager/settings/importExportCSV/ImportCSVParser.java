@@ -48,10 +48,9 @@ public class ImportCSVParser {
              InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
              CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)) {
             List<String> headersList = csvParser.getHeaderNames();
-            if(headersList.get(0).equals("Type")){
+            if (headersList.get(0).equals("Type")) {
                 version = ImportExportCSVRecord.CSV_VERSION.V1;
-            }
-            else {
+            } else {
                 version = ImportExportCSVRecord.CSV_VERSION.V2;
             }
             List<CSVRecord> records = csvParser.getRecords();
@@ -62,7 +61,7 @@ public class ImportCSVParser {
                     .forEach(accountRepository::createAccount);
             Set<Category> uniqueValues = new HashSet<>();
             for (CSVRecord record : records) {
-                ImportExportCSVRecord importExportCSVRecord = new ImportExportCSVRecord(record,version);
+                ImportExportCSVRecord importExportCSVRecord = new ImportExportCSVRecord(record, version);
                 Category category = importExportCSVRecord.toCategory();
                 if (uniqueValues.add(category)) {
                     try {
@@ -80,11 +79,11 @@ public class ImportCSVParser {
             accountRepository.updateAccountBalances(transactionRepository);
             recentTransactionRepository.updateAllRecentTransactions();
             accountTypeRepository.insertDefaultAccountTypes();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private static void setupPrimaryCurrency(CurrencyRepository currencyRepository) {
         if (!currencyRepository.checkPrimaryCurrencyExists()) {
             try {

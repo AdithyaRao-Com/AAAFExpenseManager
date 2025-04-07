@@ -26,6 +26,7 @@ public class LookupDialog {
     private final String title;
     private final String positiveButtonText;
     private final String negativeButtonText;
+
     @SuppressLint("InflateParams")
     public LookupDialog(@NonNull
                         Context context,
@@ -55,6 +56,7 @@ public class LookupDialog {
         }
         getAlertBuilder();
     }
+
     public LookupDialog(@NonNull
                         Context context,
                         @NonNull

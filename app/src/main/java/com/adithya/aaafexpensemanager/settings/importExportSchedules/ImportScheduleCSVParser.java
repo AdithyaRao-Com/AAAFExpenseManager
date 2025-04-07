@@ -50,11 +50,11 @@ public class ImportScheduleCSVParser {
                 transaction.primaryCurrencyCode = defaultCurrency;
                 recurringRepository.addRecurringSchedule(transaction);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     private static void setupPrimaryCurrency(CurrencyRepository currencyRepository) {
         if (!currencyRepository.checkPrimaryCurrencyExists()) {
             try {

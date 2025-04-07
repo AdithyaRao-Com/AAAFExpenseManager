@@ -234,14 +234,14 @@ public class CategorySummaryChartFragment extends Fragment {
             }
         }
     }
-    private CategorySummaryRecord.TimePeriod getSelectedPeriodEnum(String selectedTimePeriodString){
-        try{
+
+    private CategorySummaryRecord.TimePeriod getSelectedPeriodEnum(String selectedTimePeriodString) {
+        try {
             CategorySummaryRecord.TimePeriod.valueOf(selectedTimePeriodString);
-        }
-        catch (Exception e){
-            CategorySummaryRecord.TimePeriod[] l1= CategorySummaryRecord.TimePeriod.values();
-            for(CategorySummaryRecord.TimePeriod listItem:l1){
-                if(listItem.toString().equals(selectedTimePeriodString)){
+        } catch (Exception e) {
+            CategorySummaryRecord.TimePeriod[] l1 = CategorySummaryRecord.TimePeriod.values();
+            for (CategorySummaryRecord.TimePeriod listItem : l1) {
+                if (listItem.toString().equals(selectedTimePeriodString)) {
                     return listItem;
                 }
             }

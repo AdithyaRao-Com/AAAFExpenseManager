@@ -18,6 +18,7 @@ public class CsvFileTypeDetector {
             return false;
         }
     }
+
     public static boolean isLikelyScheduleCsv(Context context, Uri fileUri) {
         try {
             List<String> headers = CsvHeaderUtils.getCsvHeaders(context, fileUri);

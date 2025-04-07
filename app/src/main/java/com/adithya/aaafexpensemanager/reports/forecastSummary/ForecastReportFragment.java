@@ -52,8 +52,7 @@ public class ForecastReportFragment extends Fragment {
             assert transactionFilter != null;
             String selectedTimePeriodString = transactionFilter.periodName;
             selectedTimePeriod = getSelectedPeriodEnum(selectedTimePeriodString);
-        }
-        else {
+        } else {
             setDefaultTimePeriodSelection();
             transactionFilter = new TransactionFilter();
         }
@@ -102,14 +101,13 @@ public class ForecastReportFragment extends Fragment {
         reportsRecyclerView = view.findViewById(R.id.reportsRecyclerView);
     }
 
-    private ForecastTimePeriod getSelectedPeriodEnum(String selectedTimePeriodString){
-        try{
+    private ForecastTimePeriod getSelectedPeriodEnum(String selectedTimePeriodString) {
+        try {
             ForecastTimePeriod.valueOf(selectedTimePeriodString);
-        }
-        catch (Exception e){
-            ForecastTimePeriod[] l1= ForecastTimePeriod.values();
-            for(ForecastTimePeriod listItem:l1){
-                if(listItem.toString().equals(selectedTimePeriodString)){
+        } catch (Exception e) {
+            ForecastTimePeriod[] l1 = ForecastTimePeriod.values();
+            for (ForecastTimePeriod listItem : l1) {
+                if (listItem.toString().equals(selectedTimePeriodString)) {
                     return listItem;
                 }
             }

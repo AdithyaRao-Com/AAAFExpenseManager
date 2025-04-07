@@ -41,7 +41,7 @@ public class QIFImportExportRecord {
         this.accountName = record.accountName;
         this.accountType = "Bank";
         this.transactionDate = record.getTransactionLocalDate();
-        this.amount = String.format("%.2f",record.amount);
+        this.amount = String.format("%.2f", record.amount);
         this.payee = record.transactionName;
         this.memo = record.notes;
         this.category = record.category;

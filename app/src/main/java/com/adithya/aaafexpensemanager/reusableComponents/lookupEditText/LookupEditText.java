@@ -23,6 +23,7 @@ public class LookupEditText extends TextInputEditText implements View.OnClickLis
     private Context context;
     private OnItemClickListener onItemClickListener;
     private List<LookupEditTextItem> items;
+
     public LookupEditText(Context context) {
         super(context);
         init(context);

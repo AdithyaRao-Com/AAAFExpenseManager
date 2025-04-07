@@ -18,7 +18,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection deprecation, UnusedReturnValue */
+/**
+ * @noinspection deprecation, UnusedReturnValue
+ */
 public class ExportScheduleCSVGenerator {
     public static boolean generateCSV(Context context, Uri fileUri) {
         List<ImportExportScheduleCSVRecord> records = getCSVRecords(context);
@@ -29,14 +31,15 @@ public class ExportScheduleCSVGenerator {
                 csvPrinter.printRecord((Object[]) row.getStringArray());
             }
             csvPrinter.flush();
-            Log.d("ExportCSVGenerator","CSV file generated successfully: " + fileUri);
+            Log.d("ExportCSVGenerator", "CSV file generated successfully: " + fileUri);
             return true;
         } catch (IOException e) {
             e.printStackTrace();
-            Log.e("ExportCSVGenerator","Error generating CSV file: " + e.getMessage());
+            Log.e("ExportCSVGenerator", "Error generating CSV file: " + e.getMessage());
             return false;
         }
     }
+
     private static List<String> getCSVHeaders() {
         List<String> headers = new ArrayList<>();
         headers.add("Transaction Name");
@@ -52,10 +55,11 @@ public class ExportScheduleCSVGenerator {
         headers.add("Notes");
         return headers;
     }
+
     private static List<ImportExportScheduleCSVRecord> getCSVRecords(Context context) {
         List<ImportExportScheduleCSVRecord> records = new ArrayList<>();
         RecurringRepository recurringRepository = new RecurringRepository((Application) context.getApplicationContext());
-        List<RecurringSchedule> recurringSchedules = recurringRepository.getAllRecurringSchedules(new TransactionFilter(),-1);
+        List<RecurringSchedule> recurringSchedules = recurringRepository.getAllRecurringSchedules(new TransactionFilter(), -1);
         for (RecurringSchedule recurringSchedule : recurringSchedules) {
             records.add(new ImportExportScheduleCSVRecord(recurringSchedule));
         }

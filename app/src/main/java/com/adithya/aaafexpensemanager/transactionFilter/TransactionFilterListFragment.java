@@ -33,7 +33,7 @@ public class TransactionFilterListFragment extends Fragment {
         RecyclerView transactionFilterRecyclerView = view.findViewById(R.id.transactionFilterRecyclerView);
         transactionFilterRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         viewModel = new ViewModelProvider(requireActivity()).get(TransactionFilterViewModel.class);
-        adapter = new TransactionFilterAdapter(new ArrayList<>(),this.requireContext());
+        adapter = new TransactionFilterAdapter(new ArrayList<>(), this.requireContext());
         transactionFilterRecyclerView.setAdapter(adapter);
         viewModel.getTransactionFilters().observe(getViewLifecycleOwner(), transactionFilters -> {
             adapter.setTransactionFilters(transactionFilters);
@@ -43,8 +43,8 @@ public class TransactionFilterListFragment extends Fragment {
     }
 
     private class TransactionFilterAdapter extends RecyclerView.Adapter<TransactionFilterAdapter.TransactionFilterViewHolder> {
-        private List<TransactionFilter> transactionFilters;
         private final Context context;
+        private List<TransactionFilter> transactionFilters;
 
         public TransactionFilterAdapter(List<TransactionFilter> transactionFilters, Context context) {
             this.transactionFilters = transactionFilters;
@@ -70,21 +70,22 @@ public class TransactionFilterListFragment extends Fragment {
             holder.itemView.setOnClickListener(v -> {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("transactionFilter", transactionFilter);
-                if (transactionFilter.reportType.equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)){
+                if (transactionFilter.reportType.equals(AppConstants.REPORT_TYPE_CATEGORY_SUMMARY)) {
                     Navigation.findNavController(v)
-                            .navigate(R.id.action_transactionFilterListFragment_to_categorySummaryFragment,bundle);
-                }else{
+                            .navigate(R.id.action_transactionFilterListFragment_to_categorySummaryFragment, bundle);
+                } else {
                     Navigation.findNavController(v)
-                            .navigate(R.id.action_transactionFilterListFragment_to_balanceForecastFragment,bundle);
+                            .navigate(R.id.action_transactionFilterListFragment_to_balanceForecastFragment, bundle);
                 }
             });
             holder.itemView.setOnLongClickListener(v -> {
-                List<String> options = List.of("Edit Item","Delete Item","Run Report");
-                showSubItemsDialog(v, options,transactionFilter);
+                List<String> options = List.of("Edit Item", "Delete Item", "Run Report");
+                showSubItemsDialog(v, options, transactionFilter);
                 return true;
             });
         }
-        private void showSubItemsDialog(View anchorView, List<String> subItems,TransactionFilter transactionFilter) {
+
+        private void showSubItemsDialog(View anchorView, List<String> subItems, TransactionFilter transactionFilter) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
             builder.setTitle("Select an option");
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this.context, android.R.layout.simple_list_item_1, subItems);
@@ -123,6 +124,7 @@ public class TransactionFilterListFragment extends Fragment {
         public int getItemCount() {
             return transactionFilters.size();
         }
+
         public class TransactionFilterViewHolder extends RecyclerView.ViewHolder {
             public android.widget.TextView reportNameTextView;
             public android.widget.TextView reportTypeTextView;

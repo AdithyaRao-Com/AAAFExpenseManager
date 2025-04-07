@@ -33,7 +33,6 @@ public class ImportCSVScheduleFragment extends Fragment {
     private TextView fileSelectedTextView;
     private Button uploadButton;
     private Uri selectedFileUri;
-    private ProgressBar circularProgress;
     @SuppressLint("SetTextI18n")
     private final ActivityResultLauncher<Intent> pickFileLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -52,6 +51,7 @@ public class ImportCSVScheduleFragment extends Fragment {
                 }
             }
     );
+    private ProgressBar circularProgress;
     private Context context;
     private ViewGroup viewGroup;
     private ExecutorService executorService;

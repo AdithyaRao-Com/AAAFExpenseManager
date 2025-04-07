@@ -10,22 +10,28 @@ import java.io.OutputStreamWriter;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-/** @noinspection CallToPrintStackTrace, FieldCanBeLocal */
+/**
+ * @noinspection CallToPrintStackTrace, FieldCanBeLocal
+ */
 public class QIFExporter {
     private final QIFImportExportRepository repository;
     private final Application application;
+
     public QIFExporter(Application application) {
         this.application = application;
         repository = new QIFImportExportRepository(application);
     }
-    /** @noinspection UnusedReturnValue*/
+
+    /**
+     * @noinspection UnusedReturnValue
+     */
     public boolean generateQIF(Uri fileUri) {
         List<QIFImportExportRecord> records = repository.getAllQIFImportExportRecords();
         try {
             OutputStream outputStream = application.getContentResolver().openOutputStream(fileUri);
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));
             writeQIFHeader(writer);
-            writeTransactions(writer,records);
+            writeTransactions(writer, records);
             writer.close();
             return true;
 
@@ -34,17 +40,19 @@ public class QIFExporter {
             return false;
         }
     }
+
     private void writeQIFHeader(BufferedWriter writer) throws IOException {
         List<QIFHeaderRecord> headerRecords = repository.getAllQIFHeaderRecords();
-        for(QIFHeaderRecord record : headerRecords){
+        for (QIFHeaderRecord record : headerRecords) {
             writer.write("!Account\n");
             writer.write("N" + record.accountName + "\n");
             writer.write("T" + "Bank" + "\n");
             writer.write("^\n");
         }
     }
+
     private void writeTransactions(BufferedWriter writer, List<QIFImportExportRecord> records) throws IOException {
-        for(QIFImportExportRecord record : records){
+        for (QIFImportExportRecord record : records) {
             writer.write("!Type:Bank\n"); // Assuming all transactions are bank. Adjust if needed.
             writer.write("N" + record.accountName + "\n");
 

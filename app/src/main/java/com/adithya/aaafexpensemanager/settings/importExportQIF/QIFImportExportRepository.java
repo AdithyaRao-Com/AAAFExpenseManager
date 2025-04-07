@@ -12,17 +12,23 @@ import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection CallToPrintStackTrace*/
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class QIFImportExportRepository {
     private final SQLiteDatabase db;
-    /** @noinspection FieldCanBeLocal*/
+    /**
+     * @noinspection FieldCanBeLocal
+     */
     private final Application application;
+
     public QIFImportExportRepository(Application application) {
         //noinspection resource
         QIFImportExportDBHelper dbHelper = new QIFImportExportDBHelper(application);
         this.application = application;
         db = dbHelper.getWritableDatabase();
     }
+
     public void addQIFImportExportRecord(QIFImportExportRecord record) {
         try {
             ContentValues values = new ContentValues();
@@ -34,36 +40,38 @@ public class QIFImportExportRepository {
             values.put("memo", record.memo);
             values.put("category", record.category);
             db.insert(QIFImportExportDBHelper.TABLE_TRANSACTIONS, null, values);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public void deleteAllQIFImportExportRecords() {
         db.delete(QIFImportExportDBHelper.TABLE_TRANSACTIONS, null, null);
     }
+
     public void addAllQIFImportExportRecords(List<QIFImportExportRecord> records) {
         for (QIFImportExportRecord record : records) {
             addQIFImportExportRecord(record);
         }
     }
-    public void loadQIFInterfaceTable(){
+
+    public void loadQIFInterfaceTable() {
         try {
             TransactionRepository repository = new TransactionRepository(application);
-            List<Transaction> records = repository.getAllTransactions(new TransactionFilter(),-1);
+            List<Transaction> records = repository.getAllTransactions(new TransactionFilter(), -1);
             deleteAllQIFImportExportRecords();
             records.stream()
                     .map(QIFImportExportRecord::new)
                     .forEach(this::addQIFImportExportRecord);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
     public List<QIFImportExportRecord> getAllQIFImportExportRecords() {
         List<QIFImportExportRecord> records = new ArrayList<>();
         loadQIFInterfaceTable();
-        try(Cursor cursor = db.query(QIFImportExportDBHelper.TABLE_TRANSACTIONS, null, null, null, null, null, null)){
+        try (Cursor cursor = db.query(QIFImportExportDBHelper.TABLE_TRANSACTIONS, null, null, null, null, null, null)) {
             if (cursor.moveToFirst()) {
                 do {
                     QIFImportExportRecord record = getQIFImportExportRecordFromCursor(cursor);
@@ -72,13 +80,13 @@ public class QIFImportExportRepository {
                     }
                 } while (cursor.moveToNext());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         deleteAllQIFImportExportRecords();
         return records;
     }
+
     private QIFImportExportRecord getQIFImportExportRecordFromCursor(Cursor cursor) {
         try {
             String accountName = cursor.getString(cursor.getColumnIndexOrThrow("account_name"));
@@ -89,15 +97,15 @@ public class QIFImportExportRepository {
             String memo = cursor.getString(cursor.getColumnIndexOrThrow("memo"));
             String category = cursor.getString(cursor.getColumnIndexOrThrow("category"));
             return new QIFImportExportRecord(accountName, accountType, transactionDate, amount, payee, memo, category);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    public List<QIFHeaderRecord> getAllQIFHeaderRecords(){
+
+    public List<QIFHeaderRecord> getAllQIFHeaderRecords() {
         List<QIFHeaderRecord> records = new ArrayList<>();
-        try(Cursor cursor = db.rawQuery("SELECT DISTINCT account_name, account_type FROM " + QIFImportExportDBHelper.TABLE_TRANSACTIONS, null)){
+        try (Cursor cursor = db.rawQuery("SELECT DISTINCT account_name, account_type FROM " + QIFImportExportDBHelper.TABLE_TRANSACTIONS, null)) {
             if (cursor.moveToFirst()) {
                 do {
                     String accountName = cursor.getString(cursor.getColumnIndexOrThrow("account_name"));
@@ -107,8 +115,7 @@ public class QIFImportExportRepository {
                 } while (cursor.moveToNext());
             }
             return records;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }

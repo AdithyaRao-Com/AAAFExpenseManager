@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/** @noinspection CallToPrintStackTrace*/
+/**
+ * @noinspection CallToPrintStackTrace
+ */
 public class LockedFileReplace {
     public static void replaceLockedFile(Path sourceFilePath, Path destinationFilePath) throws IOException {
 

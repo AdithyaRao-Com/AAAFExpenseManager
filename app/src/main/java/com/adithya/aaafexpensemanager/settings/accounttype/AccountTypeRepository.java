@@ -10,7 +10,9 @@ import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class AccountTypeRepository {
     private final DatabaseHelper dbHelper;
     private final SQLiteDatabase db;

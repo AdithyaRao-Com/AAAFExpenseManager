@@ -27,6 +27,7 @@ public class EditTextDialog {
     private final String title;
     private final String positiveButtonText;
     private final String negativeButtonText;
+
     @SuppressLint("InflateParams")
     public EditTextDialog(@NonNull
                           Context context,
@@ -55,6 +56,7 @@ public class EditTextDialog {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     public EditTextDialog(Context context,
                           String title,
                           PositiveListener positiveListener,

@@ -12,11 +12,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Objects;
 
-/** @noinspection FieldCanBeLocal*/
+/**
+ * @noinspection FieldCanBeLocal
+ */
 public class QIFImporter {
     // TODO - Test functionality for QIF Importer
     private final QIFImportExportRepository repository;
     private final Application application;
+
     public QIFImporter(Application application) {
         this.application = application;
         this.repository = new QIFImportExportRepository(application);

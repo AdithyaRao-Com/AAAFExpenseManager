@@ -25,7 +25,9 @@ import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 import java.util.ArrayList;
 import java.util.List;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class FutureTransactionFragment extends Fragment implements TransactionFilterDialog.OnFilterAppliedListener {
     public TransactionFilter transactionFilter;
     public int currentPage = 1;
