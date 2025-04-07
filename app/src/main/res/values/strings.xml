@@ -132,4 +132,5 @@
     <string name="import_schedules_csv">Import Schedules CSV</string>
     <string name="test_fragment">Test Fragment</string>
     <string name="select_qif_file">Select QIF File</string>
+    <string name="select_csv_file">Select CSV File</string>
 </resources>
