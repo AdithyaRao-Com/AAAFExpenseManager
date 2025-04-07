@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class TransactionFilterUtils {
+    // TODO - Fix the issue on the Account Tags loading accounts into the transaction filter lookup
     public static void addTaggedAccountsToFilter(TransactionFilter transactionFilters, Application application) {
         AccountRepository accountRepository = new AccountRepository(application);
         try {

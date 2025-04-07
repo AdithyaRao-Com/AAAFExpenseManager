@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TransactionFilter implements Parcelable {
+public class TransactionFilter implements Parcelable,Cloneable {
     public static final Parcelable.Creator<TransactionFilter> CREATOR = new Parcelable.Creator<>() {
         @Override
         public TransactionFilter createFromParcel(Parcel in) {
@@ -197,5 +197,30 @@ public class TransactionFilter implements Parcelable {
         }
         accountNames.clear();
         accountNames.addAll(deDupedAccounts.keySet());
+    }
+
+    @Override
+    public TransactionFilter clone() {
+        try {
+            TransactionFilter clone = (TransactionFilter) super.clone();
+            clone.transactionNames = new ArrayList<>(this.transactionNames);
+            clone.fromTransactionDate = this.fromTransactionDate;
+            clone.toTransactionDate = this.toTransactionDate;
+            clone.categories = new ArrayList<>(this.categories);
+            clone.accountNames = new ArrayList<>(this.accountNames);
+            clone.toAccountNames = new ArrayList<>(this.toAccountNames);
+            clone.fromAmount = this.fromAmount;
+            clone.toAmount = this.toAmount;
+            clone.transactionTypes = new ArrayList<>(this.transactionTypes);
+            clone.accountTypes = new ArrayList<>(this.accountTypes);
+            clone.searchText = this.searchText;
+            clone.reportName = this.reportName;
+            clone.periodName = this.reportName;
+            clone.accountTags = new ArrayList<>(this.accountTags);
+            clone.reportType = this.reportType;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

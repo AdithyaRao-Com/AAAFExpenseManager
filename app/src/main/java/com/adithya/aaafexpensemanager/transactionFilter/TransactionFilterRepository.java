@@ -3,7 +3,6 @@ package com.adithya.aaafexpensemanager.transactionFilter;
 import android.app.Application;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 
 import androidx.annotation.NonNull;
@@ -70,22 +69,16 @@ public class TransactionFilterRepository {
         return values;
     }
 
-    public void addTransactionFilter(TransactionFilter transactionFilter) {
-        boolean updateInd = false;
+    public void addTransactionFilter(TransactionFilter transactionFilter,TransactionFilter previousTransactionFilter) {
         ContentValues values = getContentValues(transactionFilter);
         try {
-            db.insertOrThrow(DBHelperActions.TRANSACTION_FILTER, null, values);
-        } catch (SQLiteConstraintException e) {
-            updateInd = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (updateInd) {
-            try {
-                db.update(DBHelperActions.TRANSACTION_FILTER, values, "report_name = ?", new String[]{transactionFilter.reportName});
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (!previousTransactionFilter.reportName.isBlank()) {
+                db.delete(DBHelperActions.TRANSACTION_FILTER, "report_name = ?", new String[]{previousTransactionFilter.reportName});
             }
+            db.insertOrThrow(DBHelperActions.TRANSACTION_FILTER, null, values);
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 

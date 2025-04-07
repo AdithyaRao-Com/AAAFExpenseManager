@@ -65,6 +65,7 @@ public class CreateTransactionFilterFragment extends Fragment {
     private EditText dateToEditText;
     private LinearLayout dateFromToWrapper;
     private TextInputLayout periodNameLookupWrapper;
+    private TransactionFilter previousTransactionFilter;
 
     @Nullable
     @Override
@@ -224,7 +225,7 @@ public class CreateTransactionFilterFragment extends Fragment {
                     transactionFilter.setToTransactionDate(LocalDate.parse(dateToEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     transactionFilter.periodName = "";
                 }
-                transactionFilterViewModel.addTransactionFilter(transactionFilter);
+                transactionFilterViewModel.addTransactionFilter(transactionFilter,previousTransactionFilter);
                 Navigation.findNavController(requireView()).navigate(R.id.action_createTransactionFilterFragment_to_transactionFilterListFragment);
             } catch (RuntimeException e) {
                 Log.e("CreateTransactionFilterFragment", "setupCreateTransactionFilterFab - error", e);
@@ -239,9 +240,11 @@ public class CreateTransactionFilterFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             transactionFilter = bundle.getParcelable("transactionFilter");
+            previousTransactionFilter = transactionFilter.clone();
             initializeFields();
         } else {
             transactionFilter = new TransactionFilter();
+            previousTransactionFilter = transactionFilter.clone();
         }
     }
 
