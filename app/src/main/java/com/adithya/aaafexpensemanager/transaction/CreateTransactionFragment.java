@@ -345,13 +345,13 @@ public class CreateTransactionFragment extends Fragment {
         accountNameAutoComplete.setItemStrings(this.eligibleAccountNames);
         toAccountNameAutoComplete.setItemStrings(this.eligibleAccountNames);
         accountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> {
-            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem))
+            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem.toEditTextLookupString()))
                     .findFirst().orElse(null)
                     .currencyCode;
             accountCurrencyTextView.setText(tempCurrencyCode);
         });
         toAccountNameAutoComplete.setOnItemClickListener((selectedItem, position) -> {
-            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem))
+            String tempCurrencyCode = accounts.stream().filter(account -> account.accountName.equals(selectedItem.toEditTextLookupString()))
                     .findFirst().orElse(null)
                     .currencyCode;
             toAccountCurrencyTextView.setText(tempCurrencyCode);
