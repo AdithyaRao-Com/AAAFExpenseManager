@@ -70,11 +70,11 @@ public class CreateTransactionFilterFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         context = getContext().getApplicationContext();
-        recentTransactionViewModel = new ViewModelProvider(this).get(RecentTransactionViewModel.class);
-        accountViewModel = new ViewModelProvider(this).get(AccountViewModel.class);
-        accountTypeViewModel = new ViewModelProvider(this).get(AccountTypeViewModel.class);
-        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        transactionFilterViewModel = new ViewModelProvider(this).get(TransactionFilterViewModel.class);
+        recentTransactionViewModel = new ViewModelProvider(requireActivity()).get(RecentTransactionViewModel.class);
+        accountViewModel = new ViewModelProvider(requireActivity()).get(AccountViewModel.class);
+        accountTypeViewModel = new ViewModelProvider(requireActivity()).get(AccountTypeViewModel.class);
+        categoryViewModel = new ViewModelProvider(requireActivity()).get(CategoryViewModel.class);
+        transactionFilterViewModel = new ViewModelProvider(requireActivity()).get(TransactionFilterViewModel.class);
         View view = inflater.inflate(R.layout.fragment_create_transacton_filter, container, false);
         transactionNameTextView = view.findViewById(R.id.transactionNameTextView);
         categoriesTextView = view.findViewById(R.id.categoriesTextView);

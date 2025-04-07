@@ -51,8 +51,8 @@ public class TransactionFilterListFragment extends Fragment {
             this.context = context;
         }
 
-        public void setTransactionFilters(List<TransactionFilter> categories) {
-            this.transactionFilters = categories;
+        public void setTransactionFilters(List<TransactionFilter> transactionFilters) {
+            this.transactionFilters = transactionFilters;
         }
 
         @NonNull

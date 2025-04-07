@@ -65,8 +65,8 @@ public class CurrencyFragment extends Fragment {
             this.currencies = currencies;
         }
 
-        public void setCurrencies(List<Currency> categories) {
-            this.currencies = categories;
+        public void setCurrencies(List<Currency> currencies) {
+            this.currencies = currencies;
         }
 
         @NonNull
