@@ -17,7 +17,6 @@ import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEd
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +27,9 @@ public class ForecastReportFragment extends Fragment {
     private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
     private RecyclerView reportsRecyclerView;
-    private List<LookupEditText.LookupEditTextItem> timePeriods = new ArrayList<>();
+    private final List<LookupEditText.LookupEditTextItem> timePeriods = Arrays
+            .stream(ForecastConstants.ForecastTimePeriod.values())
+            .collect(Collectors.toList());
     private Application application;
 
     @Override
@@ -84,9 +85,6 @@ public class ForecastReportFragment extends Fragment {
     }
 
     private void setupTimePeriodSelection() {
-        timePeriods = Arrays
-                .stream(ForecastConstants.ForecastTimePeriod.values())
-                .collect(Collectors.toList());
         timePeriodSelection.setItems(timePeriods);
         timePeriodSelection.setText(selectedTimePeriod.toString());
         timePeriodSelection.setOnItemClickListener((selectedItem, position) -> {
