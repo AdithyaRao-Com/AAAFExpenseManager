@@ -291,17 +291,17 @@
         android:id="@+id/nav_export_csv"
         android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.ExportCSVFragment"
         android:label="Export CSV"
-        tools:layout="@layout/fragment_setting_export_csv"></fragment>
+        tools:layout="@layout/fragment_setting_export_csv" />
     <fragment
         android:id="@+id/nav_export_schedules_csv"
         android:name="com.adithya.aaafexpensemanager.settings.importExportSchedules.ExportCSVScheduleFragment"
         android:label="Export Schedules CSV"
-        tools:layout="@layout/fragment_setting_export_csv"></fragment>
+        tools:layout="@layout/fragment_setting_export_csv" />
     <fragment
         android:id="@+id/nav_import_schedules_csv"
         android:name="com.adithya.aaafexpensemanager.settings.importExportSchedules.ImportCSVScheduleFragment"
         android:label="Import Schedules CSV"
-        tools:layout="@layout/fragment_setting_upload_csv"></fragment>
+        tools:layout="@layout/fragment_setting_upload_csv" />
     <fragment
         android:id="@+id/nav_autobackup_dir_sel"
         android:name="com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupDirectorySelectionFragment"
@@ -392,15 +392,15 @@
         android:id="@+id/nav_import_QIF"
         android:name="com.adithya.aaafexpensemanager.settings.importExportQIF.ImportQIFFragment"
         android:label="Import QIF"
-        tools:layout="@layout/fragment_setting_import_qif"></fragment>
+        tools:layout="@layout/fragment_setting_import_qif" />
     <fragment
         android:id="@+id/nav_export_QIF"
         android:name="com.adithya.aaafexpensemanager.settings.importExportQIF.ExportQIFFragment"
         android:label="Export QIF"
-        tools:layout="@layout/fragment_setting_export_qif"></fragment>
+        tools:layout="@layout/fragment_setting_export_qif" />
     <fragment
         android:id="@+id/nav_test_fragment"
         android:name="com.adithya.aaafexpensemanager.util.TestFragment"
         android:label="Test Fragment"
-        tools:layout="@layout/fragment_test"></fragment>
+        tools:layout="@layout/fragment_test" />
 </navigation>
