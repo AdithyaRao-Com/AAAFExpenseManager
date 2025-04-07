@@ -32,6 +32,7 @@ public class AccountFragment extends Fragment {
     private AccountsAdapter adapter;
     private boolean showClosedAccounts = false;
     private MenuItem showHideClosedAccountsMenuItem;
+    private MenuItem createNewAccountMenuItem;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -93,6 +94,7 @@ public class AccountFragment extends Fragment {
             public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
                 menuInflater.inflate(R.menu.list_account_menu, menu);
                 showHideClosedAccountsMenuItem = menu.findItem(R.id.actionShowHideClosedAccountsMenuItem);
+                createNewAccountMenuItem = menu.findItem(R.id.createNewAccountMenuItem);
             }
 
             /** */
@@ -113,6 +115,10 @@ public class AccountFragment extends Fragment {
                             "Yes",
                             "No"
                     );
+                    return true;
+                }
+                else if (menuItem.getItemId() == R.id.createNewAccountMenuItem) {
+                    changeNavigation(R.id.nav_create_account, null);
                     return true;
                 }
                 return false;

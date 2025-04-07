@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements MenuHost {
             Log.d("Navigation", "Destination changed: " + destination.getLabel());
             final int fabDestination;
             if (destination.getId() == R.id.nav_account) {
-                fabDestination = R.id.nav_create_account;
+                fabDestination = R.id.nav_create_transaction;
             } else if (destination.getId() == R.id.nav_transaction) {
                 fabDestination = R.id.nav_create_transaction;
             } else if (destination.getId() == R.id.nav_category) {
