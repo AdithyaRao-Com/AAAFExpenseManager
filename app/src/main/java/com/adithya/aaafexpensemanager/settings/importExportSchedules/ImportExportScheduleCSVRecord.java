@@ -80,7 +80,7 @@ public class ImportExportScheduleCSVRecord {
             this.transactionName,
             this.recurringFrequency,
             this.getRepeatInterval(),
-            this.getRecurringStartDate().isBefore(LocalDate.now())?LocalDate.now().plusDays(1):this.getRecurringStartDate(),
+            this.getRecurringStartDate(),
             this.getRecurringEndDate(),
             this.category,
             this.notes,

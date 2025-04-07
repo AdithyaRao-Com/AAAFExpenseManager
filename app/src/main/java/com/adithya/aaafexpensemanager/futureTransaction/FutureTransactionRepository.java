@@ -337,15 +337,24 @@ public class FutureTransactionRepository {
         ) {
             futureTransactions.add(new FutureTransaction(recurringSchedule, referenceDate));
         }
+        if(referenceDate.isBefore(recurringSchedule.getRecurringStartDateLocalDate())
+        && recurringSchedule.getRecurringStartDateLocalDate().isAfter(lastAvailableFutureTransaction.getTransactionLocalDate())
+        && recurringSchedule.getRecurringStartDateLocalDate().isAfter(lastTransactionInsertedDate)
+        && (recurringSchedule.getRecurringStartDateLocalDate().isAfter(LocalDate.now())
+                || recurringSchedule.getRecurringStartDateLocalDate().isEqual(LocalDate.now()))) {
+            futureTransactions.add(new FutureTransaction(recurringSchedule, recurringSchedule.getRecurringStartDateLocalDate()));
+        }
         LocalDate referenceEndDate;
         if (endDate.isBefore(recurringSchedule.getRecurringEndDateLocalDate())) {
             referenceEndDate = endDate;
         } else {
             referenceEndDate = recurringSchedule.getRecurringEndDateLocalDate().plusDays(1);
         }
-        List<FutureTransaction> futureTransactions1 = referenceDate.datesUntil(referenceEndDate,
-                        getPeriodFromSchedule(recurringSchedule))
+        List<FutureTransaction> futureTransactions1 = recurringSchedule.getRecurringStartDateLocalDate()
+                .datesUntil(referenceEndDate,getPeriodFromSchedule(recurringSchedule))
                 .map(date1 -> new FutureTransaction(recurringSchedule, date1))
+                .filter(e -> e.getTransactionLocalDate().isAfter(LocalDate.now()))
+                .filter(e -> e.getTransactionLocalDate().isAfter(referenceDate.minusDays(1)))
                 .filter(e -> e.getTransactionLocalDate().isAfter(lastAvailableFutureTransaction.getTransactionLocalDate()))
                 .filter(e -> e.getTransactionLocalDate().isAfter(lastTransactionInsertedDate))
                 .filter(e -> e.getTransactionLocalDate().isAfter(recurringSchedule.getRecurringStartDateLocalDate()))
