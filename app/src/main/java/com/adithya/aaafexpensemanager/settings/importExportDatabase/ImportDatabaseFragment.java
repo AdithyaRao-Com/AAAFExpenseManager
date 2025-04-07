@@ -6,6 +6,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import com.adithya.aaafexpensemanager.settings.SettingsRepository;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @noinspection FieldCanBeLocal
@@ -40,6 +44,8 @@ public class ImportDatabaseFragment extends Fragment {
     private Uri importUri;
     private DatabaseImporter databaseImporter;
     private ProgressBar circularProgress;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -47,6 +53,8 @@ public class ImportDatabaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsRepository = new SettingsRepository((Application) requireContext().getApplicationContext());
         databaseImporter = new DatabaseImporter();
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
 
         pickFileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -90,35 +98,49 @@ public class ImportDatabaseFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void importDatabase() {
-        try {
-            circularProgress.setVisibility(View.VISIBLE);
-            if (importUri == null) {
-                showSnackbar("Please select a database zip file first.");
-                return;
-            }
+        if (importUri == null) {
+            showSnackbar("Please select a database zip file first.");
+            return;
+        }
 
-            boolean success = databaseImporter.importDatabase(requireContext(), importUri, databaseFile);
-            if (success) {
-                importStatusTextView.setText("Import completed successfully.");
-                showSnackbar("Database imported successfully.");
-            } else {
-                importStatusTextView.setText("Import failed.");
-                showSnackbar("Database import failed.");
+        circularProgress.setVisibility(View.VISIBLE);
+
+        executorService.execute(() -> {
+            try {
+                boolean success = databaseImporter.importDatabase(requireContext(), importUri, databaseFile);
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    if (success) {
+                        importStatusTextView.setText("Import completed successfully.");
+                        showSnackbar("Database imported successfully.");
+                    } else {
+                        importStatusTextView.setText("Import failed.");
+                        showSnackbar("Database import failed.");
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    importStatusTextView.setText("Import failed.");
+                    showSnackbar("Database import failed.");
+                });
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            showSnackbar("Database import failed");
-        }
-        finally {
-            circularProgress.setVisibility(View.GONE);
-        }
+        });
     }
 
     private void showSnackbar(String message) {
         View view = getView();
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }

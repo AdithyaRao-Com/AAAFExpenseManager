@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ExportCSVScheduleFragment extends Fragment {
 
@@ -41,6 +45,8 @@ public class ExportCSVScheduleFragment extends Fragment {
     private Uri exportUri;
     private Application application;
     private ProgressBar circularProgress;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -48,6 +54,8 @@ public class ExportCSVScheduleFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsRepository = new SettingsRepository((Application) requireContext().getApplicationContext());
         application = (Application) requireContext().getApplicationContext();
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
 
         createWriteRequestLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -110,25 +118,40 @@ public class ExportCSVScheduleFragment extends Fragment {
             showSnackbar("Please select an export location first.");
             return;
         }
-        try {
-            circularProgress.setVisibility(View.VISIBLE);
-            ExportScheduleCSVGenerator.generateCSV(application, exportUri);
-            exportStatusTextView.setText("Schedules CSV export completed.");
-            showSnackbar("Schedules CSV file exported successfully.");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            showSnackbar("Schedules CSV export failed");
-        }
-        finally {
-            circularProgress.setVisibility(View.GONE);
-        }
+
+        circularProgress.setVisibility(View.VISIBLE);
+
+        executorService.execute(() -> {
+            try {
+                ExportScheduleCSVGenerator.generateCSV(application, exportUri);
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("Schedules CSV export completed.");
+                    showSnackbar("Schedules CSV file exported successfully.");
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("Schedules CSV export failed.");
+                    showSnackbar("Schedules CSV export failed.");
+                });
+            }
+        });
     }
 
     private void showSnackbar(String message) {
         View view = getView();
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }

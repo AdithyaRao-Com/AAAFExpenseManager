@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @noinspection FieldCanBeLocal
@@ -46,6 +50,8 @@ public class ExportDatabaseFragment extends Fragment {
     private Uri exportUri;
     private DatabaseExporter databaseExporter;
     private ProgressBar circularProgress;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -53,6 +59,8 @@ public class ExportDatabaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsRepository = new SettingsRepository((Application) requireContext().getApplicationContext());
         databaseExporter = new DatabaseExporter();
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
 
         createWriteRequestLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -113,30 +121,44 @@ public class ExportDatabaseFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void exportDatabase() {
-        try {
-            circularProgress.setVisibility(View.VISIBLE);
-            if (exportUri == null) {
-                showSnackbar("Please select an export location first.");
-                return;
-            }
+        if (exportUri == null) {
+            showSnackbar("Please select an export location first.");
+            return;
+        }
 
-            databaseExporter.exportDatabase(requireContext(), databaseFile, exportUri);
-            exportStatusTextView.setText("Export completed.");
-            showSnackbar("Database exported successfully.");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            showSnackbar("Database import failed");
-        }
-        finally {
-            circularProgress.setVisibility(View.GONE);
-        }
+        circularProgress.setVisibility(View.VISIBLE);
+
+        executorService.execute(() -> {
+            try {
+                databaseExporter.exportDatabase(requireContext(), databaseFile, exportUri);
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("Export completed.");
+                    showSnackbar("Database exported successfully.");
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("Database export failed.");
+                    showSnackbar("Database export failed.");
+                });
+            }
+        });
     }
 
     private void showSnackbar(String message) {
         View view = getView();
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }

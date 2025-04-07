@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +27,9 @@ import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.util.CsvFileTypeDetector;
 import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ImportCSVFragment extends Fragment {
     private ProgressBar circularProgress;
@@ -51,6 +56,8 @@ public class ImportCSVFragment extends Fragment {
     );
     private Context context;
     private ViewGroup viewGroup;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @Nullable
     @Override
@@ -62,7 +69,8 @@ public class ImportCSVFragment extends Fragment {
         fileSelectedTextView = view.findViewById(R.id.fileSelectedTextView);
         uploadButton = view.findViewById(R.id.uploadButton);
         Button selectFileButton = view.findViewById(R.id.selectFileButton);
-
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
         uploadButton.setEnabled(false);
 
         selectFileButton.setOnClickListener(v -> {
@@ -81,42 +89,67 @@ public class ImportCSVFragment extends Fragment {
     }
 
     private void processCsvFile(Uri fileUri) {
-        if (CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)) {
-            parseTransactions(this.context, fileUri);
-            Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(this.context, "File is not a CSV", Toast.LENGTH_SHORT).show();
-            ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
-                @Override
-                public void onConversionComplete(Uri csvFileUri) {
-                    parseTransactions(context, csvFileUri);
-                }
+        circularProgress.setVisibility(View.VISIBLE);
+        executorService.execute(() -> {
+            if (CsvFileTypeDetector.isLikelyCsv(this.context, fileUri)) {
+                parseTransactions(this.context, fileUri);
+                mainHandler.post(() -> {
+                    Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
+                    circularProgress.setVisibility(View.GONE);
+                });
 
-                @Override
-                public void onConversionFailed(String errorMessage) {
-                    Snackbar.make(viewGroup.getRootView(), "Conversion failed: " + errorMessage, Snackbar.LENGTH_LONG).show();
-                    Log.e("UploadCSVFragment", "Conversion failed: " + errorMessage);
+            } else {
+                ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
+                    @Override
+                    public void onConversionComplete(Uri csvFileUri) {
+                        parseTransactions(context, csvFileUri);
+                        mainHandler.post(() -> {
+                            Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
+                            circularProgress.setVisibility(View.GONE);
+                        });
+
+                    }
+
+                    @Override
+                    public void onConversionFailed(String errorMessage) {
+                        mainHandler.post(() -> {
+                            Snackbar.make(viewGroup.getRootView(), "Conversion failed: " + errorMessage, Snackbar.LENGTH_LONG).show();
+                            Log.e("UploadCSVFragment", "Conversion failed: " + errorMessage);
+                            circularProgress.setVisibility(View.GONE);
+                        });
+
+                    }
+                });
+                try {
+                    convertor.convertExcelToCsv(fileUri);
+                } catch (Exception e) {
+                    mainHandler.post(() -> {
+                        Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
+                        circularProgress.setVisibility(View.GONE);
+                    });
+
                 }
-            });
-            try {
-                convertor.convertExcelToCsv(fileUri);
-            } catch (Exception e) {
-                Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
             }
-        }
+        });
+
     }
 
-    private void parseTransactions(Context context,Uri fileUri){
+    private void parseTransactions(Context context, Uri fileUri) {
         try {
-            circularProgress.setVisibility(View.VISIBLE);
             ImportCSVParser.parseTransactions(this.context, fileUri);
-        }
-        catch (Exception e){
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        finally {
-            circularProgress.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }

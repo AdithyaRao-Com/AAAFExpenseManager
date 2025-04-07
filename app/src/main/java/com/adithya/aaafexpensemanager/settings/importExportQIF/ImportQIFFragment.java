@@ -6,6 +6,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +24,9 @@ import androidx.fragment.app.Fragment;
 import com.adithya.aaafexpensemanager.R;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class ImportQIFFragment extends Fragment {
 
     private Button selectFileButton;
@@ -32,12 +37,16 @@ public class ImportQIFFragment extends Fragment {
     private Uri importUri;
     private QIFImporter qifImporter;
     private ProgressBar circularProgress;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @SuppressLint("SetTextI18n")
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         qifImporter = new QIFImporter((Application) requireContext().getApplicationContext());
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
 
         pickFileLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -89,30 +98,45 @@ public class ImportQIFFragment extends Fragment {
             showSnackbar("Please select a QIF file first.");
             return;
         }
-        try {
-            circularProgress.setVisibility(View.VISIBLE);
-            boolean success = qifImporter.importQIF(importUri);
-            if (success) {
-                importStatusTextView.setText("QIF import completed successfully.");
-                showSnackbar("QIF file imported successfully.");
-            } else {
-                importStatusTextView.setText("QIF import failed.");
-                showSnackbar("QIF file import failed.");
+
+        circularProgress.setVisibility(View.VISIBLE);
+
+        executorService.execute(() -> {
+            try {
+                boolean success = qifImporter.importQIF(importUri);
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    if (success) {
+                        importStatusTextView.setText("QIF import completed successfully.");
+                        showSnackbar("QIF file imported successfully.");
+                    } else {
+                        importStatusTextView.setText("QIF import failed.");
+                        showSnackbar("QIF file import failed.");
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    importStatusTextView.setText("QIF import failed: " + e.getMessage());
+                    showSnackbar("QIF file import failed: " + e.getMessage());
+                });
             }
-        } catch (Exception e) {
-            importStatusTextView.setText("QIF import failed: " + e.getMessage());
-            showSnackbar("QIF file import failed: " + e.getMessage());
-            e.printStackTrace();
-        }
-        finally {
-            circularProgress.setVisibility(View.GONE);
-        }
+        });
     }
 
     private void showSnackbar(String message) {
         View view = getView();
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }

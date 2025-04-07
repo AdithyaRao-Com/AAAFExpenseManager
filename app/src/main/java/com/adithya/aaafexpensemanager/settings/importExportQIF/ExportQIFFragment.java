@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +31,8 @@ import com.google.android.material.snackbar.Snackbar;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ExportQIFFragment extends Fragment {
 
@@ -41,6 +45,8 @@ public class ExportQIFFragment extends Fragment {
     private Uri exportUri;
     private QIFExporter qifExporter;
     private ProgressBar circularProgress;
+    private ExecutorService executorService;
+    private Handler mainHandler;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -48,6 +54,8 @@ public class ExportQIFFragment extends Fragment {
         super.onCreate(savedInstanceState);
         settingsRepository = new SettingsRepository((Application) requireContext().getApplicationContext());
         qifExporter = new QIFExporter((Application) requireContext().getApplicationContext());
+        executorService = Executors.newSingleThreadExecutor();
+        mainHandler = new Handler(Looper.getMainLooper());
 
         createWriteRequestLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -106,31 +114,44 @@ public class ExportQIFFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     private void exportQif() {
+        if (exportUri == null) {
+            showSnackbar("Please select an export location first.");
+            return;
+        }
+
         circularProgress.setVisibility(View.VISIBLE);
-        try {
-            circularProgress.setVisibility(View.VISIBLE);
-            if (exportUri == null) {
-                showSnackbar("Please select an export location first.");
-                return;
+
+        executorService.execute(() -> {
+            try {
+                qifExporter.generateQIF(exportUri);
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("QIF export completed.");
+                    showSnackbar("QIF file exported successfully.");
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                mainHandler.post(() -> {
+                    circularProgress.setVisibility(View.GONE);
+                    exportStatusTextView.setText("QIF export failed.");
+                    showSnackbar("QIF export failed.");
+                });
             }
-            qifExporter.generateQIF(exportUri);
-            circularProgress.setVisibility(View.GONE);
-            exportStatusTextView.setText("QIF export completed.");
-            showSnackbar("QIF file exported successfully.");
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            showSnackbar("QIF export failed");
-        }
-        finally {
-            circularProgress.setVisibility(View.GONE);
-        }
+        });
     }
 
     private void showSnackbar(String message) {
         View view = getView();
         if (view != null) {
             Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (executorService != null) {
+            executorService.shutdown();
         }
     }
 }
