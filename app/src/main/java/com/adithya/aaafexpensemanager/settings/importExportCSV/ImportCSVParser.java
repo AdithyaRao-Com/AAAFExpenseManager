@@ -58,14 +58,14 @@ public class ImportCSVParser {
                     .map(value -> new ImportExportCSVRecord(value, version))
                     .map(importRecord -> importRecord.toAccount(defaultCurrency))
                     .distinct()
-                    .forEach(accountRepository::createAccount);
+                    .forEach(accountRepository::createAccountIfNotExists);
             Set<Category> uniqueValues = new HashSet<>();
             for (CSVRecord record : records) {
                 ImportExportCSVRecord importExportCSVRecord = new ImportExportCSVRecord(record, version);
                 Category category = importExportCSVRecord.toCategory();
                 if (uniqueValues.add(category)) {
                     try {
-                        categoryRepository.addCategory(category);
+                        categoryRepository.addCategoryIfNotExists(category);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -96,8 +96,6 @@ public class ImportCSVParser {
     }
 
     private static void cleanUpExistingData(AccountRepository accountRepository, CategoryRepository categoryRepository, TransactionRepository transactionRepository, RecentTransactionRepository recentTransactionRepository) {
-        accountRepository.deleteAll();
-        categoryRepository.deleteAll();
         transactionRepository.deleteAll();
         recentTransactionRepository.deleteAll();
     }

@@ -89,6 +89,14 @@ public class CategoryRepository {
         values.put("parent_category", category.parentCategory);
         long result = db.insert("categories", null, values);
     }
+    public void addCategoryIfNotExists(Category category) throws CategoryExistsException {
+        boolean isRecordExists = checkCategoryNameExists(category.categoryName,
+                category.categoryUUID);
+        if (isRecordExists) {
+            return;
+        }
+        addCategory(category);
+    }
 
     public boolean checkCategoryNameExists(String categoryName, UUID categoryUUID) {
         String selection = "(category_name = ? AND category_uuid != ?)";

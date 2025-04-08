@@ -93,11 +93,16 @@ public class AccountRepository {
         ContentValues values = getContentValues(account, true);
         db.insert("accounts", null, values);
     }
+    public void createAccountIfNotExists(Account account) {
+        if(getAccountByName(account.accountName)==null) {
+            createAccount(account);
+        }
+    }
 
     public void updateAccountOnly(Account account) {
         addTagsAccount(account.accountTags);
         ContentValues values = getContentValues(account, false);
-        int t1 = db.update("accounts", values, "account_name = ?", new String[]{account.accountName}); // Update based on name (or ID if you have one)
+        int t1 = db.update("accounts", values, "account_name = ?", new String[]{account.accountName});
         Log.d("AccountRepository", "Rows updated: " + t1);
         Account acc1 = getAccountByName(account.accountName);
     }
