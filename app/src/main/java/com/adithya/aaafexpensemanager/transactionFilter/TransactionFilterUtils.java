@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public final class TransactionFilterUtils {
-    // TODO - Fix the issue on the Account Tags loading accounts into the transaction filter lookup
     public static void addTaggedAccountsToFilter(TransactionFilter transactionFilters, Application application) {
         AccountRepository accountRepository = new AccountRepository(application);
         try {
@@ -38,10 +37,11 @@ public final class TransactionFilterUtils {
                 application);
     }
 
-    public static HashMap<String, Object> generateTransactionFilterQuery(TransactionFilter transactionFilter,
+    public static HashMap<String, Object> generateTransactionFilterQuery(TransactionFilter transactionFilterInput,
                                                                          RecurringSchedule recurringSchedule,
                                                                          String queryGenerationType,
                                                                          Application application) {
+        TransactionFilter transactionFilter = transactionFilterInput.clone();
         HashMap<String, Object> opHashMap = new HashMap<>();
         StringBuilder queryBuilder = new StringBuilder();
         ArrayList<String> opArgsList = new ArrayList<>();
