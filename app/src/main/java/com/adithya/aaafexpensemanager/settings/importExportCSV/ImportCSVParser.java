@@ -48,7 +48,7 @@ public class ImportCSVParser {
              InputStreamReader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
              CSVParser csvParser = CSVFormat.DEFAULT.withFirstRecordAsHeader().parse(reader)) {
             List<String> headersList = csvParser.getHeaderNames();
-            if (headersList.get(0).equals("Type")) {
+            if (headersList.get(1).equals("Date")) {
                 version = ImportExportCSVRecord.CSV_VERSION.V1;
             } else {
                 version = ImportExportCSVRecord.CSV_VERSION.V2;

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import androidx.fragment.app.Fragment;
 
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.util.CsvFileTypeDetector;
-import com.adithya.aaafexpensemanager.util.ExcelToCsvConverter;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.concurrent.ExecutorService;
@@ -97,39 +95,6 @@ public class ImportCSVFragment extends Fragment {
                     Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
                     circularProgress.setVisibility(View.GONE);
                 });
-
-            } else {
-                ExcelToCsvConverter convertor = new ExcelToCsvConverter(this.context, new ExcelToCsvConverter.ConversionListener() {
-                    @Override
-                    public void onConversionComplete(Uri csvFileUri) {
-                        parseTransactions(context, csvFileUri);
-                        mainHandler.post(() -> {
-                            Snackbar.make(viewGroup.getRootView(), "CSV Imported Successfully", Snackbar.LENGTH_LONG).show();
-                            circularProgress.setVisibility(View.GONE);
-                        });
-
-                    }
-
-                    @Override
-                    public void onConversionFailed(String errorMessage) {
-                        mainHandler.post(() -> {
-                            Snackbar.make(viewGroup.getRootView(), "Conversion failed: " + errorMessage, Snackbar.LENGTH_LONG).show();
-                            Log.e("UploadCSVFragment", "Conversion failed: " + errorMessage);
-                            circularProgress.setVisibility(View.GONE);
-                        });
-
-                    }
-                });
-                try {
-                    convertor.convertExcelToCsv(fileUri);
-                } catch (Exception e) {
-                    mainHandler.post(() -> {
-                        Snackbar.make(viewGroup.getRootView(), "Conversion failed 2nd Attempt: " + e.getMessage(), Snackbar.LENGTH_LONG).show();
-                        Log.e("UploadCSVFragment", "Conversion failed: " + e.getMessage());
-                        circularProgress.setVisibility(View.GONE);
-                    });
-
-                }
             }
         });
 
