@@ -34,6 +34,12 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
         ForecastReportRecord item = items.get(position);
         holder.dateTextView.setText(item.getDateText());
         holder.amountTextView.setText(item.getAmountText());
+        if(item.amount<=0){
+            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
+        }
+        else {
+            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_green_dark));
+        }
     }
 
     @Override

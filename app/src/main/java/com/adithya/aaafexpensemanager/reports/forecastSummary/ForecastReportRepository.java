@@ -19,6 +19,7 @@ import java.util.Objects;
  * @noinspection unused, CallToPrintStackTrace , FieldCanBeLocal
  */
 public class ForecastReportRepository {
+    // TODO - Add past data into Searches too
     /**
      * @noinspection FieldCanBeLocal
      */
