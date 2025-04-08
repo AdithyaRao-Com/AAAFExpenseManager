@@ -434,20 +434,21 @@ SELECT t1.*,
     }
 
     private static void createAccountsAllView(SQLiteDatabase db) {
-        db.execSQL("CREATE VIEW IF NOT EXISTS accounts_all_view AS \n" +
-                "select ac1.*,\n" +
-                "  curr1.currency_code, " +
-                "  curr1.conversion_factor, " +
-                "  curr1.primary_currency_code " +
-                "  from accounts ac1\n" +
-                "  left join account_types at1\n" +
-                "         on ac1.account_type = at1.account_type\n" +
-                " left join currency_all_details curr1 " +
-                "        on ac1.currency_code = curr1.currency_code " +
-                "order by at1.account_type_display_order ASC," +
-                " at1.account_type ASC, " +
-                " ac1.display_order ASC, " +
-                " ac1.account_name ASC");
+        db.execSQL("""
+CREATE VIEW IF NOT EXISTS accounts_all_view AS
+select ac1.*,
+  curr1.currency_code,
+  curr1.conversion_factor,
+  curr1.primary_currency_code
+  from accounts ac1
+  left join account_types at1
+		 on ac1.account_type = at1.account_type
+ left join currency_all_details curr1
+		on ac1.currency_code = curr1.currency_code
+order by at1.account_type_display_order ASC,
+ at1.account_type ASC,
+ ac1.display_order ASC,
+ ac1.account_name ASC""");
     }
 
     private static void createRecurringTransactionsView(SQLiteDatabase db) {

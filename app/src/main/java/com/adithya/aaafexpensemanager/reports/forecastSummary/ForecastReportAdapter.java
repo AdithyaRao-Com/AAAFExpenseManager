@@ -11,6 +11,7 @@ import com.adithya.aaafexpensemanager.R;
 
 import java.util.List;
 
+/** @noinspection deprecation*/
 public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAdapter.ViewHolder> {
     private List<ForecastReportRecord> items;
 

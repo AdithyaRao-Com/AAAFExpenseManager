@@ -93,9 +93,7 @@ public class ForecastReportFragment extends Fragment {
         LocalDate startDateLocal = transactionFilterTemp.getFromTransactionDateLocalDate();
         LocalDate endDateLocal = transactionFilterTemp.getToTransactionDateLocalDate().plusDays(1);
         forecastReportRecords
-                .forEach(forecastReportRecord -> {
-                    forecastReportRecordHashMap.put(forecastReportRecord.transactionDate,forecastReportRecord);
-                });
+                .forEach(forecastReportRecord -> forecastReportRecordHashMap.put(forecastReportRecord.transactionDate,forecastReportRecord));
         //Populate first value
         LocalDate firstValueKey = transactionFilterTemp.getFromTransactionDateLocalDate();
         if(!forecastReportRecordHashMap.containsKey(firstValueKey)){
