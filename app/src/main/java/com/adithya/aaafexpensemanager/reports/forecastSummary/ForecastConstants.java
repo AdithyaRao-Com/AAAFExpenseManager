@@ -8,111 +8,6 @@ import java.time.LocalDate;
 
 public class ForecastConstants {
     public enum ForecastTimePeriod implements LookupEditText.LookupEditTextItem {
-        LAST_MONTH() {
-            @Override
-            public String toEditTextLookupString() {
-                return toString();
-            }
-            @NonNull
-            @Override
-            public LocalDate getEndDate() {
-                return LocalDate.now();
-            }
-            @NonNull
-            @Override
-            public LocalDate getStartDate() {
-                return LocalDate.now().withDayOfMonth(1).minusMonths(1);
-            }
-            @NonNull
-            @Override
-            public String toString() {
-                return "Last Month";
-            }
-        },
-        LAST_3_MONTHS() {
-            @Override
-            public String toEditTextLookupString() {
-                return toString();
-            }
-            @NonNull
-            @Override
-            public LocalDate getEndDate() {
-                return LocalDate.now();
-            }
-            @NonNull
-            @Override
-            public LocalDate getStartDate() {
-                return LocalDate.now().withDayOfMonth(1).minusMonths(3);
-            }
-            @NonNull
-            @Override
-            public String toString() {
-                return "Last 3 Months";
-            }
-        },
-        LAST_6_MONTHS() {
-            @Override
-            public String toEditTextLookupString() {
-                return toString();
-            }
-            @NonNull
-            @Override
-            public LocalDate getEndDate() {
-                return LocalDate.now();
-            }
-            @NonNull
-            @Override
-            public LocalDate getStartDate() {
-                return LocalDate.now().withDayOfMonth(1).minusMonths(6);
-            }
-            @NonNull
-            @Override
-            public String toString() {
-                return "Last 6 Months";
-            }
-        },
-        LAST_12_MONTHS() {
-            @Override
-            public String toEditTextLookupString() {
-                return toString();
-            }
-            @NonNull
-            @Override
-            public LocalDate getEndDate() {
-                return LocalDate.now();
-            }
-            @NonNull
-            @Override
-            public LocalDate getStartDate() {
-                return LocalDate.now().withDayOfMonth(1).minusMonths(12);
-            }
-            @NonNull
-            @Override
-            public String toString() {
-                return "Last 12 Months";
-            }
-        },
-        LAST_YEAR() {
-            @Override
-            public String toEditTextLookupString() {
-                return toString();
-            }
-            @NonNull
-            @Override
-            public LocalDate getEndDate() {
-                return LocalDate.now().withDayOfYear(1).minusDays(1);
-            }
-            @NonNull
-            @Override
-            public LocalDate getStartDate() {
-                return LocalDate.now().withDayOfYear(1).minusYears(1);
-            }
-            @NonNull
-            @Override
-            public String toString() {
-                return "Last Year";
-            }
-        },
         THIS_MONTH() {
             @Override
             public String toEditTextLookupString() {
@@ -255,6 +150,132 @@ public class ForecastConstants {
             @Override
             public String toString() {
                 return "Next 3 Years";
+            }
+        },
+        LAST_MONTH() {
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now().withDayOfMonth(1).minusMonths(1);
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Last Month";
+            }
+        },
+        LAST_3_MONTHS() {
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now().withDayOfMonth(1).minusMonths(3);
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Last 3 Months";
+            }
+        },
+        LAST_6_MONTHS() {
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now().withDayOfMonth(1).minusMonths(6);
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Last 6 Months";
+            }
+        },
+        LAST_12_MONTHS() {
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now().withDayOfMonth(1).minusMonths(12);
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Last 12 Months";
+            }
+        },
+        LAST_YEAR() {
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now().withDayOfYear(1).minusDays(1);
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now().withDayOfYear(1).minusYears(1);
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Last Year";
+            }
+        },
+        CUSTOM(){
+            @Override
+            public String toEditTextLookupString() {
+                return toString();
+            }
+            @NonNull
+            @Override
+            public LocalDate getEndDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public LocalDate getStartDate() {
+                return LocalDate.now();
+            }
+            @NonNull
+            @Override
+            public String toString() {
+                return "Custom";
             }
         };
 

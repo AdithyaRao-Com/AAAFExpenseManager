@@ -27,7 +27,7 @@ public class DBHelperActions {
     public static final String TAGS_MASTER = "tags_master";
     public static final String TRANSACTION_FILTER = "transaction_filter";
 
-    public static void dropActions(SQLiteDatabase db) {
+    public static void dropActionsV1(SQLiteDatabase db) {
         db.execSQL("DROP VIEW IF EXISTS SplitTransfers");
         db.execSQL("DROP VIEW IF EXISTS accounts_all_view");
         db.execSQL("DROP VIEW IF EXISTS RecurringScheduleNextDate");
@@ -55,7 +55,7 @@ public class DBHelperActions {
         Log.d("DatabaseHelper", "Recreating tables");
     }
 
-    public static void createActions(SQLiteDatabase db) {
+    public static void createActionsV1(SQLiteDatabase db) {
         String CREATE_TRANSACTION_FILTER_TABLE = "CREATE TABLE transaction_filter (" +
                 "report_name TEXT PRIMARY KEY," +
                 "report_type TEXT," +
@@ -403,16 +403,34 @@ public class DBHelperActions {
     }
 
     private static void createSplitAllTransfersView(SQLiteDatabase db) {
-        db.execSQL("CREATE VIEW IF NOT EXISTS SplitAllTransfers AS " +
-                "SELECT t1.*,CASE WHEN t1.transaction_type='Income' THEN t1.amount\n" +
-                "\t\t          WHEN t1.transaction_type='Expense' THEN (-1)*t1.amount \n" +
-                "\t\t\t END signed_amount\n" +
-                "  FROM SplitTransfers t1\n" +
-                "UNION ALL\n" +
-                "SELECT t1.*,CASE WHEN t1.transaction_type='Income' THEN t1.amount\n" +
-                "\t\t         WHEN t1.transaction_type='Expense' THEN (-1)*t1.amount \n" +
-                "\t\t\tEND signed_amount\n" +
-                "  FROM FutureSplitTransfers t1");
+        String CREATE_SPLIT_ALL_TRANSFERS =
+"""
+CREATE VIEW IF NOT EXISTS SplitAllTransfers AS
+SELECT t1.*,
+       CASE
+           WHEN t1.transaction_type = 'Income' THEN t1.amount
+           WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
+       END signed_amount,
+       DATE(
+           SUBSTR(transaction_date, 1, 4) || '-' ||
+           SUBSTR(transaction_date, 5, 2) || '-' ||
+           SUBSTR(transaction_date, 7, 2)
+       ) txn_dt
+  FROM SplitTransfers t1
+UNION ALL
+SELECT t1.*,
+       CASE
+           WHEN t1.transaction_type = 'Income' THEN t1.amount
+           WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
+       END signed_amount,
+       DATE(
+           SUBSTR(transaction_date, 1, 4) || '-' ||
+           SUBSTR(transaction_date, 5, 2) || '-' ||
+           SUBSTR(transaction_date, 7, 2)
+       ) txn_dt
+  FROM FutureSplitTransfers t1;
+""";
+        db.execSQL(CREATE_SPLIT_ALL_TRANSFERS);
     }
 
     private static void createAccountsAllView(SQLiteDatabase db) {
@@ -482,5 +500,12 @@ public class DBHelperActions {
                 " ON t1.account_name = ac1.account_name " +
                 " LEFT JOIN currency_all_details curr1 " +
                 " ON ac1.currency_code = curr1.currency_code");
+    }
+
+    public static void dropCreateActionsV2(SQLiteDatabase db) {
+        Log.d("Database Helper", "Started dropCreateActionsV2");
+        db.execSQL("DROP VIEW IF EXISTS "+SPLIT_ALL_TRANSFERS);
+        createSplitAllTransfersView(db);
+        Log.d("Database Helper", "Completed dropCreateActionsV2");
     }
 }

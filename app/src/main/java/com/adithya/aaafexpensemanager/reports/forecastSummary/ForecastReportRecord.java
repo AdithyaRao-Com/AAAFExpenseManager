@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import com.adithya.aaafexpensemanager.util.CurrencyFormatter;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class ForecastReportRecord implements Parcelable {
     public static final Creator<ForecastReportRecord> CREATOR = new Creator<>() {
@@ -39,6 +40,10 @@ public class ForecastReportRecord implements Parcelable {
 
     public String getDateText() {
         return transactionDate.toString();
+    }
+
+    public String getDateText_DD_MMM_YYYY() {
+        return transactionDate.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
     }
 
     public String getAmountText() {

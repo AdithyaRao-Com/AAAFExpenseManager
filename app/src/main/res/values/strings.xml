@@ -134,4 +134,7 @@
     <string name="select_qif_file">Select QIF File</string>
     <string name="select_csv_file">Select CSV File</string>
     <string name="create_new_account">Create New Account</string>
+    <string name="about">About</string>
+    <string name="application_version">Application Version</string>
+    <string name="database_version">Database Version</string>
 </resources>

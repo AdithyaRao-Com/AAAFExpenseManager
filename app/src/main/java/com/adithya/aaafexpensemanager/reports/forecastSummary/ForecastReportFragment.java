@@ -17,8 +17,11 @@ import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEd
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterDialog;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
@@ -51,6 +54,9 @@ public class ForecastReportFragment extends Fragment {
             //noinspection deprecation
             transactionFilter = args.getParcelable("transactionFilter");
             assert transactionFilter != null;
+            if(transactionFilter.periodName==null || transactionFilter.periodName.isBlank()){
+                transactionFilter.periodName = "Custom";
+            }
             String selectedTimePeriodString = transactionFilter.periodName;
             selectedTimePeriod = getSelectedPeriodEnum(selectedTimePeriodString);
         } else {
@@ -70,13 +76,43 @@ public class ForecastReportFragment extends Fragment {
 
     private void loadReportData() {
         reportsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        transactionFilter.setFromTransactionDate(selectedTimePeriod.getStartDate());
-        transactionFilter.setToTransactionDate(selectedTimePeriod.getEndDate());
+        if (selectedTimePeriod != ForecastTimePeriod.CUSTOM) {
+            transactionFilter.setFromTransactionDate(selectedTimePeriod.getStartDate());
+            transactionFilter.setToTransactionDate(selectedTimePeriod.getEndDate());
+        }
         List<ForecastReportRecord> forecastReportRecords;
         ForecastReportRepository repository = new ForecastReportRepository(application);
         forecastReportRecords = repository.getForecastReportData(transactionFilter);
+        forecastReportRecords = fillGapData(forecastReportRecords,transactionFilter);
         ForecastReportAdapter forecastReportAdapter = new ForecastReportAdapter(forecastReportRecords);
         reportsRecyclerView.setAdapter(forecastReportAdapter);
+    }
+
+    private List<ForecastReportRecord> fillGapData(List<ForecastReportRecord> forecastReportRecords,TransactionFilter transactionFilterTemp) {
+        NavigableMap<LocalDate,ForecastReportRecord> forecastReportRecordHashMap = new TreeMap<>();
+        LocalDate startDateLocal = transactionFilterTemp.getFromTransactionDateLocalDate();
+        LocalDate endDateLocal = transactionFilterTemp.getToTransactionDateLocalDate().plusDays(1);
+        forecastReportRecords
+                .forEach(forecastReportRecord -> {
+                    forecastReportRecordHashMap.put(forecastReportRecord.transactionDate,forecastReportRecord);
+                });
+        //Populate first value
+        LocalDate firstValueKey = transactionFilterTemp.getFromTransactionDateLocalDate();
+        if(!forecastReportRecordHashMap.containsKey(firstValueKey)){
+            LocalDate nextKey = forecastReportRecordHashMap.higherKey(firstValueKey);
+            ForecastReportRecord nextValue = forecastReportRecordHashMap.get(nextKey);
+            assert nextValue != null;
+            forecastReportRecordHashMap.put(firstValueKey,new ForecastReportRecord(firstValueKey,nextValue.amount,nextValue.currency));
+        }
+        startDateLocal.datesUntil(endDateLocal).forEach(date -> {
+            if(!forecastReportRecordHashMap.containsKey(date)){
+                LocalDate previousKey = forecastReportRecordHashMap.lowerKey(date);
+                ForecastReportRecord previousValue = forecastReportRecordHashMap.get(previousKey);
+                assert previousValue != null;
+                forecastReportRecordHashMap.putIfAbsent(date,new ForecastReportRecord(date,previousValue.amount,previousValue.currency));
+            }
+        });
+        return forecastReportRecordHashMap.values().stream().toList();
     }
 
     private void setDefaultTimePeriodSelection() {

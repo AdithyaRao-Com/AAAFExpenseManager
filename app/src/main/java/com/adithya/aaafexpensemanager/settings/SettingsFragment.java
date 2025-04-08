@@ -22,6 +22,7 @@ public class SettingsFragment extends Fragment {
     private TextView futureTransactionsTextView;
     private TextView currenciesTextView;
     private TextView importExportHomeTextView;
+    private TextView aboutAppTextView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -40,6 +41,8 @@ public class SettingsFragment extends Fragment {
         currenciesTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_currencyHomeFragment));
         importExportHomeTextView = view.findViewById(R.id.import_export_home_text_view);
         importExportHomeTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importExportHomeFragment));
+        aboutAppTextView = view.findViewById(R.id.about_app);
+        aboutAppTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_aboutAppFragment));
         return view;
     }
 

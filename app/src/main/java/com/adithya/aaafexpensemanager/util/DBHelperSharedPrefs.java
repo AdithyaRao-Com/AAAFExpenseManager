@@ -3,12 +3,12 @@ package com.adithya.aaafexpensemanager.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class DataHelperSharedPrefs {
+public class DBHelperSharedPrefs {
     private static final String PREFS_NAME = "data_helper_prefs";
     private static final String current_data_base_version = "current_data_base_version";
     private final SharedPreferences sharedPreferences;
 
-    public DataHelperSharedPrefs(Context context) {
+    public DBHelperSharedPrefs(Context context) {
         super();
         sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
     }

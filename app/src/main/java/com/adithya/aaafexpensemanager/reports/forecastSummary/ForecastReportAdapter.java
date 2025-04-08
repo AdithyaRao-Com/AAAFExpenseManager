@@ -32,7 +32,7 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
     @Override
     public void onBindViewHolder(@NonNull ForecastReportAdapter.ViewHolder holder, int position) {
         ForecastReportRecord item = items.get(position);
-        holder.dateTextView.setText(item.getDateText());
+        holder.dateTextView.setText(item.getDateText_DD_MMM_YYYY());
         holder.amountTextView.setText(item.getAmountText());
         if(item.amount<=0){
             holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
