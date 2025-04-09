@@ -41,6 +41,9 @@ import java.util.stream.Collectors;
  * @noinspection deprecation
  */
 public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    /*TODO - BUG There is a bug in copy transaction. After a transaction is copied and edited.
+             A duplicate transaction shows up along with the edited transaction
+    */
     private static final int TYPE_DATE = 0;
     private static final int TYPE_TRANSACTION = 1;
     private final List<Object> items;
@@ -92,12 +95,10 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
-        if (holder instanceof DateViewHolder) {
-            DateViewHolder dateViewHolder = (DateViewHolder) holder;
+        if (holder instanceof DateViewHolder dateViewHolder) {
             LocalDate date = (LocalDate) item;
             dateViewHolder.dateTextView.setText(dateFormatter.format(date));
-        } else if (holder instanceof TransactionViewHolder) {
-            TransactionViewHolder transactionViewHolder = (TransactionViewHolder) holder;
+        } else if (holder instanceof TransactionViewHolder transactionViewHolder) {
             Transaction transaction = (Transaction) item;
             if (transaction != null) {
                 setUpTransactionViewHolder(transactionViewHolder, position, transaction);
@@ -209,8 +210,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         selectedTransactions.clear();
         int itemPosition = 0;
         for (Object listObject : items) {
-            if (listObject instanceof Transaction) {
-                Transaction transaction = (Transaction) listObject;
+            if (listObject instanceof Transaction transaction) {
                 selectedTransactions.add(transaction);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
                 if (viewHolder != null) {

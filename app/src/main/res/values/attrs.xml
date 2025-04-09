@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="decimalPlaces" format="integer" />
+    <declare-styleable name="DecimalLimitEditText">
+        <attr name="decimalPlaces"/>
+    </declare-styleable>
+    <declare-styleable name="CalculatorEditText">
+        <attr name="decimalPlaces" />
+    </declare-styleable>
+</resources>
