@@ -36,12 +36,9 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.apache.commons.csv)
-    implementation(libs.material.v190)
-    implementation(libs.material.v1120)
     implementation(libs.zip4j)
     implementation(libs.constraintlayout)
     implementation(libs.lifecycle.livedata.ktx)
@@ -49,15 +46,11 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     implementation(libs.legacy.support.v4)
-    implementation(libs.room.runtime)
     implementation(libs.mpandroidchart)
-    implementation(libs.poi)
-    implementation(libs.poi.ooxml)
     implementation(libs.work.runtime)
     implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    annotationProcessor(libs.room.compiler)
     debugImplementation(libs.navigation.ui.ktx)
 }
