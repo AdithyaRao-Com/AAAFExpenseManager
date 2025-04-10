@@ -16,11 +16,6 @@ import com.adithya.aaafexpensemanager.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class CalculatorEditText extends TextInputEditText {
-    /*
-    TODO - BUG When the calculator is opened the data from the edit text is copied to the calc.
-        But on clicking ok on the calc after that resets the amount field to 0 again.
-        We need the set data to be remained in the edit text if no change is done by the calculator
-     */
     public interface OnCalculatedResultListener {
         void onCalculatedResult(double result);
     }
@@ -166,7 +161,6 @@ public class CalculatorEditText extends TextInputEditText {
         Calculator(TextView display) {
             this.display = display;
         }
-
         void onButtonClick(String buttonText) {
             switch (buttonText) {
                 case "C":
@@ -206,6 +200,9 @@ public class CalculatorEditText extends TextInputEditText {
             }
         }
         public void setCurrentInput(String currentInput){
+            this.currentInput = currentInput;
+            this.previousInput = currentInput;
+            this.currentOperator = "=";
             display.setText(currentInput);
         }
 
