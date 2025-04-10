@@ -41,9 +41,6 @@ import java.util.stream.Collectors;
  * @noinspection deprecation
  */
 public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    /*TODO - BUG There is a bug in copy transaction. After a transaction is copied and edited.
-             A duplicate transaction shows up along with the edited transaction
-    */
     private static final int TYPE_DATE = 0;
     private static final int TYPE_TRANSACTION = 1;
     private final List<Object> items;
@@ -375,11 +372,13 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         Map<String, Transaction> transactionMap =
                 selectedTransactions.stream()
                         .collect(Collectors.toMap(e -> e.transactionUUID.toString(), e -> e));
-        transactionMap.forEach((key, value) -> viewModel.copyTransaction(value));
         new ConfirmationDialog(transactionFragment.getContext(),
                 "Copy Transactions",
                 "Are you sure you want to copy these transactions?",
-                () -> transactionMap.forEach((key, value) -> viewModel.copyTransaction(value)),
+                () -> {
+                    transactionMap.forEach((key, value) -> viewModel.copyTransaction(value));
+                    this.transactionFragment.reloadData();
+                },
                 () -> {
                 },
                 "Copy",

@@ -18,6 +18,7 @@ import com.adithya.aaafexpensemanager.transaction.exception.InvalidAccountDataEx
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterUtils;
 import com.adithya.aaafexpensemanager.util.AppConstants;
+import com.adithya.aaafexpensemanager.util.DBHelperActions;
 import com.adithya.aaafexpensemanager.util.DatabaseHelper;
 
 import java.time.LocalDate;
@@ -136,7 +137,7 @@ public class TransactionRepository {
         if (updateAccountBalances(transaction, TransactionRepository.INSERTS)) return;
         try {
             ContentValues values = getContentValues(transaction, TransactionRepository.INSERTS);
-            db.insertOrThrow("transactions", null, values);
+            db.insertOrThrow(DBHelperActions.TRANSACTIONS, null, values);
             recentTransactionRepository.updateRecentTransaction(transaction);
             this.recordCount = this.recordCount + 1;
             if (this.recordCount % 100 == 0) {
@@ -189,7 +190,7 @@ public class TransactionRepository {
         String whereClause = "transaction_uuid = ?";
         String[] whereArgs = new String[]{transaction.transactionUUID.toString()};
         try {
-            int updatedCount = db.update("transactions", values, whereClause, whereArgs);
+            int updatedCount = db.update(DBHelperActions.TRANSACTIONS, values, whereClause, whereArgs);
             if (updatedCount <= 0)
                 throw new RuntimeException("Transaction not updated " + transaction);
             recentTransactionRepository.updateRecentTransaction(transaction);
