@@ -120,12 +120,10 @@ public class CalculatorEditText extends TextInputEditText {
             //noinspection DataFlowIssue
             String amountText = getText().toString();
             double amountDouble = Double.parseDouble(amountText);
-            calculatorDisplay.setText(amountText);
             calculator.setCurrentInput(amountText);
         }
         catch (Exception e){
-            calculatorDisplay.setText("0");
-            calculator.setCurrentInput("0.0");
+            calculator.setCurrentInput("0");
         }
         AlertDialog.Builder builder = getAlertBuilder(dialogView, calculator);
         builder.show();
@@ -200,9 +198,11 @@ public class CalculatorEditText extends TextInputEditText {
             }
         }
         public void setCurrentInput(String currentInput){
-            this.currentInput = currentInput;
-            this.previousInput = currentInput;
-            this.currentOperator = "=";
+            if(Double.parseDouble(currentInput)!=0){
+                this.currentInput = currentInput;
+                this.previousInput = currentInput;
+                this.currentOperator = "=";
+            }
             display.setText(currentInput);
         }
 
