@@ -24,8 +24,5 @@
         <item
             android:id="@+id/nav_transaction_filter_list"
             android:title="@string/saved_reports" />
-        <item
-            android:id="@+id/nav_test_fragment"
-            android:title="@string/test_fragment" />
     </group>
 </menu>

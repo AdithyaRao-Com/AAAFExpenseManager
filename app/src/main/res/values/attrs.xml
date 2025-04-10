@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="decimalPlaces" format="integer" />
+    <attr name="allowNegativePlaces" format="boolean"/>
     <declare-styleable name="DecimalLimitEditText">
         <attr name="decimalPlaces"/>
     </declare-styleable>
     <declare-styleable name="CalculatorEditText">
         <attr name="decimalPlaces" />
+        <attr name="allowNegativePlaces"/>
     </declare-styleable>
 </resources>

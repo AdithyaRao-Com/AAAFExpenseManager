@@ -54,6 +54,7 @@ public class CalculatorEditText extends TextInputEditText {
         if (attrs != null) {
             android.content.res.TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.CalculatorEditText);
             decimalPlaces = typedArray.getInt(R.styleable.CalculatorEditText_decimalPlaces, 2);
+            allowNegativeValues = typedArray.getBoolean(R.styleable.CalculatorEditText_allowNegativePlaces, true);
             typedArray.recycle();
         }
 
