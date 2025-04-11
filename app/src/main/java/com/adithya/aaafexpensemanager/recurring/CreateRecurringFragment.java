@@ -33,6 +33,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.adithya.aaafexpensemanager.R;
 import com.adithya.aaafexpensemanager.account.AccountViewModel;
 import com.adithya.aaafexpensemanager.recenttrans.RecentTransactionViewModel;
+import com.adithya.aaafexpensemanager.reusableComponents.calculatorEditText.CalculatorEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
 import com.adithya.aaafexpensemanager.settings.category.CategoryViewModel;
@@ -74,7 +75,7 @@ public class CreateRecurringFragment extends Fragment {
     private LookupEditText categoryAutoCompleteTextView;
     private List<String> categoryNames;
     private EditText notesEditText;
-    private EditText amountEditText;
+    private CalculatorEditText amountEditText;
     private LookupEditText accountNameAutoComplete;
     private LookupEditText toAccountNameAutoComplete;
     private MaterialButton accountCurrencyTextView;

@@ -88,7 +88,7 @@ public final class TransactionFilterUtils {
             buildValuesToQueryInClause(tempTransactionType, transactionFilter.transactionTypes, opArgsList);
             queryBuilder.append(TRANSACTION_TYPE_QUERY.replace("<<transaction_type>>", tempTransactionType.toString()));
         }
-        String SEARCH_FILTER_QUERY = " AND (transaction_name LIKE ? OR account_name LIKE ? OR CAST(amount AS TEXT) LIKE ? OR transaction_date LIKE ?)";
+        String SEARCH_FILTER_QUERY = " AND (transaction_name LIKE ? OR account_name LIKE ? OR CAST(amount AS TEXT) LIKE ? OR notes LIKE ?)";
         if (transactionFilter.searchText != null && !transactionFilter.searchText.isBlank()) {
             queryBuilder.append(SEARCH_FILTER_QUERY);
             opArgsList.add("%" + transactionFilter.searchText + "%");
