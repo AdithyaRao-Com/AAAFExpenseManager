@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanager.R;
+import com.adithya.aaafexpensemanager.reusableComponents.calculatorEditText.CalculatorEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList;
 import com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanager.reusableComponents.reusableDialogs.ConfirmationDialog;
@@ -39,7 +40,8 @@ import java.util.stream.Collectors;
 
 public class CreateAccountFragment extends Fragment {
     CheckBox updateBalanceCheckBox;
-    private EditText accountNameEditText, accountBalanceEditText;
+    private EditText accountNameEditText;
+    private CalculatorEditText accountBalanceEditText;
     private LookupAutoCompleteList accountTagsEditText;
     private FloatingActionButton createAccountButton;
     private LookupEditText accountTypeSpinner;
