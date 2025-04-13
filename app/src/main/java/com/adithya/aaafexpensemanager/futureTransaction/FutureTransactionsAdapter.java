@@ -79,12 +79,10 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
-        if (holder instanceof DateViewHolder) {
-            DateViewHolder dateViewHolder = (DateViewHolder) holder;
+        if (holder instanceof DateViewHolder dateViewHolder) {
             LocalDate date = (LocalDate) item;
             dateViewHolder.dateTextView.setText(dateFormatter.format(date));
-        } else if (holder instanceof TransactionViewHolder) {
-            TransactionViewHolder transactionViewHolder = (TransactionViewHolder) holder;
+        } else if (holder instanceof TransactionViewHolder transactionViewHolder) {
             FutureTransaction transaction = (FutureTransaction) item;
             if (transaction != null) {
                 setUpTransactionViewHolder(transactionViewHolder, position, transaction);
@@ -98,7 +96,6 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, FutureTransaction futureTransaction) {
         holder.transactionNameTextView.setText(futureTransaction.transactionName);
-        holder.transactionDateTextView.setText(futureTransaction.getFormattedTransactionDate());
         holder.amountTextView.setText(futureTransaction.amountToIndianFormat());
         holder.accountNameTextView.setText(futureTransaction.accountName);
         holder.categoryNameTextView.setText(futureTransaction.category);
@@ -187,8 +184,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         selectedTransactions.clear();
         int itemPosition = 0;
         for (Object listObject : items) {
-            if (listObject instanceof FutureTransaction) {
-                FutureTransaction transaction = (FutureTransaction) listObject;
+            if (listObject instanceof FutureTransaction transaction) {
                 selectedTransactions.add(transaction);
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
                 if (viewHolder != null) {
@@ -272,7 +268,6 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionNameTextView;
-        TextView transactionDateTextView;
         TextView amountTextView;
         TextView accountNameTextView;
         LinearLayout transactionItemContainer;
@@ -282,7 +277,6 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionNameTextView = itemView.findViewById(R.id.transactionNameTextView);
-            transactionDateTextView = itemView.findViewById(R.id.transactionDateTextView);
             amountTextView = itemView.findViewById(R.id.amountTextView);
             accountNameTextView = itemView.findViewById(R.id.accountNameTextView);
             transactionItemContainer = itemView.findViewById(R.id.transaction_item_container);

@@ -109,7 +109,6 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, Transaction transaction) {
         holder.transactionNameTextView.setText(transaction.transactionName);
-        holder.transactionDateTextView.setText(transaction.getFormattedTransactionDate());
         holder.amountTextView.setText(transaction.amountToIndianFormat());
         holder.accountNameTextView.setText(transaction.accountName);
         holder.categoryNameTextView.setText(transaction.category);
@@ -405,7 +404,6 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public static class TransactionViewHolder extends RecyclerView.ViewHolder {
         TextView transactionNameTextView;
-        TextView transactionDateTextView;
         TextView amountTextView;
         TextView accountNameTextView;
         LinearLayout transactionItemContainer;
@@ -415,7 +413,6 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
             transactionNameTextView = itemView.findViewById(R.id.transactionNameTextView);
-            transactionDateTextView = itemView.findViewById(R.id.transactionDateTextView);
             amountTextView = itemView.findViewById(R.id.amountTextView);
             accountNameTextView = itemView.findViewById(R.id.accountNameTextView);
             transactionItemContainer = itemView.findViewById(R.id.transaction_item_container);
