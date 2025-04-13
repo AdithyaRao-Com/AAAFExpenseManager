@@ -277,7 +277,6 @@ public class CreateTransactionFragment extends Fragment {
         transactionTypeButton.setOnClickListener(v -> {
             transactionTypePosition = (transactionTypePosition + 1) % 3;
             updateTransactionButton();
-            updateToAccountVisibility();
         });
     }
 
@@ -437,6 +436,7 @@ public class CreateTransactionFragment extends Fragment {
                     return true;
                 }
         );
+        updateToAccountVisibility();
     }
 
     @Override
