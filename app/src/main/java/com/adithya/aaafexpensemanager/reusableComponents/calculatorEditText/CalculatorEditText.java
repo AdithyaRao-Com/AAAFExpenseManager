@@ -156,6 +156,7 @@ public class CalculatorEditText extends TextInputEditText {
         private String currentInput = "";
         private String previousInput = "";
         private String currentOperator = "";
+        private boolean calculationCompletedFlag = false;
 
         Calculator(TextView display) {
             this.display = display;
@@ -170,6 +171,7 @@ public class CalculatorEditText extends TextInputEditText {
                     break;
                 case "=":
                     calculate();
+                    calculationCompletedFlag = true;
                     break;
                 case "+":
                 case "-":
@@ -183,6 +185,7 @@ public class CalculatorEditText extends TextInputEditText {
                         currentInput = "";
                         currentOperator = buttonText;
                     }
+                    calculationCompletedFlag = true;
                     break;
                 case "+/-":
                     if (!currentInput.isEmpty()) {
@@ -193,6 +196,10 @@ public class CalculatorEditText extends TextInputEditText {
                     }
                     break;
                 default:
+                    if(calculationCompletedFlag){
+                        currentInput = "";
+                        calculationCompletedFlag = false;
+                    }
                     currentInput += buttonText;
                     display.setText(currentInput);
                     break;
@@ -203,6 +210,7 @@ public class CalculatorEditText extends TextInputEditText {
                 this.currentInput = currentInput;
                 this.previousInput = currentInput;
                 this.currentOperator = "=";
+                this.calculationCompletedFlag = true;
             }
             display.setText(currentInput);
         }
