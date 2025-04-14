@@ -134,7 +134,7 @@ public class CreateAccountFragment extends Fragment {
                             "Balance Adjustment",
                             LocalDate.now(),
                             transactionType,
-                            "Other > Adjustments",
+                            "Adjustments",
                             null,
                             Math.abs(difference),
                             name,
