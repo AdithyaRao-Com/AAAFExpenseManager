@@ -41,6 +41,7 @@ public class Transaction implements Parcelable {
     public String currencyCode;
     public double conversionFactor;
     public String primaryCurrencyCode;
+    public double runningBalance;
 
     public Transaction(String transactionName, LocalDate transactionDate, String transactionType, String category, String notes, double amount, String accountName, String toAccountName, String transferInd, String recurringScheduleUUID) {
         this.transactionUUID = UUID.randomUUID();
@@ -62,7 +63,7 @@ public class Transaction implements Parcelable {
                        String transactionType, String category, String notes, double amount,
                        String accountName, String toAccountName, long createDateTime,
                        long lastUpdateDateTime, String transferInd, String recurringScheduleUUID,
-                       String currencyCode, double conversionFactor, String primaryCurrencyCode) {
+                       String currencyCode, double conversionFactor, String primaryCurrencyCode,double runningBalance) {
         this.transactionUUID = transactionUUID;
         this.transactionName = transactionName;
         this.transactionDate = transactionDate;
@@ -79,6 +80,7 @@ public class Transaction implements Parcelable {
         this.currencyCode = currencyCode;
         this.conversionFactor = conversionFactor;
         this.primaryCurrencyCode = primaryCurrencyCode;
+        this.runningBalance = runningBalance;
     }
 
     public Transaction(Transaction transaction) {
@@ -98,6 +100,7 @@ public class Transaction implements Parcelable {
         this.currencyCode = transaction.currencyCode;
         this.conversionFactor = transaction.conversionFactor;
         this.primaryCurrencyCode = transaction.primaryCurrencyCode;
+        this.runningBalance = transaction.runningBalance;
     }
 
     // Parcelable implementation
@@ -119,6 +122,7 @@ public class Transaction implements Parcelable {
         this.currencyCode = in.readString();
         this.conversionFactor = in.readDouble();
         this.primaryCurrencyCode = in.readString();
+        this.runningBalance = in.readDouble();
     }
 
     public double getSignedAmount() {
@@ -171,6 +175,7 @@ public class Transaction implements Parcelable {
         dest.writeString(currencyCode);
         dest.writeDouble(conversionFactor);
         dest.writeString(primaryCurrencyCode);
+        dest.writeDouble(runningBalance);
     }
 
     public String getDateE_MMMM_dd_yyyy() {
@@ -179,10 +184,10 @@ public class Transaction implements Parcelable {
     }
 
     public String amountToIndianFormat() {
-        return CurrencyFormatter.formatIndianStyle(this.amount, "INR");
+        return CurrencyFormatter.formatIndianStyle(this.amount, this.currencyCode);
     }
 
     public String amountToStandardFormat() {
-        return CurrencyFormatter.formatStandardStyle(this.amount, "INR");
+        return CurrencyFormatter.formatStandardStyle(this.amount, this.currencyCode);
     }
 }

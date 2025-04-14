@@ -193,7 +193,8 @@ public class FutureTransaction implements Parcelable {
                 this.recurringScheduleUUID.toString(),
                 this.currencyCode,
                 this.conversionFactor,
-                this.primaryCurrencyCode);
+                this.primaryCurrencyCode,
+                0.0d);
     }
 
     public String amountToIndianFormat() {

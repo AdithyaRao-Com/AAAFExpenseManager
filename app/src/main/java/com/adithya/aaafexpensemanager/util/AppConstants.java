@@ -24,7 +24,7 @@ public class AppConstants {
             REPORT_TYPE_BALANCE_FORECAST_SUMMARY);
     public static final long DEFAULT_RECURRING_END_INTERVAL = 10L;
     public static final boolean IS_DEV_MODE = true;
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
     public static final String APPLICATION_VERSION ="1.0";
     public static final LocalDate TRANSACTION_DATE_DUMMY = LocalDate.of(2000, 1, 1);
     public static final int COPY_LIMIT = 10;

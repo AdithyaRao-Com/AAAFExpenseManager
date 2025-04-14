@@ -38,6 +38,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(oldVersion<2){
             DBHelperActions.dropCreateActionsV2(db);
         }
+        if(oldVersion<3){
+            DBHelperActions.dropCreateActionsV3(db);
+        }
+        if(oldVersion<4){
+            DBHelperActions.dropCreateActionsV4(db);
+        }
     }
 
     @Override

@@ -70,7 +70,7 @@ public class TransactionRepository {
                     .replace("<<batchSize>>", String.valueOf(batchSize))
                     .replace("<<offset>>", String.valueOf((pageNumber - 1) * batchSize));
         }
-        try (Cursor cursor = db.query("SplitTransfers", null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)) {
+        try (Cursor cursor = db.query(DBHelperActions.SPLIT_TRANSFERS, null, queryString, queryParms.toArray(new String[0]), null, null, orderByArgs)) {
             if (cursor.moveToFirst()) {
                 do {
                     Transaction transaction = getTransactionFromCursor(cursor);
@@ -101,6 +101,7 @@ public class TransactionRepository {
             int currencyCodeIndex = cursor.getColumnIndexOrThrow("currency_code");
             int conversionFactorIndex = cursor.getColumnIndexOrThrow("conversion_factor");
             int primaryCurrencyCodeIndex = cursor.getColumnIndexOrThrow("primary_currency_code");
+            int runningBalanceIndex = cursor.getColumnIndexOrThrow("account_balance");
             String transactionUUIDStr = cursor.getString(uuidIndex);
             UUID transactionUUID = UUID.fromString(transactionUUIDStr);
             String transactionName = cursor.getString(nameIndex);
@@ -122,10 +123,16 @@ public class TransactionRepository {
             String currencyCode = cursor.getString(currencyCodeIndex);
             double conversionFactor = cursor.getDouble(conversionFactorIndex);
             String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
+            double runningBalance;
+            try{
+                runningBalance = Math.round(cursor.getDouble(runningBalanceIndex)*100.0)/100.0;
+            } catch (Exception e){
+                runningBalance = 0.0d;
+            }
             return new Transaction(transactionUUID, transactionName, transactionDateInt,
                     transactionType, category, notes, amount, accountName, toAccountName,
                     createDateTime, lastUpdateDateTime, transferInd, recurringScheduleUUID,
-                    currencyCode, conversionFactor, primaryCurrencyCode);
+                    currencyCode, conversionFactor, primaryCurrencyCode,runningBalance);
 
         } catch (Exception e) {
             e.printStackTrace();

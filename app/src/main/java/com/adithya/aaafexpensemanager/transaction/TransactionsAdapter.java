@@ -106,11 +106,11 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     /**
      * @noinspection deprecation
      */
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, Transaction transaction) {
         holder.transactionNameTextView.setText(transaction.transactionName);
         holder.amountTextView.setText(transaction.amountToIndianFormat());
-        holder.accountNameTextView.setText(transaction.accountName);
+        holder.accountNameTextView.setText(String.format("%s | %s %s",transaction.accountName,transaction.runningBalance,transaction.currencyCode));
         holder.categoryNameTextView.setText(transaction.category);
         String transactionType = transaction.transactionType;
         int amountColor;
