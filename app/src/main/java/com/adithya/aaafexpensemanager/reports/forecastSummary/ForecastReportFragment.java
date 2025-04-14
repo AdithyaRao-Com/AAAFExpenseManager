@@ -25,14 +25,14 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class ForecastReportFragment extends Fragment {
+    private final List<LookupEditText.LookupEditTextItem> timePeriods = Arrays
+            .stream(ForecastConstants.ForecastTimePeriod.values())
+            .collect(Collectors.toList());
     private TransactionFilter transactionFilter = new TransactionFilter();
     private LookupEditText timePeriodSelection;
     private Button filterButton;
     private ForecastTimePeriod selectedTimePeriod;
     private RecyclerView reportsRecyclerView;
-    private final List<LookupEditText.LookupEditTextItem> timePeriods = Arrays
-            .stream(ForecastConstants.ForecastTimePeriod.values())
-            .collect(Collectors.toList());
     private Application application;
 
     @Override
@@ -54,7 +54,7 @@ public class ForecastReportFragment extends Fragment {
             //noinspection deprecation
             transactionFilter = args.getParcelable("transactionFilter");
             assert transactionFilter != null;
-            if(transactionFilter.periodName==null || transactionFilter.periodName.isBlank()){
+            if (transactionFilter.periodName == null || transactionFilter.periodName.isBlank()) {
                 transactionFilter.periodName = "Custom";
             }
             String selectedTimePeriodString = transactionFilter.periodName;
@@ -83,31 +83,31 @@ public class ForecastReportFragment extends Fragment {
         List<ForecastReportRecord> forecastReportRecords;
         ForecastReportRepository repository = new ForecastReportRepository(application);
         forecastReportRecords = repository.getForecastReportData(transactionFilter);
-        forecastReportRecords = fillGapData(forecastReportRecords,transactionFilter);
+        forecastReportRecords = fillGapData(forecastReportRecords, transactionFilter);
         ForecastReportAdapter forecastReportAdapter = new ForecastReportAdapter(forecastReportRecords);
         reportsRecyclerView.setAdapter(forecastReportAdapter);
     }
 
-    private List<ForecastReportRecord> fillGapData(List<ForecastReportRecord> forecastReportRecords,TransactionFilter transactionFilterTemp) {
-        NavigableMap<LocalDate,ForecastReportRecord> forecastReportRecordHashMap = new TreeMap<>();
+    private List<ForecastReportRecord> fillGapData(List<ForecastReportRecord> forecastReportRecords, TransactionFilter transactionFilterTemp) {
+        NavigableMap<LocalDate, ForecastReportRecord> forecastReportRecordHashMap = new TreeMap<>();
         LocalDate startDateLocal = transactionFilterTemp.getFromTransactionDateLocalDate();
         LocalDate endDateLocal = transactionFilterTemp.getToTransactionDateLocalDate().plusDays(1);
         forecastReportRecords
-                .forEach(forecastReportRecord -> forecastReportRecordHashMap.put(forecastReportRecord.transactionDate,forecastReportRecord));
+                .forEach(forecastReportRecord -> forecastReportRecordHashMap.put(forecastReportRecord.transactionDate, forecastReportRecord));
         //Populate first value
         LocalDate firstValueKey = transactionFilterTemp.getFromTransactionDateLocalDate();
-        if(!forecastReportRecordHashMap.containsKey(firstValueKey)){
+        if (!forecastReportRecordHashMap.containsKey(firstValueKey)) {
             LocalDate nextKey = forecastReportRecordHashMap.higherKey(firstValueKey);
             ForecastReportRecord nextValue = forecastReportRecordHashMap.get(nextKey);
             assert nextValue != null;
-            forecastReportRecordHashMap.put(firstValueKey,new ForecastReportRecord(firstValueKey,nextValue.amount,nextValue.currency));
+            forecastReportRecordHashMap.put(firstValueKey, new ForecastReportRecord(firstValueKey, nextValue.amount, nextValue.currency));
         }
         startDateLocal.datesUntil(endDateLocal).forEach(date -> {
-            if(!forecastReportRecordHashMap.containsKey(date)){
+            if (!forecastReportRecordHashMap.containsKey(date)) {
                 LocalDate previousKey = forecastReportRecordHashMap.lowerKey(date);
                 ForecastReportRecord previousValue = forecastReportRecordHashMap.get(previousKey);
                 assert previousValue != null;
-                forecastReportRecordHashMap.putIfAbsent(date,new ForecastReportRecord(date,previousValue.amount,previousValue.currency));
+                forecastReportRecordHashMap.putIfAbsent(date, new ForecastReportRecord(date, previousValue.amount, previousValue.currency));
             }
         });
         return forecastReportRecordHashMap.values().stream().toList();

@@ -63,7 +63,7 @@ public class Transaction implements Parcelable {
                        String transactionType, String category, String notes, double amount,
                        String accountName, String toAccountName, long createDateTime,
                        long lastUpdateDateTime, String transferInd, String recurringScheduleUUID,
-                       String currencyCode, double conversionFactor, String primaryCurrencyCode,double runningBalance) {
+                       String currencyCode, double conversionFactor, String primaryCurrencyCode, double runningBalance) {
         this.transactionUUID = transactionUUID;
         this.transactionName = transactionName;
         this.transactionDate = transactionDate;

@@ -5,22 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".settings.SettingsFragment">
+
     <TextView
         android:id="@+id/applicationVersionTextView"
         style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/application_version" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/separator_color" />
+
     <TextView
         android:id="@+id/databaseVersionTextView"
         style="@style/LargeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/database_version" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"

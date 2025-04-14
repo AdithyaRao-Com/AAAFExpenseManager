@@ -80,12 +80,10 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
-        if (holder instanceof AccountsAdapter.AccountTypeViewHolder) {
-            AccountTypeViewHolder accountTypeViewHolder = (AccountTypeViewHolder) holder;
+        if (holder instanceof AccountTypeViewHolder accountTypeViewHolder) {
             String accountType = (String) item;
             accountTypeViewHolder.accountTypeTextView.setText(accountType);
-        } else if (holder instanceof AccountViewHolder) {
-            AccountViewHolder accountViewHolder = (AccountViewHolder) holder;
+        } else if (holder instanceof AccountViewHolder accountViewHolder) {
             Account account = (Account) item;
             if (account != null) {
                 accountViewHolder.accountNameTextView.setText(account.accountName);

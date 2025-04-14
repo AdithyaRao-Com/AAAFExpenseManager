@@ -82,12 +82,10 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
-        if (holder instanceof RecurringAdapter.DateViewHolder) {
-            RecurringAdapter.DateViewHolder dateViewHolder = (RecurringAdapter.DateViewHolder) holder;
+        if (holder instanceof DateViewHolder dateViewHolder) {
             LocalDate date = (LocalDate) item;
             dateViewHolder.dateTextView.setText(dateFormatter.format(date));
-        } else if (holder instanceof RecurringAdapter.RecurringViewHolder) {
-            RecurringAdapter.RecurringViewHolder recurringViewHolder = (RecurringAdapter.RecurringViewHolder) holder;
+        } else if (holder instanceof RecurringViewHolder recurringViewHolder) {
             RecurringSchedule recurringSchedule = (RecurringSchedule) item;
             if (recurringSchedule != null) {
                 setUpRecurringViewHolder(recurringViewHolder, position, recurringSchedule);

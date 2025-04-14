@@ -157,16 +157,19 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now().withDayOfMonth(1).minusMonths(1);
             }
+
             @NonNull
             @Override
             public String toString() {
@@ -178,16 +181,19 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now().withDayOfMonth(1).minusMonths(3);
             }
+
             @NonNull
             @Override
             public String toString() {
@@ -199,16 +205,19 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now().withDayOfMonth(1).minusMonths(6);
             }
+
             @NonNull
             @Override
             public String toString() {
@@ -220,16 +229,19 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now().withDayOfMonth(1).minusMonths(12);
             }
+
             @NonNull
             @Override
             public String toString() {
@@ -241,37 +253,43 @@ public class ForecastConstants {
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now().withDayOfYear(1).minusDays(1);
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now().withDayOfYear(1).minusYears(1);
             }
+
             @NonNull
             @Override
             public String toString() {
                 return "Last Year";
             }
         },
-        CUSTOM(){
+        CUSTOM() {
             @Override
             public String toEditTextLookupString() {
                 return toString();
             }
+
             @NonNull
             @Override
             public LocalDate getEndDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public LocalDate getStartDate() {
                 return LocalDate.now();
             }
+
             @NonNull
             @Override
             public String toString() {

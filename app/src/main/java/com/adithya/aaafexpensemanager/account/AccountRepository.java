@@ -93,8 +93,9 @@ public class AccountRepository {
         ContentValues values = getContentValues(account, true);
         db.insert("accounts", null, values);
     }
+
     public void createAccountIfNotExists(Account account) {
-        if(getAccountByName(account.accountName)==null) {
+        if (getAccountByName(account.accountName) == null) {
             createAccount(account);
         }
     }

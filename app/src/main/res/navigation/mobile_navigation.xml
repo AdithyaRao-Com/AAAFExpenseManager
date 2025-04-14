@@ -411,5 +411,5 @@
     <fragment
         android:id="@+id/nav_about_app"
         android:name="com.adithya.aaafexpensemanager.settings.aboutApp.AboutAppFragment"
-        android:label="About App"/>
+        android:label="About App" />
 </navigation>

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TransactionFilter implements Parcelable,Cloneable {
+public class TransactionFilter implements Parcelable, Cloneable {
     public static final Parcelable.Creator<TransactionFilter> CREATOR = new Parcelable.Creator<>() {
         @Override
         public TransactionFilter createFromParcel(Parcel in) {
@@ -223,28 +223,28 @@ public class TransactionFilter implements Parcelable,Cloneable {
             throw new AssertionError();
         }
     }
-    public LocalDate getFromTransactionDateLocalDate(){
+
+    public LocalDate getFromTransactionDateLocalDate() {
         try {
             return LocalDate.parse(String.valueOf(fromTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return LocalDate.now().withDayOfMonth(1).minusMonths(1);
         }
     }
-    public LocalDate getToTransactionDateLocalDate(){
+
+    public LocalDate getToTransactionDateLocalDate() {
         try {
             return LocalDate.parse(String.valueOf(toTransactionDate), DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return LocalDate.now().withDayOfMonth(1).plusMonths(1);
         }
     }
 
-    public String getFromTransactionDate_YYYY_MM_DD(){
+    public String getFromTransactionDate_YYYY_MM_DD() {
         return fromTransactionDateToLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public String getToTransactionDate_YYYY_MM_DD(){
+    public String getToTransactionDate_YYYY_MM_DD() {
         return toTransactionDateToLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

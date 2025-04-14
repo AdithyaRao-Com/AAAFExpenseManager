@@ -116,8 +116,7 @@ public class AccountFragment extends Fragment {
                             "No"
                     );
                     return true;
-                }
-                else if (menuItem.getItemId() == R.id.createNewAccountMenuItem) {
+                } else if (menuItem.getItemId() == R.id.createNewAccountMenuItem) {
                     changeNavigation(R.id.nav_create_account, null);
                     return true;
                 }

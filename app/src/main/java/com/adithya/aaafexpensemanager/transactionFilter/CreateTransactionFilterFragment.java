@@ -225,7 +225,7 @@ public class CreateTransactionFilterFragment extends Fragment {
                     transactionFilter.setToTransactionDate(LocalDate.parse(dateToEditText.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                     transactionFilter.periodName = "";
                 }
-                transactionFilterViewModel.addTransactionFilter(transactionFilter,previousTransactionFilter);
+                transactionFilterViewModel.addTransactionFilter(transactionFilter, previousTransactionFilter);
                 Navigation.findNavController(requireView()).navigate(R.id.action_createTransactionFilterFragment_to_transactionFilterListFragment);
             } catch (RuntimeException e) {
                 Log.e("CreateTransactionFilterFragment", "setupCreateTransactionFilterFab - error", e);

@@ -69,15 +69,14 @@ public class TransactionFilterRepository {
         return values;
     }
 
-    public void addTransactionFilter(TransactionFilter transactionFilter,TransactionFilter previousTransactionFilter) {
+    public void addTransactionFilter(TransactionFilter transactionFilter, TransactionFilter previousTransactionFilter) {
         ContentValues values = getContentValues(transactionFilter);
         try {
             if (!previousTransactionFilter.reportName.isBlank()) {
                 db.delete(DBHelperActions.TRANSACTION_FILTER, "report_name = ?", new String[]{previousTransactionFilter.reportName});
             }
             db.insertOrThrow(DBHelperActions.TRANSACTION_FILTER, null, values);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

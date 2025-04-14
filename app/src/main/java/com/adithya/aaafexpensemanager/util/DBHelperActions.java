@@ -254,90 +254,90 @@ public class DBHelperActions {
 
     private static void createSplitTransfersView(SQLiteDatabase db) {
         String SPLIT_TRANSFERS_VIEW =
-"""
-CREATE VIEW IF NOT EXISTS SplitTransfers AS
-SELECT t1.*,
-SUM(CASE
-    WHEN t1.transaction_type = 'Income' THEN t1.amount
-    WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
-    END) OVER(PARTITION BY t1.account_name
-	              ORDER BY t1.transaction_date ASC
-						  ,t1.create_date ASC
-						  ,t1.transaction_uuid
-			  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) account_balance
-FROM
-(SELECT
-t1.transaction_uuid,
-t1.transaction_name,
-t1.transaction_date,
-t1.transaction_type,
-t1.category,
-t1.notes,
-t1.amount,
-t1.account_name,
-t1.to_account_name,
-t1.create_date,
-t1.last_update_date,
-t1.transaction_type transfer_ind,
-curr1.currency_code,
-curr1.conversion_factor,
-curr1.primary_currency_code,
-t1.recurring_schedule_uuid
-FROM transactions t1
-LEFT JOIN accounts ac1
-ON t1.account_name = ac1.account_name
-LEFT JOIN currency_all_details curr1
-ON ac1.currency_code = curr1.currency_code
-WHERE transaction_type != 'Transfer'
-UNION ALL
-SELECT
-t1.transaction_uuid,
-t1.transaction_name,
-t1.transaction_date,
-'Expense' as transaction_type,
-t1.category,
-t1.notes,
-t1.amount,
-t1.account_name,
-'' as to_account_name,
-t1.create_date,
-t1.last_update_date,
-t1.transaction_type transfer_ind,
-curr1.currency_code,
-curr1.conversion_factor,
-curr1.primary_currency_code,
-t1.recurring_schedule_uuid
-FROM transactions t1
-LEFT JOIN accounts ac1
-ON t1.account_name = ac1.account_name
-LEFT JOIN currency_all_details curr1
-ON ac1.currency_code = curr1.currency_code
-WHERE transaction_type = 'Transfer'
-UNION ALL
-SELECT
-t1.transaction_uuid,
-t1.transaction_name,
-t1.transaction_date,
-'Income' as transaction_type,
-t1.category,
-t1.notes,
-t1.amount,
-t1.to_account_name AS account_name,
-'' as to_account_name,
-t1.create_date,
-t1.last_update_date,
-t1.transaction_type transfer_ind,
-curr1.currency_code,
-curr1.conversion_factor,
-curr1.primary_currency_code,
-t1.recurring_schedule_uuid
-FROM transactions t1
-LEFT JOIN accounts ac1
-ON t1.to_account_name = ac1.account_name
-LEFT JOIN currency_all_details curr1
-ON ac1.currency_code = curr1.currency_code
-WHERE transaction_type = 'Transfer') t1
-""";
+                """
+                        CREATE VIEW IF NOT EXISTS SplitTransfers AS
+                        SELECT t1.*,
+                        SUM(CASE
+                            WHEN t1.transaction_type = 'Income' THEN t1.amount
+                            WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
+                            END) OVER(PARTITION BY t1.account_name
+                        	              ORDER BY t1.transaction_date ASC
+                        						  ,t1.create_date ASC
+                        						  ,t1.transaction_uuid
+                        			  ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) account_balance
+                        FROM
+                        (SELECT
+                        t1.transaction_uuid,
+                        t1.transaction_name,
+                        t1.transaction_date,
+                        t1.transaction_type,
+                        t1.category,
+                        t1.notes,
+                        t1.amount,
+                        t1.account_name,
+                        t1.to_account_name,
+                        t1.create_date,
+                        t1.last_update_date,
+                        t1.transaction_type transfer_ind,
+                        curr1.currency_code,
+                        curr1.conversion_factor,
+                        curr1.primary_currency_code,
+                        t1.recurring_schedule_uuid
+                        FROM transactions t1
+                        LEFT JOIN accounts ac1
+                        ON t1.account_name = ac1.account_name
+                        LEFT JOIN currency_all_details curr1
+                        ON ac1.currency_code = curr1.currency_code
+                        WHERE transaction_type != 'Transfer'
+                        UNION ALL
+                        SELECT
+                        t1.transaction_uuid,
+                        t1.transaction_name,
+                        t1.transaction_date,
+                        'Expense' as transaction_type,
+                        t1.category,
+                        t1.notes,
+                        t1.amount,
+                        t1.account_name,
+                        '' as to_account_name,
+                        t1.create_date,
+                        t1.last_update_date,
+                        t1.transaction_type transfer_ind,
+                        curr1.currency_code,
+                        curr1.conversion_factor,
+                        curr1.primary_currency_code,
+                        t1.recurring_schedule_uuid
+                        FROM transactions t1
+                        LEFT JOIN accounts ac1
+                        ON t1.account_name = ac1.account_name
+                        LEFT JOIN currency_all_details curr1
+                        ON ac1.currency_code = curr1.currency_code
+                        WHERE transaction_type = 'Transfer'
+                        UNION ALL
+                        SELECT
+                        t1.transaction_uuid,
+                        t1.transaction_name,
+                        t1.transaction_date,
+                        'Income' as transaction_type,
+                        t1.category,
+                        t1.notes,
+                        t1.amount,
+                        t1.to_account_name AS account_name,
+                        '' as to_account_name,
+                        t1.create_date,
+                        t1.last_update_date,
+                        t1.transaction_type transfer_ind,
+                        curr1.currency_code,
+                        curr1.conversion_factor,
+                        curr1.primary_currency_code,
+                        t1.recurring_schedule_uuid
+                        FROM transactions t1
+                        LEFT JOIN accounts ac1
+                        ON t1.to_account_name = ac1.account_name
+                        LEFT JOIN currency_all_details curr1
+                        ON ac1.currency_code = curr1.currency_code
+                        WHERE transaction_type = 'Transfer') t1
+                        """;
         db.execSQL(SPLIT_TRANSFERS_VIEW);
     }
 
@@ -418,51 +418,51 @@ WHERE transaction_type = 'Transfer') t1
 
     private static void createSplitAllTransfersView(SQLiteDatabase db) {
         String CREATE_SPLIT_ALL_TRANSFERS =
-"""
-CREATE VIEW IF NOT EXISTS SplitAllTransfers AS
-SELECT t1.*,
-       CASE
-           WHEN t1.transaction_type = 'Income' THEN t1.amount
-           WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
-       END signed_amount,
-       DATE(
-           SUBSTR(transaction_date, 1, 4) || '-' ||
-           SUBSTR(transaction_date, 5, 2) || '-' ||
-           SUBSTR(transaction_date, 7, 2)
-       ) txn_dt
-  FROM SplitTransfers t1
-UNION ALL
-SELECT t1.*,
-       CASE
-           WHEN t1.transaction_type = 'Income' THEN t1.amount
-           WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
-       END signed_amount,
-       DATE(
-           SUBSTR(transaction_date, 1, 4) || '-' ||
-           SUBSTR(transaction_date, 5, 2) || '-' ||
-           SUBSTR(transaction_date, 7, 2)
-       ) txn_dt
-  FROM FutureSplitTransfers t1;
-""";
+                """
+                        CREATE VIEW IF NOT EXISTS SplitAllTransfers AS
+                        SELECT t1.*,
+                               CASE
+                                   WHEN t1.transaction_type = 'Income' THEN t1.amount
+                                   WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
+                               END signed_amount,
+                               DATE(
+                                   SUBSTR(transaction_date, 1, 4) || '-' ||
+                                   SUBSTR(transaction_date, 5, 2) || '-' ||
+                                   SUBSTR(transaction_date, 7, 2)
+                               ) txn_dt
+                          FROM SplitTransfers t1
+                        UNION ALL
+                        SELECT t1.*,
+                               CASE
+                                   WHEN t1.transaction_type = 'Income' THEN t1.amount
+                                   WHEN t1.transaction_type = 'Expense' THEN (-1) * t1.amount
+                               END signed_amount,
+                               DATE(
+                                   SUBSTR(transaction_date, 1, 4) || '-' ||
+                                   SUBSTR(transaction_date, 5, 2) || '-' ||
+                                   SUBSTR(transaction_date, 7, 2)
+                               ) txn_dt
+                          FROM FutureSplitTransfers t1;
+                        """;
         db.execSQL(CREATE_SPLIT_ALL_TRANSFERS);
     }
 
     private static void createAccountsAllView(SQLiteDatabase db) {
         db.execSQL("""
-CREATE VIEW IF NOT EXISTS accounts_all_view AS
-select ac1.*,
-  curr1.currency_code,
-  curr1.conversion_factor,
-  curr1.primary_currency_code
-  from accounts ac1
-  left join account_types at1
-		 on ac1.account_type = at1.account_type
- left join currency_all_details curr1
-		on ac1.currency_code = curr1.currency_code
-order by at1.account_type_display_order ASC,
- at1.account_type ASC,
- ac1.display_order ASC,
- ac1.account_name ASC""");
+                CREATE VIEW IF NOT EXISTS accounts_all_view AS
+                select ac1.*,
+                  curr1.currency_code,
+                  curr1.conversion_factor,
+                  curr1.primary_currency_code
+                  from accounts ac1
+                  left join account_types at1
+                		 on ac1.account_type = at1.account_type
+                 left join currency_all_details curr1
+                		on ac1.currency_code = curr1.currency_code
+                order by at1.account_type_display_order ASC,
+                 at1.account_type ASC,
+                 ac1.display_order ASC,
+                 ac1.account_name ASC""");
     }
 
     private static void createRecurringTransactionsView(SQLiteDatabase db) {
@@ -520,20 +520,21 @@ order by at1.account_type_display_order ASC,
 
     public static void dropCreateActionsV2(SQLiteDatabase db) {
         Log.d("Database Helper", "Started dropCreateActionsV2");
-        db.execSQL("DROP VIEW IF EXISTS "+SPLIT_ALL_TRANSFERS);
+        db.execSQL("DROP VIEW IF EXISTS " + SPLIT_ALL_TRANSFERS);
         createSplitAllTransfersView(db);
         Log.d("Database Helper", "Completed dropCreateActionsV2");
     }
+
     public static void dropCreateActionsV3(SQLiteDatabase db) {
         Log.d("Database Helper", "Started dropCreateActionsV3");
-        db.execSQL("DROP VIEW IF EXISTS "+SPLIT_TRANSFERS);
+        db.execSQL("DROP VIEW IF EXISTS " + SPLIT_TRANSFERS);
         createSplitTransfersView(db);
         Log.d("Database Helper", "Completed dropCreateActionsV3");
     }
 
     public static void dropCreateActionsV4(SQLiteDatabase db) {
         Log.d("Database Helper", "Started dropCreateActionsV4");
-        db.execSQL("DROP VIEW IF EXISTS "+TRANSACTIONS_VIEW);
+        db.execSQL("DROP VIEW IF EXISTS " + TRANSACTIONS_VIEW);
         createTransactionsAllView(db);
         Log.d("Database Helper", "Completed dropCreateActionsV4");
     }

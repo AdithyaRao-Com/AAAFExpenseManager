@@ -28,8 +28,8 @@ public class TransactionFilterViewModel extends AndroidViewModel {
         return transactionFilters;
     }
 
-    public void addTransactionFilter(TransactionFilter transactionFilter,TransactionFilter previousTransactionFilter) {
-        repository.addTransactionFilter(transactionFilter,previousTransactionFilter);
+    public void addTransactionFilter(TransactionFilter transactionFilter, TransactionFilter previousTransactionFilter) {
+        repository.addTransactionFilter(transactionFilter, previousTransactionFilter);
         loadTransactionFilters();
     }
 

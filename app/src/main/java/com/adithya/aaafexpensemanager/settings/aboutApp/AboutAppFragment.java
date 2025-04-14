@@ -22,9 +22,9 @@ public class AboutAppFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_about_app, container, false);
         TextView applicationVersionTextView = view.findViewById(R.id.applicationVersionTextView);
         TextView databaseVersionTextView = view.findViewById(R.id.databaseVersionTextView);
-        applicationVersionTextView.setText(getString(R.string.application_version)+":"+ AppConstants.APPLICATION_VERSION);
+        applicationVersionTextView.setText(getString(R.string.application_version) + ":" + AppConstants.APPLICATION_VERSION);
         DBHelperSharedPrefs dbHelperSharedPrefs = new DBHelperSharedPrefs(requireContext());
-        databaseVersionTextView.setText(getString(R.string.database_version)+":"+ dbHelperSharedPrefs.getCurrentDataBaseVersion(0));
+        databaseVersionTextView.setText(getString(R.string.database_version) + ":" + dbHelperSharedPrefs.getCurrentDataBaseVersion(0));
         return view;
     }
 }

@@ -16,9 +16,6 @@ import com.adithya.aaafexpensemanager.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class CalculatorEditText extends TextInputEditText {
-    public interface OnCalculatedResultListener {
-        void onCalculatedResult(double result);
-    }
     private int decimalPlaces = 2;
     private double currentValue = 0.0;
     private boolean allowNegativeValues = true;
@@ -37,15 +34,19 @@ public class CalculatorEditText extends TextInputEditText {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
+
     public void setOnCalculatedResultListener(OnCalculatedResultListener listener) {
         this.listener = listener;
     }
-    public void setAllowNegativeValues(boolean allowNegativeValues){
-        this.allowNegativeValues = allowNegativeValues;
-    }
-    public boolean getAllowNegativeValues(){
+
+    public boolean getAllowNegativeValues() {
         return allowNegativeValues;
     }
+
+    public void setAllowNegativeValues(boolean allowNegativeValues) {
+        this.allowNegativeValues = allowNegativeValues;
+    }
+
     private void init(AttributeSet attrs) {
         setInputType(InputType.TYPE_NULL);
         setFocusable(false);
@@ -122,8 +123,7 @@ public class CalculatorEditText extends TextInputEditText {
             String amountText = getText().toString();
             double amountDouble = Double.parseDouble(amountText);
             calculator.setCurrentInput(amountText);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             calculator.setCurrentInput("0");
         }
         AlertDialog.Builder builder = getAlertBuilder(dialogView, calculator);
@@ -135,7 +135,7 @@ public class CalculatorEditText extends TextInputEditText {
         builder.setView(dialogView);
         builder.setPositiveButton("OK", (dialog, which) -> {
             double result = calculator.getResult();
-            if(!allowNegativeValues) {
+            if (!allowNegativeValues) {
                 result = Math.abs(result);
             }
             //noinspection MalformedFormatString
@@ -151,6 +151,10 @@ public class CalculatorEditText extends TextInputEditText {
         return builder;
     }
 
+    public interface OnCalculatedResultListener {
+        void onCalculatedResult(double result);
+    }
+
     static class Calculator {
         private final TextView display;
         private String currentInput = "";
@@ -161,6 +165,7 @@ public class CalculatorEditText extends TextInputEditText {
         Calculator(TextView display) {
             this.display = display;
         }
+
         void onButtonClick(String buttonText) {
             switch (buttonText) {
                 case "C":
@@ -196,7 +201,7 @@ public class CalculatorEditText extends TextInputEditText {
                     }
                     break;
                 default:
-                    if(calculationCompletedFlag){
+                    if (calculationCompletedFlag) {
                         currentInput = "";
                         calculationCompletedFlag = false;
                     }
@@ -205,8 +210,9 @@ public class CalculatorEditText extends TextInputEditText {
                     break;
             }
         }
-        public void setCurrentInput(String currentInput){
-            if(Double.parseDouble(currentInput)!=0){
+
+        public void setCurrentInput(String currentInput) {
+            if (Double.parseDouble(currentInput) != 0) {
                 this.currentInput = currentInput;
                 this.previousInput = currentInput;
                 this.currentOperator = "=";
@@ -224,7 +230,7 @@ public class CalculatorEditText extends TextInputEditText {
                     case "-" -> num1 - num2;
                     case "*" -> num1 * num2;
                     case "/" -> num1 / num2;
-                    case "+/-" -> (-1)*num1;
+                    case "+/-" -> (-1) * num1;
                     default -> num2;
                 };
                 currentInput = String.valueOf(result);

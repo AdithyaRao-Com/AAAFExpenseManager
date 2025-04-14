@@ -139,14 +139,15 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:hint="@string/amount">
+
                             <com.adithya.aaafexpensemanager.reusableComponents.calculatorEditText.CalculatorEditText
                                 android:id="@+id/amountEditText"
                                 style="@style/LargeText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                app:decimalPlaces="2"
                                 app:allowNegativeValues="false"
-                                tools:ignore="TextContrastCheck,VisualLintTextFieldSize"/>
+                                app:decimalPlaces="2"
+                                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 

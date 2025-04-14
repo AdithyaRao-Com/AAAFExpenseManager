@@ -124,15 +124,15 @@ public class TransactionRepository {
             double conversionFactor = cursor.getDouble(conversionFactorIndex);
             String primaryCurrencyCode = cursor.getString(primaryCurrencyCodeIndex);
             double runningBalance;
-            try{
-                runningBalance = Math.round(cursor.getDouble(runningBalanceIndex)*100.0)/100.0;
-            } catch (Exception e){
+            try {
+                runningBalance = Math.round(cursor.getDouble(runningBalanceIndex) * 100.0) / 100.0;
+            } catch (Exception e) {
                 runningBalance = 0.0d;
             }
             return new Transaction(transactionUUID, transactionName, transactionDateInt,
                     transactionType, category, notes, amount, accountName, toAccountName,
                     createDateTime, lastUpdateDateTime, transferInd, recurringScheduleUUID,
-                    currencyCode, conversionFactor, primaryCurrencyCode,runningBalance);
+                    currencyCode, conversionFactor, primaryCurrencyCode, runningBalance);
 
         } catch (Exception e) {
             e.printStackTrace();

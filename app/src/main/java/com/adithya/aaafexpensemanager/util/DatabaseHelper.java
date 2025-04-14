@@ -15,6 +15,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private final Application context;
     private final File databaseFile;
     private final DBHelperSharedPrefs DBHelperSharedPrefs;
+
     public DatabaseHelper(Context context) {
         super(context, AppConstants.DATABASE_NAME, null, AppConstants.DATABASE_VERSION);
         this.context = (Application) context.getApplicationContext();
@@ -35,13 +36,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         Log.d("Database Helper", "Started onUpgrade");
         DBHelperSharedPrefs.setCurrentDataBaseVersion(newVersion);
-        if(oldVersion<2){
+        if (oldVersion < 2) {
             DBHelperActions.dropCreateActionsV2(db);
         }
-        if(oldVersion<3){
+        if (oldVersion < 3) {
             DBHelperActions.dropCreateActionsV3(db);
         }
-        if(oldVersion<4){
+        if (oldVersion < 4) {
             DBHelperActions.dropCreateActionsV4(db);
         }
     }

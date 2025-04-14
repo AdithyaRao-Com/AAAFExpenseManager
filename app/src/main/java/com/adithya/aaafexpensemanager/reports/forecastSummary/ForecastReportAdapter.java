@@ -11,7 +11,9 @@ import com.adithya.aaafexpensemanager.R;
 
 import java.util.List;
 
-/** @noinspection deprecation*/
+/**
+ * @noinspection deprecation
+ */
 public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAdapter.ViewHolder> {
     private List<ForecastReportRecord> items;
 
@@ -35,10 +37,9 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
         ForecastReportRecord item = items.get(position);
         holder.dateTextView.setText(item.getDateText_DD_MMM_YYYY());
         holder.amountTextView.setText(item.getAmountText());
-        if(item.amount<=0){
+        if (item.amount <= 0) {
             holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
-        }
-        else {
+        } else {
             holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_green_dark));
         }
     }
