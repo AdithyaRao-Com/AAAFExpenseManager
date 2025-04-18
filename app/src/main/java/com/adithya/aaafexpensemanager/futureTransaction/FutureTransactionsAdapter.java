@@ -99,6 +99,12 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         holder.amountTextView.setText(futureTransaction.amountToIndianFormat());
         holder.accountNameTextView.setText(futureTransaction.accountName);
         holder.categoryNameTextView.setText(futureTransaction.category);
+        if(futureTransaction.notes == null|| futureTransaction.notes.isBlank()){
+            holder.notesTextView.setVisibility(View.GONE);
+        }else{
+            holder.notesTextView.setVisibility(View.VISIBLE);
+            holder.notesTextView.setText(futureTransaction.notes);
+        }
         String transactionType = futureTransaction.transactionType;
         int amountColor;
         if ("Income".equals(transactionType)) {
@@ -273,6 +279,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         LinearLayout transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
+        TextView notesTextView;
 
         public TransactionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -282,6 +289,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             transactionItemContainer = itemView.findViewById(R.id.transaction_item_container);
             transferIndImageView = itemView.findViewById(R.id.transaction_icon);
             categoryNameTextView = itemView.findViewById(R.id.categoryNameTextView);
+            notesTextView = itemView.findViewById(R.id.notesTextView);
         }
     }
 
