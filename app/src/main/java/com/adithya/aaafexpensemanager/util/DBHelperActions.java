@@ -359,7 +359,8 @@ public class DBHelperActions {
                 "curr1.currency_code, " +
                 "curr1.conversion_factor, " +
                 "curr1.primary_currency_code, " +
-                "t1.recurring_schedule_uuid " +
+                "t1.recurring_schedule_uuid, " +
+                "0.0 account_balance "+
                 "FROM recurring_transactions t1 " +
                 "LEFT JOIN accounts ac1 " +
                 "ON t1.account_name = ac1.account_name " +
@@ -383,7 +384,8 @@ public class DBHelperActions {
                 "curr1.currency_code, " +
                 "curr1.conversion_factor, " +
                 "curr1.primary_currency_code, " +
-                "t1.recurring_schedule_uuid " +
+                "t1.recurring_schedule_uuid, " +
+                "0.0 account_balance "+
                 "FROM recurring_transactions t1 " +
                 "LEFT JOIN accounts ac1 " +
                 "ON t1.account_name = ac1.account_name " +
@@ -407,7 +409,8 @@ public class DBHelperActions {
                 "curr1.currency_code, " +
                 "curr1.conversion_factor, " +
                 "curr1.primary_currency_code, " +
-                "t1.recurring_schedule_uuid " +
+                "t1.recurring_schedule_uuid, " +
+                "0.0 account_balance "+
                 "FROM recurring_transactions t1 " +
                 "LEFT JOIN accounts ac1 " +
                 "ON t1.to_account_name = ac1.account_name " +
@@ -483,7 +486,8 @@ public class DBHelperActions {
                 "t1.transfer_ind, " +
                 "curr1.currency_code, " +
                 "curr1.conversion_factor, " +
-                "curr1.primary_currency_code " +
+                "curr1.primary_currency_code, " +
+                "0.0 as account_balance " +
                 " FROM recurring_transactions t1 " +
                 " LEFT JOIN accounts ac1 " +
                 " ON t1.account_name = ac1.account_name " +
@@ -537,5 +541,13 @@ public class DBHelperActions {
         db.execSQL("DROP VIEW IF EXISTS " + TRANSACTIONS_VIEW);
         createTransactionsAllView(db);
         Log.d("Database Helper", "Completed dropCreateActionsV4");
+    }
+    public static void dropCreateActionsV5(SQLiteDatabase db) {
+        Log.d("Database Helper", "Started dropCreateActionsV5");
+        db.execSQL("DROP VIEW IF EXISTS " + RECURRING_TRANSACTIONS_VIEW);
+        createRecurringTransactionsView(db);
+        db.execSQL("DROP VIEW IF EXISTS " + FUTURE_SPLIT_TRANSFERS);
+        createFutureSplitTransfersView(db);
+        Log.d("Database Helper", "Completed dropCreateActionsV5");
     }
 }
