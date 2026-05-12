@@ -24,5 +24,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "AAAF Expense Manager"
+rootProject.name = "AAAF V2"
 include(":app")
