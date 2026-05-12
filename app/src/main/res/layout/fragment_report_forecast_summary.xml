@@ -30,7 +30,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                    <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                         android:id="@+id/timePeriodSelection"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

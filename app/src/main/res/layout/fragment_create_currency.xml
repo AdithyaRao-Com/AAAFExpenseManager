@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/conversion_factor">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.decimalLimitEditText.DecimalLimitEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.decimalLimitEditText.DecimalLimitEditText
                     android:id="@+id/conversionFactorTextView"
                     style="@style/LargeText"
                     android:layout_width="match_parent"

@@ -66,7 +66,7 @@
                     android:layout_weight="1"
                     android:hint="@string/amount">
 
-                    <com.adithya.aaafexpensemanager.reusableComponents.calculatorEditText.CalculatorEditText
+                    <com.adithya.aaafexpensemanagerv2.reusableComponents.calculatorEditText.CalculatorEditText
                         android:id="@+id/amountEditText"
                         style="@style/LargeText"
                         android:layout_width="match_parent"
@@ -91,7 +91,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                    <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                         android:id="@+id/accountNameAutoComplete"
                         style="@style/LargeText"
                         android:layout_width="match_parent"
@@ -133,7 +133,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                    <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                         android:id="@+id/toAccountNameAutoComplete"
                         style="@style/LargeText"
                         android:layout_width="match_parent"
@@ -165,7 +165,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/category">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/categoryAutoCompleteTextView"
                     style="@style/LargeText"
                     android:layout_width="match_parent"

@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/report_type">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/reportTypeLookup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/period_name">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/periodNameLookup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/transaction_name">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/transactionNameTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/categories">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/categoriesTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/accounts">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/accountsDialogTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -173,7 +173,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_types">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/accountTypesDialogTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_tags">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.multiSelectLookupEditText.MultiSelectLookupEditText
                     android:id="@+id/accountTagsDialogTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

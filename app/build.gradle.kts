@@ -3,10 +3,10 @@ plugins {
 }
 
 android {
-    namespace = "com.adithya.aaafexpensemanager"
+    namespace = "com.adithya.aaafexpensemanagerv2"
     compileSdk = 35
     defaultConfig {
-        applicationId = "com.adithya.aaafexpensemanager"
+        applicationId = "com.adithya.aaafexpensemanagerv2"
         minSdk = 34
         targetSdk = 35
         versionCode = 1

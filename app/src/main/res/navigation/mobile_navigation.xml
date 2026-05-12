@@ -6,7 +6,7 @@
     app:startDestination="@id/nav_account">
     <fragment
         android:id="@+id/nav_account"
-        android:name="com.adithya.aaafexpensemanager.account.AccountFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.account.AccountFragment"
         android:label="@string/menu_account"
         tools:layout="@layout/fragment_list_account">
         <action
@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/nav_transaction"
-        android:name="com.adithya.aaafexpensemanager.transaction.TransactionFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.transaction.TransactionFragment"
         android:label="@string/menu_transaction"
         tools:layout="@layout/fragment_list_transaction">
         <action
@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_category"
-        android:name="com.adithya.aaafexpensemanager.settings.category.CategoryFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.category.CategoryFragment"
         android:label="@string/menu_category"
         tools:layout="@layout/fragment_list_category">
         <action
@@ -41,12 +41,12 @@
 
     <fragment
         android:id="@+id/nav_create_account"
-        android:name="com.adithya.aaafexpensemanager.account.CreateAccountFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.account.CreateAccountFragment"
         android:label="@string/menu_create_account"
         tools:layout="@layout/fragment_create_account" />
     <fragment
         android:id="@+id/nav_create_transaction"
-        android:name="com.adithya.aaafexpensemanager.transaction.CreateTransactionFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.transaction.CreateTransactionFragment"
         android:label="@string/menu_create_transaction"
         tools:layout="@layout/fragment_create_transaction">
         <action
@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_category"
-        android:name="com.adithya.aaafexpensemanager.settings.category.CreateCategoryFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.category.CreateCategoryFragment"
         android:label="@string/menu_create_category"
         tools:layout="@layout/fragment_create_category">
         <action
@@ -68,7 +68,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_settings"
-        android:name="com.adithya.aaafexpensemanager.settings.SettingsFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings_home">
         <action
@@ -104,7 +104,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_account_type"
-        android:name="com.adithya.aaafexpensemanager.settings.accounttype.AccountTypeFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.accounttype.AccountTypeFragment"
         android:label="@string/manage_account_types"
         tools:layout="@layout/fragment_list_account_type">
         <action
@@ -120,7 +120,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_import_export_home"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportHome.ImportExportHomeFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportHome.ImportExportHomeFragment"
         android:label="Import/Export"
         tools:layout="@layout/fragment_setting_import_export_home">
         <action
@@ -171,7 +171,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_account_type"
-        android:name="com.adithya.aaafexpensemanager.settings.accounttype.CreateAccountTypeFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.accounttype.CreateAccountTypeFragment"
         android:label="Create/Update Account Type"
         tools:layout="@layout/fragment_create_account_type">
         <action
@@ -182,7 +182,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_recurring"
-        android:name="com.adithya.aaafexpensemanager.recurring.RecurringFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.recurring.RecurringFragment"
         android:label="Recurring Schedule"
         tools:layout="@layout/fragment_list_recurring">
         <action
@@ -193,7 +193,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_recurring"
-        android:name="com.adithya.aaafexpensemanager.recurring.CreateRecurringFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.recurring.CreateRecurringFragment"
         android:label="Create Recurring Schedule"
         tools:layout="@layout/fragment_create_recurring">
         <action
@@ -209,7 +209,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_future_transactions"
-        android:name="com.adithya.aaafexpensemanager.futureTransaction.FutureTransactionFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.futureTransaction.FutureTransactionFragment"
         android:label="Future Transactions"
         tools:layout="@layout/fragment_list_future_transaction">
         <action
@@ -225,7 +225,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_update_future_transaction"
-        android:name="com.adithya.aaafexpensemanager.futureTransaction.UpdateFutureTransactionFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.futureTransaction.UpdateFutureTransactionFragment"
         android:label="Update Future Transaction"
         tools:layout="@layout/fragment_create_transaction">
         <action
@@ -236,17 +236,17 @@
     </fragment>
     <fragment
         android:id="@+id/nav_export_database"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportDatabase.ExportDatabaseFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportDatabase.ExportDatabaseFragment"
         android:label="Export Database"
         tools:layout="@layout/fragment_setting_export_database" />
     <fragment
         android:id="@+id/nav_import_database"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportDatabase.ImportDatabaseFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportDatabase.ImportDatabaseFragment"
         android:label="Import Database"
         tools:layout="@layout/fragment_setting_import_database" />
     <fragment
         android:id="@+id/nav_reports"
-        android:name="com.adithya.aaafexpensemanager.reports.ReportsHomeFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.reports.ReportsHomeFragment"
         android:label="Reports"
         tools:layout="@layout/fragment_reports_home">
         <action
@@ -262,12 +262,12 @@
     </fragment>
     <fragment
         android:id="@+id/nav_balance_forecast"
-        android:name="com.adithya.aaafexpensemanager.reports.forecastSummary.ForecastReportFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.reports.forecastSummary.ForecastReportFragment"
         android:label="Balance Forecast"
         tools:layout="@layout/fragment_report_forecast_summary" />
     <fragment
         android:id="@+id/nav_category_summary"
-        android:name="com.adithya.aaafexpensemanager.reports.categorySummary.CategorySummaryFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.reports.categorySummary.CategorySummaryFragment"
         android:label="Category Summary"
         tools:layout="@layout/fragment_report_category_summary">
         <action
@@ -278,7 +278,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_category_summary_chart"
-        android:name="com.adithya.aaafexpensemanager.reports.categorySummary.CategorySummaryChartFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.reports.categorySummary.CategorySummaryChartFragment"
         android:label="Category Summary Chart"
         tools:layout="@layout/fragment_report_category_summary">
         <action
@@ -289,32 +289,32 @@
     </fragment>
     <fragment
         android:id="@+id/nav_import_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.ImportCSVFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportCSV.ImportCSVFragment"
         android:label="Import CSV"
         tools:layout="@layout/fragment_setting_upload_csv" />
     <fragment
         android:id="@+id/nav_export_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportCSV.ExportCSVFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportCSV.ExportCSVFragment"
         android:label="Export CSV"
         tools:layout="@layout/fragment_setting_export_csv" />
     <fragment
         android:id="@+id/nav_export_schedules_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportSchedules.ExportCSVScheduleFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportSchedules.ExportCSVScheduleFragment"
         android:label="Export Schedules CSV"
         tools:layout="@layout/fragment_setting_export_csv" />
     <fragment
         android:id="@+id/nav_import_schedules_csv"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportSchedules.ImportCSVScheduleFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportSchedules.ImportCSVScheduleFragment"
         android:label="Import Schedules CSV"
         tools:layout="@layout/fragment_setting_upload_csv" />
     <fragment
         android:id="@+id/nav_autobackup_dir_sel"
-        android:name="com.adithya.aaafexpensemanager.settings.autoBackup.AutoBackupDirectorySelectionFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.autoBackup.AutoBackupDirectorySelectionFragment"
         android:label="Auto Backup"
         tools:layout="@layout/fragment_setting_autobackup_directory_selection" />
     <fragment
         android:id="@+id/nav_currency"
-        android:name="com.adithya.aaafexpensemanager.settings.currency.CurrencyFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.currency.CurrencyFragment"
         android:label="Currency"
         tools:layout="@layout/fragment_list_currency">
         <action
@@ -325,7 +325,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_currency"
-        android:name="com.adithya.aaafexpensemanager.settings.currency.CreateCurrencyFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.currency.CreateCurrencyFragment"
         android:label="Create Currency"
         tools:layout="@layout/fragment_create_currency">
         <action
@@ -336,7 +336,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_currency_home"
-        android:name="com.adithya.aaafexpensemanager.settings.currency.CurrencyHomeFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.currency.CurrencyHomeFragment"
         android:label="Currency Home"
         tools:layout="@layout/fragment_currency_home">
         <action
@@ -352,7 +352,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_primary_currency"
-        android:name="com.adithya.aaafexpensemanager.settings.currency.CreatePrimaryCurrencyFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.currency.CreatePrimaryCurrencyFragment"
         android:label="Set Primary Currency"
         tools:layout="@layout/fragment_create_primary_currency">
         <action
@@ -363,7 +363,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_create_saved_report"
-        android:name="com.adithya.aaafexpensemanager.transactionFilter.CreateTransactionFilterFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.transactionFilter.CreateTransactionFilterFragment"
         android:label="Create Saved Report"
         tools:layout="@layout/fragment_create_transacton_filter">
         <action
@@ -374,7 +374,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_transaction_filter_list"
-        android:name="com.adithya.aaafexpensemanager.transactionFilter.TransactionFilterListFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.transactionFilter.TransactionFilterListFragment"
         android:label="Saved Reports"
         tools:layout="@layout/fragment_list_transaction_filter">
         <action
@@ -395,21 +395,21 @@
     </fragment>
     <fragment
         android:id="@+id/nav_import_QIF"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportQIF.ImportQIFFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportQIF.ImportQIFFragment"
         android:label="Import QIF"
         tools:layout="@layout/fragment_setting_import_qif" />
     <fragment
         android:id="@+id/nav_export_QIF"
-        android:name="com.adithya.aaafexpensemanager.settings.importExportQIF.ExportQIFFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.importExportQIF.ExportQIFFragment"
         android:label="Export QIF"
         tools:layout="@layout/fragment_setting_export_qif" />
     <fragment
         android:id="@+id/nav_test_fragment"
-        android:name="com.adithya.aaafexpensemanager.util.TestFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.util.TestFragment"
         android:label="Test Fragment"
         tools:layout="@layout/fragment_test" />
     <fragment
         android:id="@+id/nav_about_app"
-        android:name="com.adithya.aaafexpensemanager.settings.aboutApp.AboutAppFragment"
+        android:name="com.adithya.aaafexpensemanagerv2.settings.aboutApp.AboutAppFragment"
         android:label="About App" />
 </navigation>

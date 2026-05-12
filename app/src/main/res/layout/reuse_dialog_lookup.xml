@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+        <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
             android:id="@+id/dialogLookUpEditText"
             style="@style/LargeText"
             android:layout_width="match_parent"

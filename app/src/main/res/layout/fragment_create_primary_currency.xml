@@ -21,7 +21,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/primary_currency">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/primaryCurrencyCodeEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />

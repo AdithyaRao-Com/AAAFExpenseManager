@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_type">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/accountTypeSpinner"
                     style="@style/LargeText"
                     android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/account_balance">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.calculatorEditText.CalculatorEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.calculatorEditText.CalculatorEditText
                     android:id="@+id/accountBalanceEditText"
                     style="@style/LargeText"
                     android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/currency_code">
 
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupEditText.LookupEditText
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText
                     android:id="@+id/currencyCodeEditText"
                     style="@style/LargeText"
                     android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 <!--                    android:layout_height="wrap_content"-->
                 <!--                    android:inputType="text"-->
                 <!--                    style="@style/LargeText"/>-->
-                <com.adithya.aaafexpensemanager.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList
+                <com.adithya.aaafexpensemanagerv2.reusableComponents.lookupAutoCompleteList.LookupAutoCompleteList
                     android:id="@+id/accountTagsEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
