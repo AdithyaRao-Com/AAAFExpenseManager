@@ -29,7 +29,7 @@ public class DatabaseExporter {
 
         File zipFile = new File(context.getCacheDir(), "temp.zip");
         try {
-            // Delete temp file if it already exists to avoid Zip4j trying to append to a non-zip file
+            // Delete the file if already exists to make sure that any existing zip file is cleared
             if (zipFile.exists()) {
                 //noinspection ResultOfMethodCallIgnored
                 zipFile.delete();
