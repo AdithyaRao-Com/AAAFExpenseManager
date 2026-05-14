@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,8 +17,11 @@ import com.adithya.aaafexpensemanagerv2.reports.forecastSummary.ForecastConstant
 import com.adithya.aaafexpensemanagerv2.reusableComponents.lookupEditText.LookupEditText;
 import com.adithya.aaafexpensemanagerv2.transactionFilter.TransactionFilter;
 import com.adithya.aaafexpensemanagerv2.transactionFilter.TransactionFilterDialog;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
@@ -123,8 +127,38 @@ public class ForecastReportFragment extends Fragment {
         timePeriodSelection.setText(selectedTimePeriod.toString());
         timePeriodSelection.setOnItemClickListener((selectedItem, position) -> {
             selectedTimePeriod = (ForecastTimePeriod) selectedItem;
-            loadReportData();
+            transactionFilter.periodName = selectedTimePeriod.toString();
+            if (selectedTimePeriod == ForecastTimePeriod.CUSTOM) {
+                showDateRangePicker();
+            } else {
+                loadReportData();
+            }
         });
+    }
+
+    private void showDateRangePicker() {
+        MaterialDatePicker<Pair<Long, Long>> dateRangePicker =
+                MaterialDatePicker.Builder.dateRangePicker()
+                        .setTitleText("Select Dates")
+                        .setSelection(
+                                new Pair<>(
+                                        transactionFilter.getFromTransactionDateLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli(),
+                                        transactionFilter.getToTransactionDateLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                                )
+                        )
+                        .build();
+
+        dateRangePicker.addOnPositiveButtonClickListener(selection -> {
+            if (selection != null && selection.first != null && selection.second != null) {
+                LocalDate startDate = Instant.ofEpochMilli(selection.first).atZone(ZoneId.systemDefault()).toLocalDate();
+                LocalDate endDate = Instant.ofEpochMilli(selection.second).atZone(ZoneId.systemDefault()).toLocalDate();
+                transactionFilter.setFromTransactionDate(startDate);
+                transactionFilter.setToTransactionDate(endDate);
+                loadReportData();
+            }
+        });
+
+        dateRangePicker.show(getChildFragmentManager(), "DATE_RANGE_PICKER");
     }
 
     private void assignLayoutComponents(View view) {
