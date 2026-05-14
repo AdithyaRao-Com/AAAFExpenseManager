@@ -27,40 +27,51 @@ public class DatabaseExporter {
             return;
         }
 
+        File zipFile = new File(context.getCacheDir(), "temp.zip");
         try {
-            File zipFile = new File(context.getCacheDir(), "temp.zip");
+            // Delete temp file if it already exists to avoid Zip4j trying to append to a non-zip file
+            if (zipFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                zipFile.delete();
+            }
+
             zipDatabase(databaseFile, zipFile, "SQLite");
 
             try (FileInputStream fis = new FileInputStream(zipFile);
                  OutputStream os = context.getContentResolver().openOutputStream(exportUri)) {
-
+                if (os == null) {
+                    Log.e(TAG, "Could not open output stream for exportUri");
+                    return;
+                }
                 byte[] buffer = new byte[1024];
                 int length;
                 while ((length = fis.read(buffer)) > 0) {
-                    assert os != null;
                     os.write(buffer, 0, length);
                 }
             }
 
-            //noinspection ResultOfMethodCallIgnored
-            zipFile.delete();
             Log.d(TAG, "Database exported successfully");
         } catch (ZipException e) {
             Log.e(TAG, "Zip error: " + e.getMessage());
         } catch (IOException e) {
             Log.e(TAG, "Database export failed: " + e.getMessage());
+        } finally {
+            if (zipFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                zipFile.delete();
+            }
         }
     }
 
     /**
-     * @noinspection resource
      */
-    private void zipDatabase(File databaseFile, File zipFile, String password) throws ZipException {
+    private void zipDatabase(File databaseFile, File zipFile, String password) throws IOException {
         ZipParameters zipParameters = new ZipParameters();
         zipParameters.setEncryptFiles(true);
         zipParameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD);
 
-        ZipFile zip = new ZipFile(zipFile, password.toCharArray());
-        zip.addFile(databaseFile, zipParameters);
+        try (ZipFile zip = new ZipFile(zipFile, password.toCharArray())) {
+            zip.addFile(databaseFile, zipParameters);
+        }
     }
 }
