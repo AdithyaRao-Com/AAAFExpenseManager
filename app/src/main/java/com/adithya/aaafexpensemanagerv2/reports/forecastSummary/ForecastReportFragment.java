@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.NavigableMap;
@@ -114,7 +116,23 @@ public class ForecastReportFragment extends Fragment {
                 forecastReportRecordHashMap.putIfAbsent(date, new ForecastReportRecord(date, previousValue.amount, previousValue.currency));
             }
         });
-        return forecastReportRecordHashMap.values().stream().toList();
+        return get100SampledRecords(forecastReportRecordHashMap);
+    }
+
+    @NonNull
+    private static List<ForecastReportRecord> get100SampledRecords(NavigableMap<LocalDate, ForecastReportRecord> forecastReportRecordHashMap) {
+        List<ForecastReportRecord> allRecords = new ArrayList<>(forecastReportRecordHashMap.values());
+        int totalSize = allRecords.size();
+        if (totalSize <= 100) {
+            return allRecords;
+        }
+
+        List<ForecastReportRecord> sampledRecords = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            int index = (int) Math.round(i * (double) (totalSize - 1) / 99.0);
+            sampledRecords.add(allRecords.get(index));
+        }
+        return sampledRecords;
     }
 
     private void setDefaultTimePeriodSelection() {
