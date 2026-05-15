@@ -9,9 +9,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.adithya.aaafexpensemanagerv2.R;
+import com.adithya.aaafexpensemanagerv2.recenttrans.RecentTransactionViewModel;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * @noinspection FieldCanBeLocal
@@ -23,6 +26,7 @@ public class SettingsFragment extends Fragment {
     private TextView currenciesTextView;
     private TextView importExportHomeTextView;
     private TextView aboutAppTextView;
+    private TextView refreshRecentTransactionsTextView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,6 +47,13 @@ public class SettingsFragment extends Fragment {
         importExportHomeTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_importExportHomeFragment));
         aboutAppTextView = view.findViewById(R.id.about_app);
         aboutAppTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_settingsFragment_to_aboutAppFragment));
+        refreshRecentTransactionsTextView = view.findViewById(R.id.refresh_recent_transactions_text_view);
+        RecentTransactionViewModel recentTransactionViewModel = new ViewModelProvider(this).get(RecentTransactionViewModel.class);
+        refreshRecentTransactionsTextView.setOnClickListener(v -> {
+            recentTransactionViewModel.refreshRecentTransactions();
+            Snackbar.make(view, "Recent Transactions Refreshed", Snackbar.LENGTH_SHORT).show();
+        });
+
         return view;
     }
 

@@ -40,4 +40,10 @@ public class RecentTransactionViewModel extends AndroidViewModel {
     public RecentTransaction getTransactionByName(String selectedRecentTransString) {
         return repository.getRecentTransactionByName(selectedRecentTransString);
     }
+
+    public void refreshRecentTransactions() {
+        repository.deleteAll();
+        repository.updateAllRecentTransactions();
+        loadTransactions();
+    }
 }

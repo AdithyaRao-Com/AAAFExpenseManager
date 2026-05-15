@@ -156,4 +156,5 @@
     <string name="_subtract">-</string>
     <string name="_calculator_display_text">0</string>
     <string name="_plus_minus">+/-</string>
+    <string name="refresh_recent_transactions">Refresh Recent Transactions</string>
 </resources>

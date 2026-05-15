@@ -77,4 +77,16 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/separator_color" />
+
+    <TextView
+        android:id="@+id/refresh_recent_transactions_text_view"
+        style="@style/LargeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh_recent_transactions" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/separator_color" />
 </LinearLayout>
