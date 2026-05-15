@@ -13,9 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanagerv2.R;
+import com.adithya.aaafexpensemanagerv2.util.CurrencyFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -42,17 +45,40 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemViewType(int position) {
-        return items.get(position) instanceof String ? TYPE_ACCOUNT_TYPE : TYPE_ACCOUNT;
+        return items.get(position) instanceof AccountTypeSeparator ? TYPE_ACCOUNT_TYPE : TYPE_ACCOUNT;
     }
 
     private void addSeparators(List<Account> accounts) {
         String tempAccountType = null;
+        Map<String, Double> accountTypeTotals = accounts.stream()
+                .collect(Collectors.groupingBy(account -> account.accountType,
+                        Collectors.summingDouble(account -> account.accountBalance)));
+
+        Map<String, String> accountTypeCurrency = accounts.stream()
+                .collect(Collectors.toMap(account -> account.accountType, account -> account.currencyCode, (c1, c2) -> c1));
+
         for (Account account : accounts) {
             if (!account.accountType.equals(tempAccountType)) {
-                items.add(account.accountType);
+                String accountType = account.accountType;
+                Double total = accountTypeTotals.get(accountType);
+                items.add(new AccountTypeSeparator(accountType,
+                        total != null ? total : 0.0,
+                        accountTypeCurrency.getOrDefault(accountType, "")));
                 tempAccountType = account.accountType;
             }
             items.add(account);
+        }
+    }
+
+    private static class AccountTypeSeparator {
+        String accountType;
+        double totalBalance;
+        String currencyCode;
+
+        AccountTypeSeparator(String accountType, double totalBalance, String currencyCode) {
+            this.accountType = accountType;
+            this.totalBalance = totalBalance;
+            this.currencyCode = currencyCode;
         }
     }
 
@@ -81,8 +107,15 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Object item = items.get(position);
         if (holder instanceof AccountTypeViewHolder accountTypeViewHolder) {
-            String accountType = (String) item;
-            accountTypeViewHolder.accountTypeTextView.setText(accountType);
+            AccountTypeSeparator separator = (AccountTypeSeparator) item;
+            accountTypeViewHolder.accountTypeTextView.setText(separator.accountType);
+            String formattedTotal = CurrencyFormatter.formatIndianStyle(separator.totalBalance, separator.currencyCode);
+            accountTypeViewHolder.accountTypeTotalBalanceTextView.setText(formattedTotal);
+            if (separator.totalBalance >= 0) {
+                accountTypeViewHolder.accountTypeTotalBalanceTextView.setTextColor(Color.GREEN);
+            } else {
+                accountTypeViewHolder.accountTypeTotalBalanceTextView.setTextColor(Color.RED);
+            }
         } else if (holder instanceof AccountViewHolder accountViewHolder) {
             Account account = (Account) item;
             if (account != null) {
@@ -128,10 +161,12 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public static class AccountTypeViewHolder extends RecyclerView.ViewHolder {
         TextView accountTypeTextView;
+        TextView accountTypeTotalBalanceTextView;
 
         public AccountTypeViewHolder(@NonNull View itemView) {
             super(itemView);
             accountTypeTextView = itemView.findViewById(R.id.list_account_type_separator_text);
+            accountTypeTotalBalanceTextView = itemView.findViewById(R.id.list_account_type_total_balance);
         }
     }
 }
