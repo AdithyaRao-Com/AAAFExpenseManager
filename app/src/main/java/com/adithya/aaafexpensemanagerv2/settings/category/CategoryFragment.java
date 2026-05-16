@@ -51,7 +51,12 @@ public class CategoryFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                viewModel.filterCategories(s.toString());
+                String query = s.toString();
+                if (query.isEmpty()) {
+                    viewModel.resetSearch();
+                } else {
+                    viewModel.filterCategories(query);
+                }
             }
 
             @Override
@@ -59,6 +64,24 @@ public class CategoryFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (viewModel != null) {
+            EditText searchEditText = getView() != null ? getView().findViewById(R.id.searchCategoryEditText) : null;
+            if (searchEditText != null) {
+                String query = searchEditText.getText().toString();
+                if (query.isEmpty()) {
+                    viewModel.resetSearch();
+                } else {
+                    viewModel.filterCategories(query);
+                }
+            } else {
+                viewModel.loadCategories();
+            }
+        }
     }
 
     private class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> {

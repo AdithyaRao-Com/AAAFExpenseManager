@@ -12,12 +12,12 @@ import java.util.List;
 
 public class CategoryViewModel extends AndroidViewModel {
     private final CategoryRepository repository;
-    private final LiveData<List<Category>> categories;
+    private final MutableLiveData<List<Category>> categories = new MutableLiveData<>();
+    private String currentSearchText = "";
 
     public CategoryViewModel(Application application) {
         super(application);
         repository = new CategoryRepository(application);
-        categories = new MutableLiveData<>(); // Initialize LiveData
         loadCategories(); // Load categories initially
     }
 
@@ -40,14 +40,23 @@ public class CategoryViewModel extends AndroidViewModel {
         loadCategories(); // Reload after deleting
     }
 
-    private void loadCategories() {
-        List<Category> categoryList = repository.getAllCategories();
-        ((MutableLiveData<List<Category>>) categories).setValue(categoryList); // Cast and set value
+    public void loadCategories() {
+        if (currentSearchText == null || currentSearchText.isEmpty()) {
+            categories.setValue(repository.getAllCategories());
+        } else {
+            filterCategories(currentSearchText);
+        }
+    }
+
+    public void resetSearch() {
+        currentSearchText = "";
+        loadCategories();
     }
 
     public void filterCategories(String searchText) {
+        currentSearchText = searchText;
         List<Category> filteredCategories = repository.filterCategories(searchText); // From repository
-        ((MutableLiveData<List<Category>>) categories).setValue(filteredCategories);
+        categories.setValue(filteredCategories);
     }
 
     public List<String> getDistinctParentCategories() {
