@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -480,11 +481,7 @@ public class CreateRecurringFragment extends Fragment {
                     new ConfirmationDialog(getContext(),
                             "Delete Transaction",
                             "Are you sure you want to delete this Transaction?",
-                            () -> {
-                                viewModel.deleteRecurringSchedule(originalRecurringSchedule);
-                                originalRecurringSchedule = null;
-                                NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
-                            },
+                            () -> showPasswordConfirmationDialog(),
                             () -> {
                             },
                             "Delete",
@@ -508,5 +505,26 @@ public class CreateRecurringFragment extends Fragment {
             showFutureTxnMenuItem.setVisible(isEditing);
         } catch (Exception ignored) {
         }
+    }
+
+    private void showPasswordConfirmationDialog() {
+        EditText passwordEditText = new EditText(requireContext());
+        passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Enter Password")
+                .setMessage("Please enter the password to confirm deletion:")
+                .setView(passwordEditText)
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    String password = passwordEditText.getText().toString();
+                    if ("1234546".equals(password)) {
+                        viewModel.deleteRecurringSchedule(originalRecurringSchedule);
+                        originalRecurringSchedule = null;
+                        NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
+                    } else {
+                        Toast.makeText(requireContext(), "Incorrect password", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
