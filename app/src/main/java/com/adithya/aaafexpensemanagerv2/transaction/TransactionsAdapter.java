@@ -1,6 +1,7 @@
 package com.adithya.aaafexpensemanagerv2.transaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,9 +38,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-/**
- * @noinspection deprecation
- */
 public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_DATE = 0;
     private static final int TYPE_TRANSACTION = 1;
@@ -103,44 +101,43 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /**
-     * @noinspection deprecation
-     */
-    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, Transaction transaction) {
+        Context context = transactionFragment.getContext();
+        if (context == null) return;
         holder.transactionNameTextView.setText(transaction.transactionName);
         holder.amountTextView.setText(transaction.amountToIndianFormat());
         holder.accountNameTextView.setText(String.format("%s | %s %s", transaction.accountName, transaction.runningBalance, transaction.currencyCode));
         holder.categoryNameTextView.setText(transaction.category);
-        if(transaction.notes == null|| transaction.notes.isBlank()){
+        if (transaction.notes == null || transaction.notes.isBlank()) {
             holder.notesTextView.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.notesTextView.setVisibility(View.VISIBLE);
             holder.notesTextView.setText(transaction.notes);
         }
         String transactionType = transaction.transactionType;
         int amountColor;
         if ("Income".equals(transactionType)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
+            amountColor = ContextCompat.getColor(context, R.color.balance_positive);
         } else if ("Expense".equals(transactionType)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_red_dark);
+            amountColor = ContextCompat.getColor(context, R.color.balance_negative);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
+            amountColor = ContextCompat.getColor(context, android.R.color.white);
         }
         holder.amountTextView.setTextColor(amountColor);
 
 
         String transferInd = transaction.transferInd;
+        int indicatorColor;
         if ("Income".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
+            indicatorColor = ContextCompat.getColor(context, R.color.balance_positive);
         } else if ("Expense".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_red_dark);
+            indicatorColor = ContextCompat.getColor(context, R.color.balance_negative);
         } else if ("Transfer".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_blue_dark);
+            indicatorColor = ContextCompat.getColor(context, android.R.color.holo_blue_dark);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
+            indicatorColor = ContextCompat.getColor(context, android.R.color.white);
         }
-        holder.transferIndImageView.setBackgroundColor(amountColor);
+        holder.transferIndImageView.setBackgroundColor(indicatorColor);
 
         holder.itemView.setOnClickListener(v -> {
             if (actionMode != null) {
@@ -168,9 +165,13 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             return true;
         });
-        holder.transactionItemContainer.setBackgroundColor(selectedTransactions.contains((Transaction) items.get(position))
-                ? this.transactionFragment.getResources().getColor(R.color.selected_item_color)
-                : Color.TRANSPARENT);
+        
+        if (selectedTransactions.contains((Transaction) items.get(position))) {
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
+        } else {
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            holder.transactionItemContainer.setBackgroundResource(0); // Clear any system background
+        }
     }
 
     private void addSeparators(List<Transaction> transactions) {
@@ -184,17 +185,16 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /**
-     * @noinspection deprecation
-     */
     private void toggleSelection(TransactionViewHolder holder, int position) {
         Transaction transaction = (Transaction) items.get(position);
+        Context context = transactionFragment.getContext();
+        if (context == null) return;
         if (selectedTransactions.contains(transaction)) {
             selectedTransactions.remove(transaction);
-            holder.transactionItemContainer.setBackgroundColor(Color.TRANSPARENT);
+            holder.transactionItemContainer.setCardBackgroundColor(Color.TRANSPARENT);
         } else {
             selectedTransactions.add(transaction);
-            holder.transactionItemContainer.setBackgroundColor(this.transactionFragment.getResources().getColor(R.color.selected_item_color));
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
         }
 
         if (selectedTransactions.isEmpty()) {
@@ -204,12 +204,13 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    /**
-     * @noinspection DataFlowIssue
-     */
     private void selectAll(List<Object> items) {
-        RecyclerView recyclerView = transactionFragment.getView().findViewById(R.id.transactionsRecyclerView);
+        View view = transactionFragment.getView();
+        if (view == null) return;
+        RecyclerView recyclerView = view.findViewById(R.id.transactionsRecyclerView);
         selectedTransactions.clear();
+        Context context = transactionFragment.getContext();
+        if (context == null) return;
         int itemPosition = 0;
         for (Object listObject : items) {
             if (listObject instanceof Transaction transaction) {
@@ -217,7 +218,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
                 if (viewHolder != null) {
                     TransactionViewHolder myViewHolder = (TransactionViewHolder) viewHolder;
-                    myViewHolder.transactionItemContainer.setBackgroundColor(this.transactionFragment.getResources().getColor(R.color.selected_item_color));
+                    myViewHolder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
                 }
             }
             itemPosition++;
@@ -250,7 +251,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void startActionMode() {
-        //noinspection DataFlowIssue
+        if (this.transactionFragment.getActivity() == null) return;
         actionMode = this.transactionFragment.getActivity().startActionMode(new ActionMode.Callback() {
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -263,7 +264,6 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 return false;
             }
 
-            /** @noinspection DataFlowIssue*/
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
@@ -412,7 +412,7 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView transactionNameTextView;
         TextView amountTextView;
         TextView accountNameTextView;
-        LinearLayout transactionItemContainer;
+        com.google.android.material.card.MaterialCardView transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
         TextView notesTextView;

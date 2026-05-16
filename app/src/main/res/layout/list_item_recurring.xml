@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/transaction_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +18,7 @@
 
         <View
             android:id="@+id/transaction_icon"
-            android:layout_width="10dp"
+            android:layout_width="4dp"
             android:layout_height="match_parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,6 +30,7 @@
                 android:id="@+id/transactionNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/amountTextView"
@@ -37,6 +42,7 @@
                 android:id="@+id/categoryNameTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/amountTextView"
                 app:layout_constraintStart_toStartOf="parent"
@@ -47,7 +53,6 @@
                 android:id="@+id/amountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,6 +63,7 @@
                 android:id="@+id/accountNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorSecondary"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/amountTextView"
@@ -66,8 +72,4 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/separator_color" />
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

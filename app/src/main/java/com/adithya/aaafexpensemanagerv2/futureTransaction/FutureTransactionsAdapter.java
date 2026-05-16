@@ -1,6 +1,7 @@
 package com.adithya.aaafexpensemanagerv2.futureTransaction;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ActionMode;
@@ -9,11 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @noinspection deprecation
+ *
  */
 public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_DATE = 0;
@@ -91,43 +92,45 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     /**
-     * @noinspection deprecation
+     * @noinspection unused
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpTransactionViewHolder(@NonNull TransactionViewHolder holder, int position, FutureTransaction futureTransaction) {
+        Context context = transactionFragment.getContext();
         holder.transactionNameTextView.setText(futureTransaction.transactionName);
         holder.amountTextView.setText(futureTransaction.amountToIndianFormat());
         holder.accountNameTextView.setText(futureTransaction.accountName);
         holder.categoryNameTextView.setText(futureTransaction.category);
-        if(futureTransaction.notes == null|| futureTransaction.notes.isBlank()){
+        if (futureTransaction.notes == null || futureTransaction.notes.isBlank()) {
             holder.notesTextView.setVisibility(View.GONE);
-        }else{
+        } else {
             holder.notesTextView.setVisibility(View.VISIBLE);
             holder.notesTextView.setText(futureTransaction.notes);
         }
         String transactionType = futureTransaction.transactionType;
         int amountColor;
         if ("Income".equals(transactionType)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
+            amountColor = ContextCompat.getColor(context, R.color.balance_positive);
         } else if ("Expense".equals(transactionType)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_red_dark);
+            amountColor = ContextCompat.getColor(context, R.color.balance_negative);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
+            amountColor = ContextCompat.getColor(context, android.R.color.white);
         }
         holder.amountTextView.setTextColor(amountColor);
 
 
         String transferInd = futureTransaction.transferInd;
+        int indicatorColor;
         if ("Income".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_green_dark);
+            indicatorColor = ContextCompat.getColor(context, R.color.balance_positive);
         } else if ("Expense".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_red_dark);
+            indicatorColor = ContextCompat.getColor(context, R.color.balance_negative);
         } else if ("Transfer".equals(transferInd)) {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.holo_blue_dark);
+            indicatorColor = ContextCompat.getColor(context, android.R.color.holo_blue_dark);
         } else {
-            amountColor = transactionFragment.getResources().getColor(android.R.color.white);
+            indicatorColor = ContextCompat.getColor(context, android.R.color.white);
         }
-        holder.transferIndImageView.setBackgroundColor(amountColor);
+        holder.transferIndImageView.setBackgroundColor(indicatorColor);
 
         holder.itemView.setOnClickListener(v -> {
             if (actionMode != null) {
@@ -146,9 +149,13 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             }
             return true;
         });
-        holder.transactionItemContainer.setBackgroundColor(selectedTransactions.contains((FutureTransaction) items.get(position))
-                ? this.transactionFragment.getResources().getColor(R.color.selected_item_color)
-                : Color.TRANSPARENT);
+
+        if (selectedTransactions.contains((FutureTransaction) items.get(position))) {
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
+        } else {
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
+            holder.transactionItemContainer.setBackgroundResource(0); // Clear any system background
+        }
     }
 
     private void addSeparators(List<FutureTransaction> transactions) {
@@ -162,17 +169,15 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    /**
-     * @noinspection deprecation
-     */
     private void toggleSelection(TransactionViewHolder holder, int position) {
         FutureTransaction transaction = (FutureTransaction) items.get(position);
+        Context context = transactionFragment.getContext();
         if (selectedTransactions.contains(transaction)) {
             selectedTransactions.remove(transaction);
-            holder.transactionItemContainer.setBackgroundColor(Color.TRANSPARENT);
+            holder.transactionItemContainer.setCardBackgroundColor(Color.TRANSPARENT);
         } else {
             selectedTransactions.add(transaction);
-            holder.transactionItemContainer.setBackgroundColor(this.transactionFragment.getResources().getColor(R.color.selected_item_color));
+            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
         }
 
         if (selectedTransactions.isEmpty()) {
@@ -182,12 +187,10 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
-    /**
-     * @noinspection DataFlowIssue
-     */
     private void selectAll(List<Object> items) {
         RecyclerView recyclerView = transactionFragment.getView().findViewById(R.id.transactionsRecyclerView);
         selectedTransactions.clear();
+        Context context = transactionFragment.getContext();
         int itemPosition = 0;
         for (Object listObject : items) {
             if (listObject instanceof FutureTransaction transaction) {
@@ -195,7 +198,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                 RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(itemPosition);
                 if (viewHolder != null) {
                     TransactionViewHolder myViewHolder = (TransactionViewHolder) viewHolder;
-                    myViewHolder.transactionItemContainer.setBackgroundColor(this.transactionFragment.getResources().getColor(R.color.selected_item_color));
+                    myViewHolder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
                 }
             }
             itemPosition++;
@@ -276,7 +279,7 @@ public class FutureTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
         TextView transactionNameTextView;
         TextView amountTextView;
         TextView accountNameTextView;
-        LinearLayout transactionItemContainer;
+        com.google.android.material.card.MaterialCardView transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
         TextView notesTextView;

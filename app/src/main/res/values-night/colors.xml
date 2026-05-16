@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="balance_positive">#81C784</color>
+    <color name="balance_negative">#E57373</color>
+</resources>

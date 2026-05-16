@@ -2,7 +2,6 @@ package com.adithya.aaafexpensemanagerv2.account;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanagerv2.R;
@@ -111,11 +111,8 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             accountTypeViewHolder.accountTypeTextView.setText(separator.accountType);
             String formattedTotal = CurrencyFormatter.formatIndianStyle(separator.totalBalance, separator.currencyCode);
             accountTypeViewHolder.accountTypeTotalBalanceTextView.setText(formattedTotal);
-            if (separator.totalBalance >= 0) {
-                accountTypeViewHolder.accountTypeTotalBalanceTextView.setTextColor(Color.GREEN);
-            } else {
-                accountTypeViewHolder.accountTypeTotalBalanceTextView.setTextColor(Color.RED);
-            }
+            int color = separator.totalBalance >= 0 ? ContextCompat.getColor(context, R.color.balance_positive) : ContextCompat.getColor(context, R.color.balance_negative);
+            accountTypeViewHolder.accountTypeTotalBalanceTextView.setTextColor(color);
         } else if (holder instanceof AccountViewHolder accountViewHolder) {
             Account account = (Account) item;
             if (account != null) {
@@ -123,11 +120,8 @@ public class AccountsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 accountViewHolder.accountTypeTextView.setText(account.accountType);
                 accountViewHolder.accountBalanceTextView.setText(account.accountBalanceToIndianFormat());
                 // Set balance color
-                if (account.accountBalance >= 0) {
-                    accountViewHolder.accountBalanceTextView.setTextColor(Color.GREEN);
-                } else {
-                    accountViewHolder.accountBalanceTextView.setTextColor(Color.RED);
-                }
+                int color = account.accountBalance >= 0 ? ContextCompat.getColor(context, R.color.balance_positive) : ContextCompat.getColor(context, R.color.balance_negative);
+                accountViewHolder.accountBalanceTextView.setTextColor(color);
                 accountViewHolder.itemView.setOnClickListener(v -> {
                     Bundle args = new Bundle();
                     args.putParcelable("account", account);

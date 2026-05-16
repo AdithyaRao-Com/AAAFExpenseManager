@@ -3,18 +3,18 @@
     android:id="@+id/transaction_item_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="12dp"
+    android:paddingBottom="4dp">
 
     <TextView
         android:id="@+id/list_date_separator_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_list_date_separator"
-        android:gravity="center_vertical"
-        android:textAppearance="?android:attr/textAppearanceListItemSmall" />
+        android:paddingHorizontal="16dp"
+        android:textAllCaps="true"
+        android:textColor="?attr/colorPrimary"
+        android:textSize="12sp"
+        android:textStyle="bold" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/separator_color" />
 </LinearLayout>

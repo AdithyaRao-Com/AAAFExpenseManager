@@ -1,10 +1,12 @@
 package com.adithya.aaafexpensemanagerv2.reports.forecastSummary;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanagerv2.R;
@@ -12,7 +14,7 @@ import com.adithya.aaafexpensemanagerv2.R;
 import java.util.List;
 
 /**
- * @noinspection deprecation
+ *
  */
 public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAdapter.ViewHolder> {
     private List<ForecastReportRecord> items;
@@ -28,7 +30,7 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.list_item_report_forecast_summary, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_report_forecast_summary, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,10 +39,10 @@ public class ForecastReportAdapter extends RecyclerView.Adapter<ForecastReportAd
         ForecastReportRecord item = items.get(position);
         holder.dateTextView.setText(item.getDateText_DD_MMM_YYYY());
         holder.amountTextView.setText(item.getAmountText());
-        if (item.amount <= 0) {
-            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
+        if (item.amount < 0) {
+            holder.amountTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.balance_negative));
         } else {
-            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_green_dark));
+            holder.amountTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.balance_positive));
         }
     }
 

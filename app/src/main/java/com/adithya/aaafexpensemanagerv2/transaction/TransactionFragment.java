@@ -49,13 +49,10 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
         filterButton = view.findViewById(R.id.button);
         transactionFilter = new TransactionFilter();
         if (getArguments() != null && getArguments().containsKey("transaction_filter")) {
-            if (getArguments().getParcelable("transaction_filter") != null) {
-                transactionFilter = getArguments().getParcelable("transaction_filter");
-            } else {
-                transactionFilter = new TransactionFilter();
+            TransactionFilter filter = getArguments().getParcelable("transaction_filter");
+            if (filter != null) {
+                transactionFilter = filter;
             }
-        } else {
-            transactionFilter = new TransactionFilter();
         }
         checkSetToggleFilter();
         viewModel = new ViewModelProvider(requireActivity()).get(TransactionViewModel.class);
@@ -76,13 +73,11 @@ public class TransactionFragment extends Fragment implements TransactionFilterDi
                 String searchText = s.toString();
                 if (searchText.isEmpty()) {
                     transactionFilter.searchText = "";
-                    currentPage = 1;
-                    viewModel.getTransactions(transactionFilter, currentPage).getValue();
                 } else {
                     transactionFilter.searchText = searchText;
-                    currentPage = 1;
-                    updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
                 }
+                currentPage = 1;
+                updateRecyclerView(viewModel.getTransactions(transactionFilter, currentPage).getValue());
                 checkSetToggleFilter();
             }
 

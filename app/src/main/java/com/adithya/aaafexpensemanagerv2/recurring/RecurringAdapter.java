@@ -6,11 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -94,7 +94,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     /**
-     * @noinspection deprecation, unused
+     * @noinspection unused
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private void setUpRecurringViewHolder(@NonNull RecurringAdapter.RecurringViewHolder holder, int position, RecurringSchedule recurringSchedule) {
@@ -105,26 +105,27 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String transactionType = recurringSchedule.transactionType;
         int amountColor;
         if ("Income".equals(transactionType)) {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.holo_green_dark);
+            amountColor = ContextCompat.getColor(recurringFragment.requireContext(), R.color.balance_positive);
         } else if ("Expense".equals(transactionType)) {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.holo_red_dark);
+            amountColor = ContextCompat.getColor(recurringFragment.requireContext(), R.color.balance_negative);
         } else {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.white);
+            amountColor = ContextCompat.getColor(recurringFragment.requireContext(), android.R.color.white);
         }
         holder.amountTextView.setTextColor(amountColor);
 
 
         String transferInd = recurringSchedule.transferInd;
+        int indicatorColor;
         if ("Income".equals(transferInd)) {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.holo_green_dark);
+            indicatorColor = ContextCompat.getColor(recurringFragment.requireContext(), R.color.balance_positive);
         } else if ("Expense".equals(transferInd)) {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.holo_red_dark);
+            indicatorColor = ContextCompat.getColor(recurringFragment.requireContext(), R.color.balance_negative);
         } else if ("Transfer".equals(transferInd)) {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.holo_blue_dark);
+            indicatorColor = ContextCompat.getColor(recurringFragment.requireContext(), android.R.color.holo_blue_dark);
         } else {
-            amountColor = recurringFragment.getResources().getColor(android.R.color.white);
+            indicatorColor = ContextCompat.getColor(recurringFragment.requireContext(), android.R.color.white);
         }
-        holder.transferIndImageView.setBackgroundColor(amountColor);
+        holder.transferIndImageView.setBackgroundColor(indicatorColor);
 
         holder.itemView.setOnClickListener(v -> {
             UUID recurringTransactionUUID = recurringSchedule.recurringScheduleUUID;
@@ -146,7 +147,7 @@ public class RecurringAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView transactionNameTextView;
         TextView amountTextView;
         TextView accountNameTextView;
-        LinearLayout transactionItemContainer;
+        com.google.android.material.card.MaterialCardView transactionItemContainer;
         View transferIndImageView;
         TextView categoryNameTextView;
 

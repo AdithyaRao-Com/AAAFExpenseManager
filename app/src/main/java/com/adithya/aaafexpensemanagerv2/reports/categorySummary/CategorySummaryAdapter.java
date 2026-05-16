@@ -1,11 +1,13 @@
 package com.adithya.aaafexpensemanagerv2.reports.categorySummary;
 
 import android.annotation.SuppressLint;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanagerv2.R;
@@ -14,7 +16,7 @@ import com.adithya.aaafexpensemanagerv2.util.CurrencyFormatter;
 import java.util.List;
 
 /**
- * @noinspection deprecation
+ *
  */
 public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummaryAdapter.ViewHolder> {
     private List<CategorySummaryRecord> records;
@@ -26,7 +28,7 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
     @NonNull
     @Override
     public CategorySummaryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = View.inflate(parent.getContext(), R.layout.list_item_report_category_summary, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_report_category_summary, parent, false);
         return new ViewHolder(view);
     }
 
@@ -37,11 +39,10 @@ public class CategorySummaryAdapter extends RecyclerView.Adapter<CategorySummary
         holder.categoryNameTextView.setText(record.category);
         holder.amountTextView.setText(CurrencyFormatter.formatIndianStyle(record.amount, "INR"));
         if (record.amount < 0) {
-            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_red_dark));
+            holder.amountTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.balance_negative));
         } else {
-            holder.amountTextView.setTextColor(holder.itemView.getResources().getColor(android.R.color.holo_green_dark));
+            holder.amountTextView.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.balance_positive));
         }
-//        holder.pctTextView.setText(record.pct+"%");
     }
 
     @Override

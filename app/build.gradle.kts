@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace = "com.adithya.aaafexpensemanagerv2"
-    compileSdk = 35
+    compileSdk = 37
     defaultConfig {
         applicationId = "com.adithya.aaafexpensemanagerv2"
         minSdk = 34
-        targetSdk = 35
+        targetSdk = 37
         versionCode = 1
         versionName = "1.0"
 
@@ -21,7 +21,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
         }

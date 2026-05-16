@@ -13,4 +13,6 @@
     <color name="background_list_date_separator">#4D4E44</color>
     <color name="filter_enabled">#006600</color>
     <color name="filter_disabled">#555555</color>
+    <color name="balance_positive">#4CAF50</color>
+    <color name="balance_negative">#F44336</color>
 </resources>
