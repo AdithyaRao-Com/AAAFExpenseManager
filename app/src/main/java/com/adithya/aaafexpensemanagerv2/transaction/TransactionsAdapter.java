@@ -166,11 +166,10 @@ public class TransactionsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return true;
         });
         
-        if (selectedTransactions.contains((Transaction) items.get(position))) {
+        if (selectedTransactions.contains(transaction)) {
             holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, R.color.selected_item_color));
         } else {
-            holder.transactionItemContainer.setCardBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent));
-            holder.transactionItemContainer.setBackgroundResource(0); // Clear any system background
+            holder.transactionItemContainer.setCardBackgroundColor(Color.TRANSPARENT);
         }
     }
 

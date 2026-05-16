@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="separator_color">#363636</color>
-    <color name="selected_item_color">#40808080</color>
+    <color name="selected_item_color">#607D8B</color>
     <color name="grey_border">#CCCCCC</color>
     <color name="background_list_date_separator">#4D4E44</color>
     <color name="filter_enabled">#006600</color>

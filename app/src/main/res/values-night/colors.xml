@@ -2,4 +2,5 @@
 <resources>
     <color name="balance_positive">#81C784</color>
     <color name="balance_negative">#E57373</color>
+    <color name="selected_item_color">#455A64</color>
 </resources>
