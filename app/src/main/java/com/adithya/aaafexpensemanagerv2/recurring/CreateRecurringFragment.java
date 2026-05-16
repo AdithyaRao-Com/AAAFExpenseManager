@@ -508,15 +508,21 @@ public class CreateRecurringFragment extends Fragment {
     }
 
     private void showPasswordConfirmationDialog() {
-        EditText passwordEditText = new EditText(requireContext());
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.reuse_dialog_edit_text, null);
+        TextInputLayout textInputLayout = view.findViewById(R.id.textInputLayout);
+        EditText passwordEditText = view.findViewById(R.id.materialEditText);
+
+        textInputLayout.setHint("Password");
+        textInputLayout.setEndIconMode(TextInputLayout.END_ICON_PASSWORD_TOGGLE);
         passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
         new AlertDialog.Builder(requireContext())
                 .setTitle("Enter Password")
                 .setMessage("Please enter the password to confirm deletion:")
-                .setView(passwordEditText)
+                .setView(view)
                 .setPositiveButton("Confirm", (dialog, which) -> {
                     String password = passwordEditText.getText().toString();
-                    if ("1234546".equals(password)) {
+                    if ("123456".equals(password)) {
                         viewModel.deleteRecurringSchedule(originalRecurringSchedule);
                         originalRecurringSchedule = null;
                         NavHostFragment.findNavController(getParentFragment()).navigate(R.id.action_createRecurringFragment_to_recurringFragment);
