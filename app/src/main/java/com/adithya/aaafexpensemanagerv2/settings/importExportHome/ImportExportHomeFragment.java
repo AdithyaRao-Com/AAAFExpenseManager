@@ -10,45 +10,91 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.adithya.aaafexpensemanagerv2.R;
 
-/**
- * @noinspection FieldCanBeLocal
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class ImportExportHomeFragment extends Fragment {
-    private TextView exportDatabaseTextView;
-    private TextView importDatabaseTextView;
-    private TextView exportCSVTextView;
-    private TextView importCSVTextView;
-    private TextView importQIFTextView;
-    private TextView exportQIFTextView;
-    private TextView autoBackupTextView;
-    private TextView exportSchedulesCSVTextView;
-    private TextView importSchedulesCSVTextView;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_setting_import_export_home, container, false);
-        exportDatabaseTextView = view.findViewById(R.id.export_database_text_view);
-        exportDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportDatabaseFragment));
-        importDatabaseTextView = view.findViewById(R.id.import_database_text_view);
-        importDatabaseTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importDatabaseFragment));
-        exportCSVTextView = view.findViewById(R.id.export_csv_text_view);
-        exportCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportCSVFragment));
-        importCSVTextView = view.findViewById(R.id.import_csv_text_view);
-        importCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importCSVFragment));
-        importQIFTextView = view.findViewById(R.id.import_qif_text_view);
-        importQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importQIFFragment));
-        exportQIFTextView = view.findViewById(R.id.export_qif_text_view);
-        exportQIFTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportQIFFragment));
-        autoBackupTextView = view.findViewById(R.id.autobackup_text_view);
-        autoBackupTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_autoBackupFragment));
-        exportSchedulesCSVTextView = view.findViewById(R.id.export_schedule_csv_text_view);
-        exportSchedulesCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportSchedulesCSVFragment));
-        importSchedulesCSVTextView = view.findViewById(R.id.import_schedule_csv_text_view);
-        importSchedulesCSVTextView.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importSchedulesCSVFragment));
+
+        RecyclerView recyclerView = view.findViewById(R.id.importExportHomeRecyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        List<ImportExportMenuItem> items = new ArrayList<>();
+        items.add(new ImportExportMenuItem(getString(R.string.export_database), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportDatabaseFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.import_database), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importDatabaseFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.import_csv), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importCSVFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.export_csv), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportCSVFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.import_qif), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importQIFFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.export_qif), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportQIFFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.export_schedules_csv), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_exportSchedulesCSVFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.import_schedules_csv), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_importSchedulesCSVFragment)));
+        items.add(new ImportExportMenuItem(getString(R.string.auto_backup), v -> 
+            Navigation.findNavController(v).navigate(R.id.action_importExportHomeFragment_to_autoBackupFragment)));
+
+        recyclerView.setAdapter(new ImportExportMenuAdapter(items));
+
         return view;
+    }
+
+    private static class ImportExportMenuItem {
+        String title;
+        View.OnClickListener listener;
+
+        ImportExportMenuItem(String title, View.OnClickListener listener) {
+            this.title = title;
+            this.listener = listener;
+        }
+    }
+
+    private static class ImportExportMenuAdapter extends RecyclerView.Adapter<ImportExportMenuAdapter.ViewHolder> {
+        private final List<ImportExportMenuItem> items;
+
+        ImportExportMenuAdapter(List<ImportExportMenuItem> items) {
+            this.items = items;
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_menu, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            ImportExportMenuItem item = items.get(position);
+            holder.titleTextView.setText(item.title);
+            holder.itemView.setOnClickListener(item.listener);
+        }
+
+        @Override
+        public int getItemCount() {
+            return items.size();
+        }
+
+        static class ViewHolder extends RecyclerView.ViewHolder {
+            TextView titleTextView;
+
+            ViewHolder(View itemView) {
+                super(itemView);
+                titleTextView = itemView.findViewById(R.id.menuItemTitle);
+            }
+        }
     }
 }

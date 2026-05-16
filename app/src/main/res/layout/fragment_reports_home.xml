@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".reports.ReportsHomeFragment">
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/categorySummaryTextView"
-        style="@style/LargeText"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/reportsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/category_summary" />
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/separator_color" />
-
-    <TextView
-        android:id="@+id/balanceForecastTextView"
-        style="@style/LargeText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/balance_forecast_summary" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/separator_color" />
 </LinearLayout>
